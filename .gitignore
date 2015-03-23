@@ -3,6 +3,7 @@
 *.cbp
 *.test
 *.swp
+*.user
 bin/
 obj/
 build/
