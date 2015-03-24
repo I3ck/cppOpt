@@ -16,6 +16,7 @@ private:
 
     unsigned int id;
     std::map <std::string, T> parameters;
+    T result;
 
 
 public:
@@ -24,6 +25,9 @@ public:
 
     std::map <std::string, T> get_parameters() const;
     void set_parameters(const std::map <std::string, T> &value);
+
+    T get_result() const;
+    void set_result(const T &value);
 };
 
 #endif // OPTVALUE_H

@@ -12,6 +12,15 @@ void OptValue::set_parameters(const std::map <std::string, T> &value)
     parameters = value;
 }
 
+T OptValue::get_result() const
+{
+    return result;
+}
+void OptValue::set_result(const T &value)
+{
+    result = value;
+}
+
 OptValue::OptValue()
 {
     id = maxId;

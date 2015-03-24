@@ -1,6 +1,6 @@
 #include "OptBase.h"
 
-OptBase::OptBase()
+OptBase::OptBase(const std::vector<OptValue> &optValues)
 {
 
 }
