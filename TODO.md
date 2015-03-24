@@ -10,4 +10,8 @@ this has to be derived from by the library-user to define the problem itself
 use atomic or mutex locks where needed
 ##saving data
 add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
+##resultS
+maybe make it possible to work with a set of results instead of a result
+#other
+rename to either cppOpt or heurOpt or similar
 
