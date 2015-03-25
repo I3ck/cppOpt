@@ -22,10 +22,21 @@ private:
         queueCalculated,
         queueFinished;
 
+
+    std::vector<OptValue>
+        previousCalculations; ///@todo might be better to use a list here
+
+
+
+    virtual OptValue get_next_value() = 0;
+
 public:
     OptBase(const std::vector<OptValue> &optValues);
     ~OptBase();
 
+    void add_finished_calculation(const OptValue &optValue);
+
+    ///@todo some / all of these should maybe be made private / protected
     static void push_todo(const OptValue &optValue);
     static void push_calculated(const OptValue &optValue);
     static void push_finished(const OptValue &optValue);
