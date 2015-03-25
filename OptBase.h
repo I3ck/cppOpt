@@ -7,6 +7,7 @@
 
 #include "defines.h"
 #include "OptValue.h"
+#include "OptBoundary.h"
 
 
 class OptBase
@@ -28,6 +29,9 @@ private:
     std::vector<OptValue>
         previousCalculations;
 
+    const std::vector<OptBoundary>
+        optBoundaries;
+
     const OptTarget
         optTarget;
 
@@ -37,7 +41,7 @@ private:
 
 public:
     ///@todo OptValues should be OptBoundaries
-    OptBase(const std::vector<OptValue> &optValues, OptTarget optTarget);
+    OptBase(const std::vector<OptBoundary> &optBoundaries, OptTarget optTarget);
     ~OptBase();
 
     void add_finished_calculation(const OptValue &optValue);
