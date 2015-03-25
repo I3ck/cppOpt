@@ -22,11 +22,12 @@ OptBase::~OptBase()
 
 void OptBase::add_finished_calculation(const OptValue &optValue)
 {
-   ///@todo maybe add mutex for non-static data aswell
-   previousCalculations.push_back(optValue);
-   mutexQueueFinished.lock();
-   queueFinished.push(optValue);
-   mutexQueueFinished.unlock();
+    mutexPreviousCalculations.lock();
+    previousCalculations.push_back(optValue);
+    mutexPreviousCalculations.unlock();
+    mutexQueueFinished.lock();
+    queueFinished.push(optValue);
+    mutexQueueFinished.unlock();
 }
 
 void OptBase::push_todo(const OptValue &optValue)

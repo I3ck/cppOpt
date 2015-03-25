@@ -22,9 +22,11 @@ private:
         queueCalculated,
         queueFinished;
 
+    std::mutex
+        mutexPreviousCalculations;
 
     std::vector<OptValue>
-        previousCalculations; ///@todo might be better to use a list here
+        previousCalculations;
 
 
 
