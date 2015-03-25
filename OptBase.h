@@ -9,6 +9,8 @@
 #include "OptValue.h"
 #include "OptBoundary.h"
 
+class OptValue; //forward reference
+
 
 class OptBase
 {

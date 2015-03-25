@@ -21,6 +21,15 @@ void OptValue::set_result(const T &value)
     result = value;
 }
 
+OptBase* OptValue::get_owner() const
+{
+    return owner;
+}
+void OptValue::set_owner(OptBase *value)
+{
+    owner = value;
+}
+
 OptValue::OptValue()
 {
     id = maxId;
