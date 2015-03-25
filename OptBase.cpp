@@ -10,8 +10,10 @@ std::queue<OptValue>
     OptBase::queueCalculated,
     OptBase::queueFinished;
 
-OptBase::OptBase(const std::vector<OptValue> &optValues)
+OptBase::OptBase(const std::vector<OptValue> &optValues, OptTarget optTarget) :
+    optTarget(optTarget)
 {
+
 
 }
 

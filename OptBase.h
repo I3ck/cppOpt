@@ -28,12 +28,16 @@ private:
     std::vector<OptValue>
         previousCalculations;
 
+    const OptTarget
+        optTarget;
+
 
 
     virtual OptValue get_next_value() = 0;
 
 public:
-    OptBase(const std::vector<OptValue> &optValues);
+    ///@todo OptValues should be OptBoundaries
+    OptBase(const std::vector<OptValue> &optValues, OptTarget optTarget);
     ~OptBase();
 
     void add_finished_calculation(const OptValue &optValue);
