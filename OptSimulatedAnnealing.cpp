@@ -35,5 +35,6 @@ OptValue OptSimulatedAnnealing::random_start_value()
         T newValue = boundary.min + randomFactor * range;
         optValue.add_parameter(boundary.name, newValue);
     }
+    return optValue;
 }
 
