@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "CalculatorBase.h"
 #include "OptSimulatedAnnealing.h"
 
 class MyCalculator : CalculatorBase
