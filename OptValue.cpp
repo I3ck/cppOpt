@@ -35,6 +35,16 @@ void OptValue::set_owner(OptBase *value)
     owner = value;
 }
 
+std::string OptValue::to_string() const
+{
+    std::string out("");
+
+    for(const auto &parameter : parameters)
+        out += parameter.first + " = " + std::to_string(parameter.second) + "\n";
+
+    return out;
+}
+
 OptValue::OptValue()
 {
     id = maxId;

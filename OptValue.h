@@ -37,6 +37,8 @@ public:
 
     OptBase* get_owner() const;
     void set_owner(OptBase *value);
+
+    std::string to_string() const; ///@todo also add overloads for streams etc.
 };
 
 #endif // OPTVALUE_H
