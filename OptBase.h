@@ -14,7 +14,7 @@
     #include <iostream>
 #endif
 
-class OptValue; //forward reference
+//class OptValue; //forward reference
 
 
 class OptBase
