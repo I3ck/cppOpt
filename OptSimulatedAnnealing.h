@@ -7,6 +7,7 @@ class OptSimulatedAnnealing : public OptBase
 {
 private:
     T
+        temperature,
         coolingFactor,
         chance;
 
@@ -19,6 +20,7 @@ public:
     ~OptSimulatedAnnealing();
 
     OptValue get_next_value();
+    OptValue random_start_value();
 };
 
 #endif // OPTSIMULATEDANNEALING_H

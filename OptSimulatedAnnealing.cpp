@@ -6,6 +6,7 @@ OptSimulatedAnnealing::OptSimulatedAnnealing(const std::vector<OptBoundary> &opt
                                              T coolingFactor,
                                              T startChance) :
     OptBase(optBoundaries, maxCalculations, optTarget),
+    temperature(1.0),
     coolingFactor(coolingFactor),
     chance(startChance)
 {
@@ -19,6 +20,21 @@ OptSimulatedAnnealing::~OptSimulatedAnnealing()
 
 OptValue OptSimulatedAnnealing::get_next_value()
 {
+    if(previousCalculations.empty())
+        return random_start_value();
+
+}
+
+OptValue OptSimulatedAnnealing::random_start_value()
+{
+    OptValue optValue;
+    for(const auto &boundary : optBoundaries)
+    {
+        T randomFactor = rand()/(T)(RAND_MAX); ///@todo make this a method of OptBase
+        T range = boundary.max - boundary.min;
+        T newValue = boundary.min + randomFactor * range;
+        optValue.add_parameter(boundary.name, newValue);
+    }
 
 }
 

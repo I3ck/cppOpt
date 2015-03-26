@@ -15,7 +15,7 @@ class OptValue; //forward reference
 class OptBase
 {
 private:
-    ///@todo alls static members need a mutex
+    ///@todo all static members need a mutex
     static std::mutex
         mutexQueueTodo,
         mutexQueueCalculated,
@@ -28,6 +28,8 @@ private:
 
     std::mutex
         mutexPreviousCalculations;
+
+protected:
 
     std::vector<OptValue>
         previousCalculations;

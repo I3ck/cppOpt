@@ -30,6 +30,7 @@ public:
     ///@todo many members should be public / or const and defined in construction
     std::map <std::string, T> get_parameters() const;
     void set_parameters(const std::map <std::string, T> &value);
+    void add_parameter(const std::string &name, T value);
 
     T get_result() const;
     void set_result(const T &value);

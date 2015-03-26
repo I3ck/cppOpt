@@ -12,6 +12,11 @@ void OptValue::set_parameters(const std::map <std::string, T> &value)
     parameters = value;
 }
 
+void OptValue::add_parameter(const std::string &name, T value)
+{
+    parameters[name] = value;
+}
+
 T OptValue::get_result() const
 {
     return result;
