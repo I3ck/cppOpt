@@ -71,6 +71,8 @@ public:
 
     T bad_value() const;
 
+    bool result_better(const OptValue &result, const OptValue &other) const;
+
     ///@todo some / all of these should maybe be made private / protected
     static void push_todo(const OptValue &optValue);
     static void push_calculated(const OptValue &optValue);

@@ -13,7 +13,7 @@ public:
 
     void calculate(OptValue &optValue)
     {
-        optValue.set_result(5);
+        optValue.result = 5;
     }
 };
 
@@ -40,7 +40,7 @@ int main()
 
     cout << opt.get_next_value().to_string() << endl;
 
-    cout << optValue.get_result() << endl;
+    cout << optValue.result << endl;
     return 0;
 }
 

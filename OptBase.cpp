@@ -53,7 +53,7 @@ T OptBase::bad_value() const
             return std::numeric_limits<T>::min();
 
         case APPROACH:
-            if(targetValue > 0)
+            if(targetValue > 0.0)
                 return std::numeric_limits<T>::min();
             else
                 return std::numeric_limits<T>::max();
@@ -63,6 +63,27 @@ T OptBase::bad_value() const
 
         default: //MINIMIZE
             return std::numeric_limits<T>::max();
+    }
+}
+
+bool OptBase::result_better(const OptValue &result, const OptValue &other) const
+{
+    switch(optTarget)
+    {
+        case MINIMIZE:
+            return result.result < other.result;
+
+        case MAXIMIZE:
+            return result.result > other.result;
+
+        case APPROACH:
+            return abs(targetValue - result.result) < abs(targetValue - other.result);
+
+        case DIVERGE:
+            return abs(targetValue - result.result) > abs(targetValue - other.result);
+
+        default: //MINIMIZE
+            return result.result < other.result;
     }
 }
 
