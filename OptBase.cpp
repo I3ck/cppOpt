@@ -15,13 +15,19 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
                  OptTarget optTarget) :
     maxCalculations(maxCalculations),
     optBoundaries(optBoundaries),
-    optTarget(optTarget)
+    optTarget(optTarget),
+    targetValue(0.0)
 {
 
 
 }
 
 OptBase::~OptBase()
+{
+
+}
+
+bool OptBase::optimise()
 {
 
 }
@@ -34,6 +40,30 @@ void OptBase::add_finished_calculation(const OptValue &optValue)
     mutexQueueFinished.lock();
     queueFinished.push(optValue);
     mutexQueueFinished.unlock();
+}
+
+T OptBase::bad_value() const
+{
+    switch(optTarget)
+    {
+        case MINIMIZE:
+            return std::numeric_limits<T>::max();
+
+        case MAXIMIZE:
+            return std::numeric_limits<T>::min();
+
+        case APPROACH:
+            if(targetValue > 0)
+                return std::numeric_limits<T>::min();
+            else
+                return std::numeric_limits<T>::max();
+
+        case DIVERGE:
+            return targetValue;
+
+        default: //MINIMIZE
+            return std::numeric_limits<T>::max();
+    }
 }
 
 void OptBase::push_todo(const OptValue &optValue)

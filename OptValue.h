@@ -20,7 +20,7 @@ private:
     unsigned int id;
     std::map <std::string, T> parameters;
     T result;
-    OptBase *owner;
+    OptBase *owner; ///@todo save this pointer in an external data container (e.g. pair <OptValue, OptBase*>)
 
 
 public:

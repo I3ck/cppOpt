@@ -4,6 +4,7 @@
 #include <vector>
 #include <mutex>
 #include <queue>
+#include <limits>
 
 #include "defines.h"
 #include "OptValue.h"
@@ -38,6 +39,9 @@ protected:
     std::vector<OptValue>
         previousCalculations;
 
+    OptValue
+        bestCalculation;
+
     const std::vector<OptBoundary>
         optBoundaries;
 
@@ -46,6 +50,9 @@ protected:
 
     const OptTarget
         optTarget;
+
+    T
+        targetValue;
 
 
 
@@ -58,7 +65,11 @@ public:
             OptTarget optTarget = MINIMIZE);
     ~OptBase();
 
+    bool optimise();
+
     void add_finished_calculation(const OptValue &optValue);
+
+    T bad_value() const;
 
     ///@todo some / all of these should maybe be made private / protected
     static void push_todo(const OptValue &optValue);
