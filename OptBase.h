@@ -15,6 +15,7 @@ class OptValue; //forward reference
 class OptBase
 {
 private:
+    ///@todo alls static members need a mutex
     static std::mutex
         mutexQueueTodo,
         mutexQueueCalculated,
@@ -34,6 +35,9 @@ private:
     const std::vector<OptBoundary>
         optBoundaries;
 
+    const unsigned int
+        maxCalculations;
+
     const OptTarget
         optTarget;
 
@@ -43,7 +47,9 @@ private:
 
 public:
     ///@todo OptValues should be OptBoundaries
-    OptBase(const std::vector<OptBoundary> &optBoundaries, OptTarget optTarget);
+    OptBase(const std::vector<OptBoundary> &optBoundaries,
+            unsigned int maxCalculations,
+            OptTarget optTarget = MINIMIZE);
     ~OptBase();
 
     void add_finished_calculation(const OptValue &optValue);

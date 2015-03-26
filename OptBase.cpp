@@ -10,7 +10,10 @@ std::queue<OptValue>
     OptBase::queueCalculated,
     OptBase::queueFinished;
 
-OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries, OptTarget optTarget) :
+OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
+                 unsigned int maxCalculations,
+                 OptTarget optTarget) :
+    maxCalculations(maxCalculations),
     optBoundaries(optBoundaries),
     optTarget(optTarget)
 {

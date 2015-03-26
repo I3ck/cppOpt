@@ -22,4 +22,5 @@ add ways to store data (maybe make this user-implementable aswell or provide sub
 maybe make it possible to work with a set of results instead of a result
 #other
 rename to either cppOpt or heurOpt or similar
+define a namespace
 
