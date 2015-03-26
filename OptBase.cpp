@@ -14,6 +14,7 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
                  unsigned int maxCalculations,
                  OptTarget optTarget) :
     maxCalculations(maxCalculations),
+    currentCalculation(0), ///@todo or start at 1?
     optBoundaries(optBoundaries),
     optTarget(optTarget),
     targetValue(0.0)
@@ -27,9 +28,24 @@ OptBase::~OptBase()
 
 }
 
-bool OptBase::optimise()
+bool OptBase::optimise() ///@todo split this method into two [#1 only put new value onto to-calc queue ||| #2 save the result and move to next queue]
 {
+    OptValue newOptValue;
 
+    if(currentCalculation >= maxCalculations) ///@todo might have to fix this condition
+        return false;
+
+    if(currentCalculation == 0) ///@todo care in case currentCalculation gets initalised with 1
+    {
+        bestCalculation.result = bad_value();
+    }
+
+    if(true) ///@todo currently this is always true, allow algorithms to stop somehow
+    {
+        newOptValue = get_next_value();
+        ///@todo put new value in todo queue
+    }
+    return true;
 }
 
 void OptBase::add_finished_calculation(const OptValue &optValue)

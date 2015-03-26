@@ -48,6 +48,9 @@ protected:
     const unsigned int
         maxCalculations;
 
+    unsigned int
+        currentCalculation;
+
     const OptTarget
         optTarget;
 
@@ -65,7 +68,7 @@ public:
             OptTarget optTarget = MINIMIZE);
     ~OptBase();
 
-    bool optimise();
+    bool optimise(); ///@todo make it clear that this should be run in a loop
 
     void add_finished_calculation(const OptValue &optValue);
 
