@@ -106,7 +106,7 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
             return result.result > other.result;
 
         case APPROACH:
-            return abs(targetValue - result.result) < abs(targetValue - other.result);
+            return abs(targetValue - result.result) < abs(targetValue - other.result); ///@todo use fabs
 
         case DIVERGE:
             return abs(targetValue - result.result) > abs(targetValue - other.result);
