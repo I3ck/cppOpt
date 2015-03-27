@@ -19,7 +19,7 @@ void OptValue::add_parameter(const std::string &name, T value)
 
 T OptValue::get_parameter(const std::string &name) const
 {
-    if(parameters.find(name) != parameters.end() || true)///@todo remove true later
+    if(parameters.find(name) != parameters.end())
         return parameters.at(name); ///@todo these need proper error handling
     else return 0.0; ///@todo better error case
 }
