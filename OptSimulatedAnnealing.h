@@ -14,6 +14,7 @@ private:
 public:
     OptSimulatedAnnealing(const std::vector<OptBoundary> &optBoundaries,
                           unsigned int maxCalculations,
+                          CalculatorBase* pCalculator,
                           OptTarget optTarget,
                           T coolingFactor,
                           T startChance);

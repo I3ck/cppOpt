@@ -5,8 +5,11 @@
 #include <mutex>
 #include <queue>
 #include <limits>
+#include <thread>
+#include <chrono>
 
 #include "defines.h"
+#include "CalculatorBase.h"
 #include "OptValue.h"
 #include "OptBoundary.h"
 
@@ -51,6 +54,9 @@ protected:
     unsigned int
         currentCalculation;
 
+    const CalculatorBase*
+        pCalculator;
+
     const OptTarget
         optTarget;
 
@@ -65,8 +71,10 @@ public:
     ///@todo OptValues should be OptBoundaries
     OptBase(const std::vector<OptBoundary> &optBoundaries,
             unsigned int maxCalculations,
+            CalculatorBase* pCalculator,
             OptTarget optTarget = MINIMIZE);
     ~OptBase();
+
 
     bool optimise(); ///@todo make it clear that this should be run in a loop
 
@@ -76,10 +84,19 @@ public:
 
     bool result_better(const OptValue &result, const OptValue &other) const;
 
+
+
+
+    static void run_optimisations(unsigned int maxThreads);
     ///@todo some / all of these should maybe be made private / protected
+    static void threaded_work();
     static void push_todo(OptValue optValue, OptBase *pOptBase);
     static void push_calculated(OptValue optValue, OptBase *pOptBase);
     static void push_finished(OptValue optValue, OptBase *pOptBase);
+
+    static bool available_todo();
+    static bool available_calculated();
+    static bool available_finished();
 
     static std::pair<OptValue, OptBase*> pop_todo();
     static std::pair<OptValue, OptBase*> pop_calculated();

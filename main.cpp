@@ -3,7 +3,7 @@
 #include "CalculatorBase.h"
 #include "OptSimulatedAnnealing.h"
 
-class MyCalculator : CalculatorBase
+class MyCalculator : public CalculatorBase
 {
 public:
     MyCalculator()
@@ -11,7 +11,7 @@ public:
 
     }
 
-    void calculate(OptValue &optValue)
+    void calculate(OptValue &optValue) const
     {
         optValue.result = 5;
     }
@@ -28,11 +28,13 @@ int main()
     T startChance = 0.25;
     OptBoundary optBoundary(3.0, 10.0, "X");
     optBoundaries.push_back(optBoundary);
-    OptSimulatedAnnealing opt(optBoundaries, maxCalculations, optTarget, coolingFactor, startChance);
-
-
-
     MyCalculator myCalculator;
+
+    OptSimulatedAnnealing opt(optBoundaries, maxCalculations, &myCalculator, optTarget, coolingFactor, startChance);
+
+
+
+
     OptValue optValue;
     std::map <std::string, T> params = {{"a",3}, {"b",4}};
     optValue.set_parameters(params);

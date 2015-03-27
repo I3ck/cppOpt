@@ -14,10 +14,12 @@ std::queue< std::pair<OptValue, OptBase*> >
 
 OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
                  unsigned int maxCalculations,
+                 CalculatorBase* pCalculator,
                  OptTarget optTarget) :
     maxCalculations(maxCalculations),
     currentCalculation(0), ///@todo or start at 1?
     optBoundaries(optBoundaries),
+    pCalculator(pCalculator),
     optTarget(optTarget),
     targetValue(0.0)
 {
@@ -108,6 +110,36 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
     }
 }
 
+void OptBase::run_optimisations(unsigned int maxThreads)
+{
+
+}
+
+void OptBase::threaded_work()
+{
+    while(true) ///@todo there has to be a check whether there still are calculations
+    {
+        if(available_todo())
+        {
+            ///@todo possible race condition here. Make it that pop checks for availability itself (return bool and have the value be a reference which is changed bool pop(out) )
+            ///@todo or add another mutex which only locks for this check mutex availabilityCheck
+            std::pair <OptValue, OptBase*> todo = pop_todo();
+            OptValue optValue = todo.first;
+            OptBase* pOptBase = todo.second;
+
+            pOptBase->pCalculator->calculate(optValue);
+
+
+
+        }
+
+
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10)); ///@todo sleep time must be defineable by library user [maybe add as paramter to run_optimisations]
+    }
+
+}
+
 void OptBase::push_todo(OptValue optValue, OptBase* pOptBase)
 {
     mutexQueueTodo.lock();
@@ -127,6 +159,39 @@ void OptBase::push_finished(OptValue optValue, OptBase *pOptBase)
     mutexQueueFinished.lock();
     queueFinished.push({optValue, pOptBase});
     mutexQueueFinished.unlock();
+}
+
+bool OptBase::available_todo()
+{
+    bool out(false);
+
+    mutexQueueTodo.lock();
+    out = !queueTodo.empty();
+    mutexQueueTodo.unlock();
+
+    return out;
+}
+
+bool OptBase::available_calculated()
+{
+    bool out(false);
+
+    mutexQueueCalculated.lock();
+    out = !queueCalculated.empty();
+    mutexQueueCalculated.unlock();
+
+    return out;
+}
+
+bool OptBase::available_finished()
+{
+    bool out(false);
+
+    mutexQueueFinished.lock();
+    out = !queueFinished.empty();
+    mutexQueueFinished.unlock();
+
+    return out;
 }
 
 std::pair<OptValue, OptBase*> OptBase::pop_todo()

@@ -9,7 +9,7 @@ class CalculatorBase
 {
 public:
     virtual ~CalculatorBase();
-    virtual void calculate(OptValue &optValue) = 0;
+    virtual void calculate(OptValue &optValue) const = 0;
 };
 
 #endif // CALCULATORBASE_H
