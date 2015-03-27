@@ -20,8 +20,11 @@ public:
                           T startChance);
     ~OptSimulatedAnnealing();
 
+    ///@todo most methods here could/should be private
     OptValue get_next_value();
     OptValue random_start_value();
+    void update_temperature();
+    void update_chance();
 };
 
 #endif // OPTSIMULATEDANNEALING_H

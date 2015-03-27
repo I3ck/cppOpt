@@ -24,6 +24,10 @@ OptValue OptSimulatedAnnealing::get_next_value()
     if(previousCalculations.empty())
         return random_start_value();
 
+
+
+    update_temperature();
+    update_chance();
 }
 
 OptValue OptSimulatedAnnealing::random_start_value()
@@ -37,5 +41,16 @@ OptValue OptSimulatedAnnealing::random_start_value()
         optValue.add_parameter(boundary.name, newValue);
     }
     return optValue;
+}
+
+void OptValue::update_temperature()
+{
+    temperature *= coolingFactor;
+}
+
+void OptValue::update_chance()
+{
+    chance *= coolingFactor;
+
 }
 
