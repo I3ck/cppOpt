@@ -5,12 +5,16 @@
 std::mutex
     OptBase::mutexQueueTodo,
     OptBase::mutexQueueCalculated,
-    OptBase::mutexQueueFinished;
+    OptBase::mutexQueueFinished,
+    OptBase::mutexPOptimizers;
 
 std::queue< std::pair<OptValue, OptBase*> >
     OptBase::queueTodo,
     OptBase::queueCalculated,
     OptBase::queueFinished;
+
+std::vector<OptBase*>
+    OptBase::pOptimizers;
 
 OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
                  unsigned int maxCalculations,
@@ -23,8 +27,9 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
     optTarget(optTarget),
     targetValue(0.0)
 {
-
-
+    mutexPOptimizers.lock();
+    pOptimizers.push_back(this);
+    mutexPOptimizers.unlock();
 }
 
 OptBase::~OptBase()
@@ -112,6 +117,10 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
 
 void OptBase::run_optimisations(unsigned int maxThreads)
 {
+    ///@todo
+    ///@todo this is a non-threaded solution and should be fixed
+
+    //for each optimiser, start get_value
 
 }
 

@@ -27,12 +27,16 @@ private:
     static std::mutex
         mutexQueueTodo,
         mutexQueueCalculated,
-        mutexQueueFinished;
+        mutexQueueFinished,
+        mutexPOptimizers;
 
     static std::queue< std::pair<OptValue, OptBase*> >
         queueTodo,
         queueCalculated,
         queueFinished;
+
+    static std::vector <OptBase*>
+        pOptimizers; ///@todo find better name (also update mutex name)
 
     std::mutex
         mutexPreviousCalculations; ///@todo should be protected aswell?
