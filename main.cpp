@@ -42,11 +42,9 @@ int main()
     OptValue optValue;
     std::map <std::string, T> params = {{"a",3}, {"b",4}};
     optValue.set_parameters(params);
-    myCalculator.calculate(optValue);
 
     cout << opt.get_next_value().to_string() << endl;
 
-    cout << optValue.result << endl;
     return 0;
 }
 
