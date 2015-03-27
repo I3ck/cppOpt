@@ -12,7 +12,7 @@ public:
 
     }
 
-    void calculate(OptValue &optValue) const
+    void calculate(OptValue &optValue) const ///@todo make static for easier usage
     {
 #ifdef DEBUG
         std::cout << "DEBUG: in MyCalculator" << std::endl;
@@ -37,13 +37,6 @@ int main()
     OptSimulatedAnnealing opt(optBoundaries, maxCalculations, &myCalculator, optTarget, coolingFactor, startChance);
 
     OptBase::run_optimisations(1);
-
-
-    OptValue optValue;
-    std::map <std::string, T> params = {{"a",3}, {"b",4}};
-    optValue.set_parameters(params);
-
-    cout << opt.get_next_value().to_string() << endl;
 
     return 0;
 }
