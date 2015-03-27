@@ -12,7 +12,7 @@ public:
 
     }
 
-    void calculate(OptValue &optValue) const ///@todo make static for easier usage
+    void calculate(OptValue &optValue) const ///@todo make static for easier usage (may not work like this[static] or at least not help)
     {
 #ifdef DEBUG
         std::cout << "DEBUG: in MyCalculator" << std::endl;
@@ -34,7 +34,7 @@ int main()
     optBoundaries.push_back(optBoundary);
     MyCalculator myCalculator;
 
-    OptSimulatedAnnealing opt(optBoundaries, maxCalculations, &myCalculator, optTarget, coolingFactor, startChance);
+    OptSimulatedAnnealing opt(optBoundaries, maxCalculations, &myCalculator, optTarget, 0.0, coolingFactor, startChance);
 
     OptBase::run_optimisations(1);
 

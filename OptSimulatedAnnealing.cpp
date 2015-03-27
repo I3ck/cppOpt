@@ -4,9 +4,10 @@ OptSimulatedAnnealing::OptSimulatedAnnealing(const std::vector<OptBoundary> &opt
                                              unsigned int maxCalculations,
                                              CalculatorBase *pCalculator,
                                              OptTarget optTarget,
+                                             T targetValue,
                                              T coolingFactor,
                                              T startChance) :
-    OptBase(optBoundaries, maxCalculations, pCalculator, optTarget),
+    OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
     temperature(1.0),
     coolingFactor(coolingFactor),
     chance(startChance)

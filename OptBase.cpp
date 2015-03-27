@@ -19,13 +19,14 @@ std::vector<OptBase*>
 OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
                  unsigned int maxCalculations,
                  CalculatorBase* pCalculator,
-                 OptTarget optTarget) :
+                 OptTarget optTarget,
+                 T targetValue) :
     maxCalculations(maxCalculations),
     currentCalculation(0), ///@todo or start at 1?
     optBoundaries(optBoundaries),
     pCalculator(pCalculator),
     optTarget(optTarget),
-    targetValue(0.0)
+    targetValue(targetValue)
 {
     mutexPOptimizers.lock();
     pOptimizers.push_back(this);

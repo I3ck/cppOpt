@@ -16,6 +16,7 @@ public:
                           unsigned int maxCalculations,
                           CalculatorBase* pCalculator,
                           OptTarget optTarget,
+                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
                           T coolingFactor,
                           T startChance);
     ~OptSimulatedAnnealing();

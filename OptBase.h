@@ -76,7 +76,8 @@ public:
     OptBase(const std::vector<OptBoundary> &optBoundaries,
             unsigned int maxCalculations,
             CalculatorBase* pCalculator,
-            OptTarget optTarget = MINIMIZE);
+            OptTarget optTarget = MINIMIZE,
+            T targetValue = 0.0);
     ~OptBase();
 
 
