@@ -26,13 +26,13 @@ private:
         mutexQueueCalculated,
         mutexQueueFinished;
 
-    static std::queue<OptValue>
+    static std::queue< std::pair<OptValue, OptBase*> >
         queueTodo,
         queueCalculated,
         queueFinished;
 
     std::mutex
-        mutexPreviousCalculations;
+        mutexPreviousCalculations; ///@todo should be protected aswell?
 
 protected:
 
@@ -70,20 +70,20 @@ public:
 
     bool optimise(); ///@todo make it clear that this should be run in a loop
 
-    void add_finished_calculation(const OptValue &optValue);
+    void add_finished_calculation(OptValue optValue, OptBase *pOptBase);
 
     T bad_value() const;
 
     bool result_better(const OptValue &result, const OptValue &other) const;
 
     ///@todo some / all of these should maybe be made private / protected
-    static void push_todo(const OptValue &optValue);
-    static void push_calculated(const OptValue &optValue);
-    static void push_finished(const OptValue &optValue);
+    static void push_todo(OptValue optValue, OptBase *pOptBase);
+    static void push_calculated(OptValue optValue, OptBase *pOptBase);
+    static void push_finished(OptValue optValue, OptBase *pOptBase);
 
-    static OptValue pop_todo();
-    static OptValue pop_calculated();
-    static OptValue pop_finished();
+    static std::pair<OptValue, OptBase *> pop_todo();
+    static std::pair<OptValue, OptBase*> pop_calculated();
+    static std::pair<OptValue, OptBase*> pop_finished();
 };
 
 #endif // OPTBASE_H

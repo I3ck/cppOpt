@@ -5,7 +5,7 @@ std::mutex
     OptBase::mutexQueueCalculated,
     OptBase::mutexQueueFinished;
 
-std::queue<OptValue>
+std::queue< std::pair<OptValue, OptBase*> >
     OptBase::queueTodo,
     OptBase::queueCalculated,
     OptBase::queueFinished;
@@ -48,13 +48,13 @@ bool OptBase::optimise() ///@todo split this method into two [#1 only put new va
     return true;
 }
 
-void OptBase::add_finished_calculation(const OptValue &optValue)
+void OptBase::add_finished_calculation(OptValue optValue, OptBase* pOptBase)
 {
     mutexPreviousCalculations.lock();
     previousCalculations.push_back(optValue);
     mutexPreviousCalculations.unlock();
     mutexQueueFinished.lock();
-    queueFinished.push(optValue);
+    queueFinished.push({optValue, pOptBase});
     mutexQueueFinished.unlock();
 }
 
@@ -103,28 +103,28 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
     }
 }
 
-void OptBase::push_todo(const OptValue &optValue)
+void OptBase::push_todo(OptValue optValue, OptBase* pOptBase)
 {
     mutexQueueTodo.lock();
-    queueTodo.push(optValue);
+    queueTodo.push({optValue, pOptBase});
     mutexQueueTodo.unlock();
 }
 
-void OptBase::push_calculated(const OptValue &optValue)
+void OptBase::push_calculated(OptValue optValue, OptBase *pOptBase)
 {
     mutexQueueCalculated.lock();
-    queueCalculated.push(optValue);
+    queueCalculated.push({optValue, pOptBase});
     mutexQueueCalculated.unlock();
 }
 
-void OptBase::push_finished(const OptValue &optValue)
+void OptBase::push_finished(OptValue optValue, OptBase *pOptBase)
 {
     mutexQueueFinished.lock();
-    queueFinished.push(optValue);
+    queueFinished.push({optValue, pOptBase});
     mutexQueueFinished.unlock();
 }
 
-OptValue OptBase::pop_todo()
+std::pair<OptValue, OptBase*> OptBase::pop_todo()
 {
     mutexQueueTodo.lock();
     auto out = queueTodo.front();
@@ -133,7 +133,7 @@ OptValue OptBase::pop_todo()
     return out;
 }
 
-OptValue OptBase::pop_calculated()
+std::pair<OptValue, OptBase*> OptBase::pop_calculated()
 {
     mutexQueueCalculated.lock();
     auto out = queueCalculated.front();
@@ -142,7 +142,7 @@ OptValue OptBase::pop_calculated()
     return out;
 }
 
-OptValue OptBase::pop_finished()
+std::pair<OptValue, OptBase*> OptBase::pop_finished()
 {
     mutexQueueFinished.lock();
     auto out = queueFinished.front();
