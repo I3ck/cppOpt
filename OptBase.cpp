@@ -118,10 +118,19 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
 void OptBase::run_optimisations(unsigned int maxThreads)
 {
     ///@todo
+
+    //get the first to-calculate value of every optimizer
+    //and push it onto the todo queue
+    mutexPOptimizers.lock();
+    for(const auto &pOptimizer : pOptimizers)
+    {
+        if(pOptimizer->previousCalculations.size() == 0)
+            push_todo(pOptimizer->get_next_value(), pOptimizer);
+    }
+    mutexPOptimizers.unlock();
+
     ///@todo this is a non-threaded solution and should be fixed
-
-    //for each optimiser, start get_value
-
+    threaded_work();
 }
 
 T OptBase::random_factor()
@@ -143,8 +152,21 @@ void OptBase::threaded_work()
 
             pOptBase->pCalculator->calculate(optValue);
 
+            pOptBase->add_finished_calculation(optValue, pOptBase); ///@todo this method should be static (or not need the pointer argument)
 
+            if(pOptBase->previousCalculations.size() > pOptBase->maxCalculations) ///@todo maybe be >=
+                break;
 
+            //only add the next one if there still are more
+            push_todo(pOptBase->get_next_value(), pOptBase);
+
+            ///@todo remove this method and the queue alltogether
+            //push_calculated(optValue, pOptBase);
+
+            ///@todo get rid of the calculated queue
+            ///@todo and directly give the value back to the individual optimizer
+            ///@todo and directly push it onto the finished queue then
+            ///
         }
 
 
