@@ -81,7 +81,7 @@ public:
     static void push_calculated(OptValue optValue, OptBase *pOptBase);
     static void push_finished(OptValue optValue, OptBase *pOptBase);
 
-    static std::pair<OptValue, OptBase *> pop_todo();
+    static std::pair<OptValue, OptBase*> pop_todo();
     static std::pair<OptValue, OptBase*> pop_calculated();
     static std::pair<OptValue, OptBase*> pop_finished();
 };

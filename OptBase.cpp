@@ -1,5 +1,7 @@
 #include "OptBase.h"
 
+///@todo split this file into static and non-static
+
 std::mutex
     OptBase::mutexQueueTodo,
     OptBase::mutexQueueCalculated,
@@ -56,6 +58,9 @@ void OptBase::add_finished_calculation(OptValue optValue, OptBase* pOptBase)
     mutexQueueFinished.lock();
     queueFinished.push({optValue, pOptBase});
     mutexQueueFinished.unlock();
+
+    if(result_better(optValue, bestCalculation))
+        bestCalculation = optValue;
 }
 
 T OptBase::bad_value() const
