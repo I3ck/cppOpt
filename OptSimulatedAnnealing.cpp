@@ -35,22 +35,20 @@ OptValue OptSimulatedAnnealing::random_start_value()
     OptValue optValue;
     for(const auto &boundary : optBoundaries)
     {
-        T randomFactor = rand()/(T)(RAND_MAX); ///@todo make this a method of OptBase
         T range = boundary.max - boundary.min;
-        T newValue = boundary.min + randomFactor * range;
+        T newValue = boundary.min + random_factor() * range;
         optValue.add_parameter(boundary.name, newValue);
     }
     return optValue;
 }
 
-void OptValue::update_temperature()
+void OptSimulatedAnnealing::update_temperature()
 {
     temperature *= coolingFactor;
 }
 
-void OptValue::update_chance()
+void OptSimulatedAnnealing::update_chance()
 {
     chance *= coolingFactor;
-
 }
 

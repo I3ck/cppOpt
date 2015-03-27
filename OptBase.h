@@ -88,6 +88,7 @@ public:
 
 
     static void run_optimisations(unsigned int maxThreads);
+    static T random_factor();
     ///@todo some / all of these should maybe be made private / protected
     static void threaded_work();
     static void push_todo(OptValue optValue, OptBase *pOptBase);

@@ -115,6 +115,11 @@ void OptBase::run_optimisations(unsigned int maxThreads)
 
 }
 
+T OptBase::random_factor()
+{
+    return rand()/(T)(RAND_MAX);
+}
+
 void OptBase::threaded_work()
 {
     while(true) ///@todo there has to be a check whether there still are calculations
