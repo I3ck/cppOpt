@@ -152,6 +152,10 @@ void OptBase::threaded_work()
 
             pOptBase->pCalculator->calculate(optValue);
 
+#ifdef DEBUG
+            std::cout << optValue.to_string() << std::endl;
+#endif
+
             pOptBase->add_finished_calculation(optValue, pOptBase); ///@todo this method should be static (or not need the pointer argument)
 
             if(pOptBase->previousCalculations.size() > pOptBase->maxCalculations) ///@todo maybe be >=

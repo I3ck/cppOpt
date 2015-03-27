@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath> ///@todo only needed for example formula, maybe remove later
 
 #include "CalculatorBase.h"
 #include "OptSimulatedAnnealing.h"
@@ -13,7 +14,7 @@ public:
 
     void calculate(OptValue &optValue) const
     {
-        optValue.result = 5;
+        optValue.result = pow(optValue.get_parameter("X"),2);
     }
 };
 
@@ -26,13 +27,13 @@ int main()
     OptTarget optTarget = MAXIMIZE;
     T coolingFactor = 0.9;
     T startChance = 0.25;
-    OptBoundary optBoundary(3.0, 10.0, "X");
+    OptBoundary optBoundary(-3.0, 10.0, "X");
     optBoundaries.push_back(optBoundary);
     MyCalculator myCalculator;
 
     OptSimulatedAnnealing opt(optBoundaries, maxCalculations, &myCalculator, optTarget, coolingFactor, startChance);
 
-
+    OptBase::run_optimisations(1);
 
 
     OptValue optValue;
