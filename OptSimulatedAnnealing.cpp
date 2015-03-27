@@ -24,10 +24,33 @@ OptValue OptSimulatedAnnealing::get_next_value()
     if(previousCalculations.empty())
         return random_start_value();
 
+    OptValue referenceValue, newValue;
 
+    if(random_factor() < chance)
+        referenceValue = previousCalculations.back();
+
+    else
+        referenceValue = bestCalculation; ///@todo rename bestCalculation to bestOptValue or similar
+
+    for(const auto &boundary : optBoundaries)
+    {
+        ///@todo change logic could be a method
+        T change, range, maxChange;
+
+        range = boundary.max - boundary.min; ///@todo maybe add range method to boundary
+        maxChange = 0.5 * range * temperature;
+        change = random_factor() * maxChange;
+
+        if(rand() % 2)
+            change *= -1.0;
+
+        newValue.add_parameter(boundary.name, referenceValue.get_parameter(boundary.name) + change);
+    }
 
     update_temperature();
     update_chance();
+
+    return newValue;
 }
 
 OptValue OptSimulatedAnnealing::random_start_value()

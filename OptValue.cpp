@@ -16,6 +16,12 @@ void OptValue::add_parameter(const std::string &name, T value)
 {
     parameters[name] = value;
 }
+
+T OptValue::get_parameter(const std::string &name) const
+{
+    return parameters.at(name); ///@todo these need proper error handling
+}
+
 /*
 OptBase* OptValue::get_owner() const
 {

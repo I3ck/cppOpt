@@ -117,7 +117,7 @@ void OptBase::run_optimisations(unsigned int maxThreads)
 
 T OptBase::random_factor()
 {
-    return rand()/(T)(RAND_MAX);
+    return rand()/(T)(RAND_MAX); ///@todo make sure this is properly seeded
 }
 
 void OptBase::threaded_work()

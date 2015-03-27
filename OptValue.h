@@ -34,6 +34,7 @@ public:
     std::map <std::string, T> get_parameters() const;
     void set_parameters(const std::map <std::string, T> &value);
     void add_parameter(const std::string &name, T value);
+    T get_parameter(const std::string &name) const;
 
     //OptBase* get_owner() const;
     //void set_owner(OptBase *value);
