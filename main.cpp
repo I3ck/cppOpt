@@ -14,7 +14,10 @@ public:
 
     void calculate(OptValue &optValue) const
     {
+#ifdef DEBUG
+        std::cout << "DEBUG: in MyCalculator" << std::endl;
         optValue.result = pow(optValue.get_parameter("X"),2);
+#endif
     }
 };
 
@@ -24,7 +27,7 @@ int main()
 {
     std::vector<OptBoundary> optBoundaries;
     unsigned int maxCalculations = 100;
-    OptTarget optTarget = MAXIMIZE;
+    OptTarget optTarget = MINIMIZE;
     T coolingFactor = 0.9;
     T startChance = 0.25;
     OptBoundary optBoundary(-3.0, 10.0, "X");

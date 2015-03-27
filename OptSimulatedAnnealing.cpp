@@ -43,7 +43,10 @@ OptValue OptSimulatedAnnealing::get_next_value()
 
         if(rand() % 2)
             change *= -1.0;
-
+#ifdef DEBUG
+        std::cout << "DEBUG: in simulated annealing" << std::endl;
+        std::cout << "DEBUG: name is " << boundary.name << std::endl;
+#endif
         newValue.add_parameter(boundary.name, referenceValue.get_parameter(boundary.name) + change);
     }
 
@@ -62,6 +65,8 @@ OptValue OptSimulatedAnnealing::random_start_value()
         T newValue = boundary.min + random_factor() * range;
         optValue.add_parameter(boundary.name, newValue);
     }
+    bestCalculation = optValue;
+    bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
     return optValue;
 }
 
