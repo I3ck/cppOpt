@@ -29,17 +29,21 @@ using namespace std;
 int main()
 {
     std::vector<OptBoundary> optBoundaries;
-    unsigned int maxCalculations = 1000;
+    std::vector<OptBoundary> optBoundaries2;
+    unsigned int maxCalculations = 2;
     OptTarget optTarget = APPROACH;
     T coolingFactor = 0.995;
     T startChance = 0.25;
     OptBoundary optBoundary(-3.0, 10.0, "X");
+    OptBoundary optBoundary2(-30.0, -10.0, "X");
     optBoundaries.push_back(optBoundary);
+    optBoundaries2.push_back(optBoundary2);
     MyCalculator myCalculator;
 
     OptSimulatedAnnealing opt(optBoundaries, maxCalculations, &myCalculator, optTarget, 3.0, coolingFactor, startChance);
+    OptSimulatedAnnealing opt2(optBoundaries2, maxCalculations, &myCalculator, optTarget, 3.0, coolingFactor, startChance);
 
-    OptBase::run_optimisations(1);
+    OptBase::run_optimisations(2);
 
     return 0;
 }

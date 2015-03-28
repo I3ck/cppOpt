@@ -98,8 +98,7 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
 
 void OptBase::run_optimisations(unsigned int maxThreads)
 {
-    ///@todo
-
+    ///@todo make this pretty much the only public member
     //get the first to-calculate value of every optimizer
     //and push it onto the todo queue
     mutexPOptimizers.lock();
@@ -110,15 +109,13 @@ void OptBase::run_optimisations(unsigned int maxThreads)
     }
     mutexPOptimizers.unlock();
 
-    ///@todo this is a non-threaded solution and should be fixed
-
     std::vector <std::thread> threads; ///@todo vector best container type? (maybe list is enough)
 
     for (unsigned int i=0; i<maxThreads; ++i)
-        threads.emplace_back(std::thread(std::bind( &OptBase::threaded_work )));
+        threads.emplace_back(  std::thread( std::bind(&OptBase::threaded_work) )  );
 
-    for (auto &t :threads ) ///@todo add proper cooldown here (or counting variable)
-        t.join();
+    for (auto &thread :threads ) ///@todo add proper cooldown here (or counting variable)
+        thread.join();
 }
 
 T OptBase::random_factor()
