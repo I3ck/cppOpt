@@ -26,4 +26,6 @@ define a namespace
 there needs to be a flag to check whether all optimisers are done
 rename Calculator to Solver
 properly seed the random numbers
-
+optimise for speed
+allow logging and other output solutions
+have a static variable which counts the number of running threads. that way its easy to figure out when all are done

@@ -46,6 +46,7 @@ bool OptBase::optimise() ///@todo split this method into two [#1 only put new va
     if(currentCalculation >= maxCalculations) ///@todo might have to fix this condition
         return false;
 
+
     if(currentCalculation == 0) ///@todo care in case currentCalculation gets initalised with 1
     {
         bestCalculation.result = bad_value();
@@ -177,7 +178,7 @@ void OptBase::threaded_work()
 
 
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(10)); ///@todo sleep time must be defineable by library user [maybe add as paramter to run_optimisations]
+        std::this_thread::sleep_for(std::chrono::milliseconds(0)); ///@todo sleep time must be defineable by library user [maybe add as paramter to run_optimisations]
     }
 
 }
