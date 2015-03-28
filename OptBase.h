@@ -66,27 +66,22 @@ protected:
     virtual OptValue get_next_value() = 0;
 
 public:
-    ///@todo OptValues should be OptBoundaries
     OptBase(const std::vector<OptBoundary> &optBoundaries,
             unsigned int maxCalculations,
             CalculatorBase* pCalculator,
             OptTarget optTarget = MINIMIZE,
             T targetValue = 0.0);
+
     ~OptBase();
 
-
-    void add_finished_calculation(OptValue optValue, OptBase *pOptBase);
-
-    T bad_value() const;
-
-    bool result_better(const OptValue &result, const OptValue &other) const;
-
-
-
-
     static void run_optimisations(unsigned int maxThreads);
+
+protected:
+    void add_finished_calculation(OptValue optValue, OptBase *pOptBase);
+    T bad_value() const;
+    bool result_better(const OptValue &result, const OptValue &other) const;
     static T random_factor();
-    ///@todo some / all of these should maybe be made private / protected
+private:
     static void threaded_work();
     static void push_todo(OptValue optValue, OptBase *pOptBase);
     static void push_finished(OptValue optValue, OptBase *pOptBase);
