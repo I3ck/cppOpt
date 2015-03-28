@@ -56,9 +56,6 @@ protected:
     const unsigned int
         maxCalculations;
 
-    unsigned int
-        currentCalculation;
-
     const CalculatorBase*
         pCalculator;
 
@@ -81,8 +78,6 @@ public:
             T targetValue = 0.0);
     ~OptBase();
 
-
-    bool optimise(); ///@todo make it clear that this should be run in a loop
 
     void add_finished_calculation(OptValue optValue, OptBase *pOptBase);
 
