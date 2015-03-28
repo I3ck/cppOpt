@@ -33,14 +33,10 @@ private:
 
     static std::queue< std::pair<OptValue, OptBase*> >
         queueTodo,
-        queueCalculated,
-        queueFinished;
+        queueFinished; ///@todo maybe use vector here
 
     static std::vector <OptBase*>
         pOptimizers; ///@todo find better name (also update mutex name)
-
-    std::mutex
-        mutexPreviousCalculations; ///@todo should be protected aswell?
 
 protected:
 
@@ -93,15 +89,12 @@ public:
     ///@todo some / all of these should maybe be made private / protected
     static void threaded_work();
     static void push_todo(OptValue optValue, OptBase *pOptBase);
-    static void push_calculated(OptValue optValue, OptBase *pOptBase);
     static void push_finished(OptValue optValue, OptBase *pOptBase);
 
     static bool available_todo();
-    static bool available_calculated();
     static bool available_finished();
 
     static std::pair<OptValue, OptBase*> pop_todo();
-    static std::pair<OptValue, OptBase*> pop_calculated();
     static std::pair<OptValue, OptBase*> pop_finished();
 };
 

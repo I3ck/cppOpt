@@ -10,7 +10,6 @@ std::mutex
 
 std::queue< std::pair<OptValue, OptBase*> >
     OptBase::queueTodo,
-    OptBase::queueCalculated,
     OptBase::queueFinished;
 
 std::vector<OptBase*>
@@ -30,7 +29,7 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
     mutexPOptimizers.lock();
     pOptimizers.push_back(this);
     mutexPOptimizers.unlock();
-    srand( time(NULL) + rand() ); ///@todo use mtime or similar | maybe only seed once (on static level)
+    srand( time(NULL) + rand() ); ///@todo maybe only seed once (on static level)
 }
 
 OptBase::~OptBase()
@@ -40,9 +39,8 @@ OptBase::~OptBase()
 
 void OptBase::add_finished_calculation(OptValue optValue, OptBase* pOptBase)
 {
-    mutexPreviousCalculations.lock();
     previousCalculations.push_back(optValue);
-    mutexPreviousCalculations.unlock();
+
     mutexQueueFinished.lock();
     queueFinished.push({optValue, pOptBase});
     mutexQueueFinished.unlock();
@@ -172,13 +170,6 @@ void OptBase::push_todo(OptValue optValue, OptBase* pOptBase)
     mutexQueueTodo.unlock();
 }
 
-void OptBase::push_calculated(OptValue optValue, OptBase *pOptBase)
-{
-    mutexQueueCalculated.lock();
-    queueCalculated.push({optValue, pOptBase});
-    mutexQueueCalculated.unlock();
-}
-
 void OptBase::push_finished(OptValue optValue, OptBase *pOptBase)
 {
     mutexQueueFinished.lock();
@@ -193,17 +184,6 @@ bool OptBase::available_todo()
     mutexQueueTodo.lock();
     out = !queueTodo.empty();
     mutexQueueTodo.unlock();
-
-    return out;
-}
-
-bool OptBase::available_calculated()
-{
-    bool out(false);
-
-    mutexQueueCalculated.lock();
-    out = !queueCalculated.empty();
-    mutexQueueCalculated.unlock();
 
     return out;
 }
@@ -225,15 +205,6 @@ std::pair<OptValue, OptBase*> OptBase::pop_todo()
     auto out = queueTodo.front();
     queueTodo.pop();
     mutexQueueTodo.unlock();
-    return out;
-}
-
-std::pair<OptValue, OptBase*> OptBase::pop_calculated()
-{
-    mutexQueueCalculated.lock();
-    auto out = queueCalculated.front();
-    queueCalculated.pop();
-    mutexQueueCalculated.unlock();
     return out;
 }
 
