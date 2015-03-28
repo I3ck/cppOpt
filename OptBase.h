@@ -7,6 +7,7 @@
 #include <limits>
 #include <thread>
 #include <chrono>
+#include <cmath>
 
 #include "defines.h"
 #include "CalculatorBase.h"
