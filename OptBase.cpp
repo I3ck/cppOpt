@@ -31,6 +31,7 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
     mutexPOptimizers.lock();
     pOptimizers.push_back(this);
     mutexPOptimizers.unlock();
+    srand( time(NULL) + rand() ); ///@todo use mtime or similar | maybe only seed once (on static level)
 }
 
 OptBase::~OptBase()
