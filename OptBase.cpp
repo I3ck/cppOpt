@@ -111,7 +111,14 @@ void OptBase::run_optimisations(unsigned int maxThreads)
     mutexPOptimizers.unlock();
 
     ///@todo this is a non-threaded solution and should be fixed
-    threaded_work();
+
+    std::vector <std::thread> threads; ///@todo vector best container type? (maybe list is enough)
+
+    for (unsigned int i=0; i<maxThreads; ++i)
+        threads.emplace_back(std::thread(std::bind( &OptBase::threaded_work )));
+
+    for (auto &t :threads ) ///@todo add proper cooldown here (or counting variable)
+        t.join();
 }
 
 T OptBase::random_factor()
