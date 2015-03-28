@@ -29,9 +29,9 @@ using namespace std;
 int main()
 {
     std::vector<OptBoundary> optBoundaries;
-    unsigned int maxCalculations = 100;
+    unsigned int maxCalculations = 1000;
     OptTarget optTarget = APPROACH;
-    T coolingFactor = 0.9;
+    T coolingFactor = 0.995;
     T startChance = 0.25;
     OptBoundary optBoundary(-3.0, 10.0, "X");
     optBoundaries.push_back(optBoundary);
