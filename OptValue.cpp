@@ -41,7 +41,7 @@ std::string OptValue::to_string_values() const
     for(const auto &parameter : parameters)
         out += std::to_string(parameter.second) + " ";
 
-    out += "\n";
+    out += std::to_string(result);
 
     return out;
 }
@@ -55,7 +55,7 @@ std::string OptValue::to_string_header() const
     for(const auto &parameter : parameters)
         out += parameter.first + " ";
 
-    out += "\n";
+    out += "RESULT";
 
     return out;
 }

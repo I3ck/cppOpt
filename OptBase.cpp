@@ -154,7 +154,7 @@ bool OptBase::enable_logging(const std::string &pathLogFile, const OptBoundaries
     logFile.open(pathLogFile);
     if(logFile.fail())
         return false;
-    logFile << optBoundaries.to_string(); ///@todo remove newline from method and endl here
+    logFile << optBoundaries.to_string() << "RESULT\n";
     loggingEnabled = true;
     return true;
 }
@@ -276,7 +276,7 @@ std::pair<OptValue, OptBase*> OptBase::pop_finished()
 void OptBase::log(const OptValue &optValue)
 {
     mutexLogFile.lock();
-    logFile << optValue.to_string_values(); ///@todo remove newline from methods and endl here
+    logFile << optValue.to_string_values() << std::endl;
     mutexLogFile.unlock();
 }
 

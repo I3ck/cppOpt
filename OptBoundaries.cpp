@@ -37,8 +37,6 @@ std::string OptBoundaries::to_string() const
     for(const auto &boundary : optBoundaries)
         out += boundary.name + " ";
 
-    out += "\n";
-
     return out;
 }
 
