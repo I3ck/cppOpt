@@ -15,10 +15,14 @@ OptSimulatedAnnealing::OptSimulatedAnnealing(const std::vector<OptBoundary> &opt
 
 }
 
+//------------------------------------------------------------------------------
+
 OptSimulatedAnnealing::~OptSimulatedAnnealing()
 {
 
 }
+
+//------------------------------------------------------------------------------
 
 OptValue OptSimulatedAnnealing::get_next_value()
 {
@@ -57,6 +61,8 @@ OptValue OptSimulatedAnnealing::get_next_value()
     return newValue;
 }
 
+//------------------------------------------------------------------------------
+
 OptValue OptSimulatedAnnealing::random_start_value()
 {
     OptValue optValue;
@@ -71,13 +77,19 @@ OptValue OptSimulatedAnnealing::random_start_value()
     return optValue;
 }
 
+//------------------------------------------------------------------------------
+
 void OptSimulatedAnnealing::update_temperature()
 {
     temperature *= coolingFactor;
 }
 
+//------------------------------------------------------------------------------
+
 void OptSimulatedAnnealing::update_chance()
 {
     chance *= coolingFactor;
 }
+
+//------------------------------------------------------------------------------
 

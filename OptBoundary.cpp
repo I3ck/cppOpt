@@ -8,6 +8,8 @@ OptBoundary::OptBoundary(T min, T max, const std::string &name) :
 
 }
 
+//------------------------------------------------------------------------------
+
 OptBoundary::~OptBoundary()
 {
 

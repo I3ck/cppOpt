@@ -15,6 +15,8 @@ std::queue< std::pair<OptValue, OptBase*> >
 std::vector<OptBase*>
     OptBase::pOptimizers;
 
+//------------------------------------------------------------------------------
+
 OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
                  unsigned int maxCalculations,
                  CalculatorBase* pCalculator,
@@ -32,10 +34,14 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
     srand( time(NULL) + rand() ); ///@todo maybe only seed once (on static level)
 }
 
+//------------------------------------------------------------------------------
+
 OptBase::~OptBase()
 {
 
 }
+
+//------------------------------------------------------------------------------
 
 void OptBase::add_finished_calculation(OptValue optValue, OptBase* pOptBase)
 {
@@ -48,6 +54,8 @@ void OptBase::add_finished_calculation(OptValue optValue, OptBase* pOptBase)
     if(result_better(optValue, bestCalculation))
         bestCalculation = optValue;
 }
+
+//------------------------------------------------------------------------------
 
 T OptBase::bad_value() const
 {
@@ -73,6 +81,8 @@ T OptBase::bad_value() const
     }
 }
 
+//------------------------------------------------------------------------------
+
 bool OptBase::result_better(const OptValue &result, const OptValue &other) const
 {
     switch(optTarget)
@@ -93,6 +103,8 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
             return result.result < other.result;
     }
 }
+
+//------------------------------------------------------------------------------
 
 void OptBase::run_optimisations(unsigned int maxThreads)
 {
@@ -116,10 +128,14 @@ void OptBase::run_optimisations(unsigned int maxThreads)
         thread.join();
 }
 
+//------------------------------------------------------------------------------
+
 T OptBase::random_factor()
 {
     return rand()/(T)(RAND_MAX); ///@todo make sure this is properly seeded
 }
+
+//------------------------------------------------------------------------------
 
 void OptBase::threaded_work()
 {
@@ -163,6 +179,8 @@ void OptBase::threaded_work()
 
 }
 
+//------------------------------------------------------------------------------
+
 void OptBase::push_todo(OptValue optValue, OptBase* pOptBase)
 {
     mutexQueueTodo.lock();
@@ -170,12 +188,16 @@ void OptBase::push_todo(OptValue optValue, OptBase* pOptBase)
     mutexQueueTodo.unlock();
 }
 
+//------------------------------------------------------------------------------
+
 void OptBase::push_finished(OptValue optValue, OptBase *pOptBase)
 {
     mutexQueueFinished.lock();
     queueFinished.push({optValue, pOptBase});
     mutexQueueFinished.unlock();
 }
+
+//------------------------------------------------------------------------------
 
 bool OptBase::available_todo()
 {
@@ -188,6 +210,8 @@ bool OptBase::available_todo()
     return out;
 }
 
+//------------------------------------------------------------------------------
+
 bool OptBase::available_finished()
 {
     bool out(false);
@@ -199,6 +223,8 @@ bool OptBase::available_finished()
     return out;
 }
 
+//------------------------------------------------------------------------------
+
 std::pair<OptValue, OptBase*> OptBase::pop_todo()
 {
     mutexQueueTodo.lock();
@@ -208,6 +234,8 @@ std::pair<OptValue, OptBase*> OptBase::pop_todo()
     return out;
 }
 
+//------------------------------------------------------------------------------
+
 std::pair<OptValue, OptBase*> OptBase::pop_finished()
 {
     mutexQueueFinished.lock();
@@ -216,4 +244,6 @@ std::pair<OptValue, OptBase*> OptBase::pop_finished()
     mutexQueueFinished.unlock();
     return out;
 }
+
+//------------------------------------------------------------------------------
 
