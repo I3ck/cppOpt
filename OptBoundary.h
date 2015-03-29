@@ -5,6 +5,9 @@
 
 #include "defines.h"
 
+
+///@todo make this a OptBoundaries class with add methods
+///@todo that way the splitting would be easier aswell
 class OptBoundary
 {
 public:
