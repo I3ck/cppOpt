@@ -6,7 +6,8 @@ std::mutex
     OptBase::mutexQueueTodo,
     OptBase::mutexQueueCalculated,
     OptBase::mutexQueueFinished,
-    OptBase::mutexPOptimizers;
+    OptBase::mutexPOptimizers,
+    OptBase::mutexLogFile;
 
 std::queue< std::pair<OptValue, OptBase*> >
     OptBase::queueTodo,
@@ -14,6 +15,12 @@ std::queue< std::pair<OptValue, OptBase*> >
 
 std::set<OptBase*>
     OptBase::pOptimizers;
+
+bool
+    OptBase::loggingEnabled(false);
+
+std::ofstream
+    OptBase::logFile;
 
 //------------------------------------------------------------------------------
 
@@ -142,6 +149,18 @@ unsigned int OptBase::number_optimizers()
 
 //------------------------------------------------------------------------------
 
+bool OptBase::enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries)
+{
+    logFile.open(pathLogFile);
+    if(logFile.fail())
+        return false;
+    logFile << optBoundaries.to_string(); ///@todo remove newline from method and endl here
+    loggingEnabled = true;
+    return true;
+}
+
+//------------------------------------------------------------------------------
+
 T OptBase::random_factor()
 {
     return rand()/(T)(RAND_MAX);
@@ -162,6 +181,9 @@ void OptBase::threaded_work()
             OptBase* pOptBase = todo.second;
 
             pOptBase->pCalculator->calculate(optValue);
+
+            if(loggingEnabled)
+                log(optValue);
 
 #ifdef DEBUG
             std::cout << optValue.to_string_values();
@@ -247,6 +269,15 @@ std::pair<OptValue, OptBase*> OptBase::pop_finished()
     queueFinished.pop();
     mutexQueueFinished.unlock();
     return out;
+}
+
+//------------------------------------------------------------------------------
+
+void OptBase::log(const OptValue &optValue)
+{
+    mutexLogFile.lock();
+    logFile << optValue.to_string_values(); ///@todo remove newline from methods and endl here
+    mutexLogFile.unlock();
 }
 
 //------------------------------------------------------------------------------

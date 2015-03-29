@@ -9,6 +9,7 @@
 #include <thread>
 #include <chrono>
 #include <cmath>
+#include <fstream>
 
 #include "defines.h"
 #include "CalculatorBase.h"
@@ -30,7 +31,8 @@ private:
         mutexQueueTodo,
         mutexQueueCalculated,
         mutexQueueFinished,
-        mutexPOptimizers;
+        mutexPOptimizers,
+        mutexLogFile;
 
     static std::queue< std::pair<OptValue, OptBase*> >
         queueTodo,
@@ -38,6 +40,12 @@ private:
 
     static std::set <OptBase*>
         pOptimizers; ///@todo find better name (also update mutex name)
+
+    static bool
+        loggingEnabled; //only set with one method, no mutex required
+
+    static std::ofstream
+        logFile;
 
 protected:
     std::vector<OptValue>
@@ -74,6 +82,7 @@ public:
 
     static void run_optimisations(unsigned int maxThreads);
     static unsigned int number_optimizers();
+    static bool enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries);
 
 protected:
     virtual OptValue get_next_value() = 0;
@@ -97,6 +106,8 @@ private:
 
     static std::pair<OptValue, OptBase*> pop_todo();
     static std::pair<OptValue, OptBase*> pop_finished();
+
+    static void log(const OptValue &optValue);
 };
 
 #endif // OPTBASE_H

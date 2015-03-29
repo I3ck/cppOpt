@@ -30,6 +30,20 @@ void OptBoundaries::add_boundary(const OptBoundary &optBoundary)
 
 //------------------------------------------------------------------------------
 
+std::string OptBoundaries::to_string() const
+{
+    std::string out("");
+
+    for(const auto &boundary : optBoundaries)
+        out += boundary.name + " ";
+
+    out += "\n";
+
+    return out;
+}
+
+//------------------------------------------------------------------------------
+
 std::vector<OptBoundary>::iterator OptBoundaries::begin()
 {
     return optBoundaries.begin();

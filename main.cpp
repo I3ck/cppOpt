@@ -21,7 +21,6 @@ public:
 #ifdef DEBUG
         std::cout << "DEBUG: result: " << optValue.result << std::endl;
 #endif
-        log_result("log.test", optValue); ///@todo not thread safe yet
     }
 };
 
@@ -45,6 +44,7 @@ int main()
     OptSimulatedAnnealing opt(optBoundaries, maxCalculations, &myCalculator, optTarget, 3.0, coolingFactor, startChance);
     OptSimulatedAnnealing opt2(optBoundaries2, maxCalculations, &myCalculator, optTarget, 3.0, coolingFactor, startChance);
 
+    OptBase::enable_logging("log.test", optBoundaries); ///@todo usage of optBoundaries might not be clear here
     OptBase::run_optimisations(2);
 
     return 0;
