@@ -12,7 +12,7 @@ std::queue< std::pair<OptValue, OptBase*> >
     OptBase::queueTodo,
     OptBase::queueFinished;
 
-std::vector<OptBase*>
+std::set<OptBase*>
     OptBase::pOptimizers;
 
 //------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
     targetValue(targetValue)
 {
     mutexPOptimizers.lock();
-    pOptimizers.push_back(this);
+    pOptimizers.insert(this);
     mutexPOptimizers.unlock();
     srand( time(NULL) + rand() ); ///@todo maybe only seed once (on static level)
 }
@@ -38,6 +38,9 @@ OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
 
 OptBase::~OptBase()
 {
+    mutexPOptimizers.lock();
+    pOptimizers.erase( pOptimizers.find(this) );
+    mutexPOptimizers.unlock();
 
 }
 

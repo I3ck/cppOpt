@@ -1,7 +1,8 @@
 #ifndef OPTBASE_H
 #define OPTBASE_H
 
-#include <vector>
+#include <vector> ///@todo may not be needed anymore
+#include <set>
 #include <mutex>
 #include <queue>
 #include <limits>
@@ -34,7 +35,7 @@ private:
         queueTodo,
         queueFinished; ///@todo maybe use vector here
 
-    static std::vector <OptBase*>
+    static std::set <OptBase*>
         pOptimizers; ///@todo find better name (also update mutex name)
 
 protected:
