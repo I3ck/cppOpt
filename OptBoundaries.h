@@ -24,7 +24,7 @@ public:
     std::vector<OptBoundary>::iterator begin();
     std::vector<OptBoundary>::iterator end();
 
-    const std::vector<OptBoundary>::iterator& cbegin();
-    const std::vector<OptBoundary>::iterator& cend();
+    const std::vector<OptBoundary>::const_iterator cbegin() const;
+    const std::vector<OptBoundary>::const_iterator cend() const;
 };
 #endif // OPTBOUNDARIES_H

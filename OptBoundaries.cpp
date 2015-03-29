@@ -44,14 +44,14 @@ std::vector<OptBoundary>::iterator OptBoundaries::end()
 
 //------------------------------------------------------------------------------
 
-const std::vector<OptBoundary>::iterator& OptBoundaries::cbegin()
+const std::vector<OptBoundary>::const_iterator OptBoundaries::cbegin() const
 {
     return optBoundaries.cbegin();
 }
 
 //------------------------------------------------------------------------------
 
-const std::vector<OptBoundary>::iterator& OptBoundaries::cend()
+const std::vector<OptBoundary>::const_iterator OptBoundaries::cend() const
 {
     return optBoundaries.cend();
 }

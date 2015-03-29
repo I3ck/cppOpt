@@ -37,12 +37,12 @@ OptValue OptSimulatedAnnealing::get_next_value()
     else
         referenceValue = bestCalculation; ///@todo rename bestCalculation to bestOptValue or similar
 
-    for(const auto &boundary : optBoundaries)
+    for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
     {
         ///@todo change logic could be a method
         T change, range, maxChange;
 
-        range = boundary.max - boundary.min; ///@todo maybe add range method to boundary
+        range = boundary->max - boundary->min; ///@todo maybe add range method to boundary
         maxChange = 0.5 * range * temperature;
         change = random_factor() * maxChange;
 
@@ -50,9 +50,9 @@ OptValue OptSimulatedAnnealing::get_next_value()
             change *= -1.0;
 #ifdef DEBUG
         std::cout << "DEBUG: in simulated annealing" << std::endl;
-        std::cout << "DEBUG: name is " << boundary.name << std::endl;
+        std::cout << "DEBUG: name is " << boundary->name << std::endl;
 #endif
-        newValue.add_parameter(boundary.name, referenceValue.get_parameter(boundary.name) + change);
+        newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
     }
 
     update_temperature();
@@ -66,11 +66,11 @@ OptValue OptSimulatedAnnealing::get_next_value()
 OptValue OptSimulatedAnnealing::random_start_value()
 {
     OptValue optValue;
-    for(const auto &boundary : optBoundaries)
+    for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
     {
-        T range = boundary.max - boundary.min;
-        T newValue = boundary.min + random_factor() * range;
-        optValue.add_parameter(boundary.name, newValue);
+        T range = boundary->max - boundary->min;
+        T newValue = boundary->min + random_factor() * range;
+        optValue.add_parameter(boundary->name, newValue);
     }
     bestCalculation = optValue;
     bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
