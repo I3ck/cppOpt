@@ -72,6 +72,7 @@ public:
     ~OptBase();
 
     static void run_optimisations(unsigned int maxThreads);
+    static unsigned int number_optimizers();
 
 protected:
     virtual OptValue get_next_value() = 0;

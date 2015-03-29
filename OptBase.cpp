@@ -41,7 +41,6 @@ OptBase::~OptBase()
     mutexPOptimizers.lock();
     pOptimizers.erase( pOptimizers.find(this) );
     mutexPOptimizers.unlock();
-
 }
 
 //------------------------------------------------------------------------------
@@ -128,6 +127,17 @@ void OptBase::run_optimisations(unsigned int maxThreads)
 
     for (auto &thread :threads ) ///@todo add proper cooldown here (or counting variable)
         thread.join();
+}
+
+//------------------------------------------------------------------------------
+
+unsigned int OptBase::number_optimizers()
+{
+    unsigned int out(0);
+    mutexPOptimizers.lock();
+    out = pOptimizers.size();
+    mutexPOptimizers.unlock();
+    return out;
 }
 
 //------------------------------------------------------------------------------
