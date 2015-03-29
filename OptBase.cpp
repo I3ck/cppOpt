@@ -108,7 +108,6 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
 
 void OptBase::run_optimisations(unsigned int maxThreads)
 {
-    ///@todo make this pretty much the only public member
     //get the first to-calculate value of every optimizer
     //and push it onto the todo queue
     mutexPOptimizers.lock();
@@ -132,7 +131,7 @@ void OptBase::run_optimisations(unsigned int maxThreads)
 
 T OptBase::random_factor()
 {
-    return rand()/(T)(RAND_MAX); ///@todo make sure this is properly seeded
+    return rand()/(T)(RAND_MAX);
 }
 
 //------------------------------------------------------------------------------
@@ -162,14 +161,6 @@ void OptBase::threaded_work()
 
             //only add the next one if there still are more
             push_todo(pOptBase->get_next_value(), pOptBase);
-
-            ///@todo remove this method and the queue alltogether
-            //push_calculated(optValue, pOptBase);
-
-            ///@todo get rid of the calculated queue
-            ///@todo and directly give the value back to the individual optimizer
-            ///@todo and directly push it onto the finished queue then
-            ///
         }
 
 

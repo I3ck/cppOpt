@@ -34,16 +34,6 @@ T OptValue::get_parameter(const std::string &name) const
 
 //------------------------------------------------------------------------------
 
-/*
-OptBase* OptValue::get_owner() const
-{
-    return owner;
-}
-void OptValue::set_owner(OptBase *value)
-{
-    owner = value;
-}
-*/
 std::string OptValue::to_string() const
 {
     std::string out("");

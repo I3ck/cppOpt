@@ -21,7 +21,7 @@ public:
                           T startChance);
     ~OptSimulatedAnnealing();
 
-    ///@todo most methods here could/should be private
+private:
     OptValue get_next_value();
     OptValue random_start_value();
     void update_temperature();
