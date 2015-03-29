@@ -1,6 +1,6 @@
 #include "OptSimulatedAnnealing.h"
 
-OptSimulatedAnnealing::OptSimulatedAnnealing(const std::vector<OptBoundary> &optBoundaries,
+OptSimulatedAnnealing::OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                                              unsigned int maxCalculations,
                                              CalculatorBase *pCalculator,
                                              OptTarget optTarget,

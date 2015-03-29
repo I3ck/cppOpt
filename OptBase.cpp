@@ -17,7 +17,7 @@ std::set<OptBase*>
 
 //------------------------------------------------------------------------------
 
-OptBase::OptBase(const std::vector<OptBoundary> &optBoundaries,
+OptBase::OptBase(const OptBoundaries &optBoundaries,
                  unsigned int maxCalculations,
                  CalculatorBase* pCalculator,
                  OptTarget optTarget,

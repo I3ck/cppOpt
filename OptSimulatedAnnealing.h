@@ -12,7 +12,7 @@ private:
         chance;
 
 public:
-    OptSimulatedAnnealing(const std::vector<OptBoundary> &optBoundaries,
+    OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                           unsigned int maxCalculations,
                           CalculatorBase* pCalculator,
                           OptTarget optTarget,

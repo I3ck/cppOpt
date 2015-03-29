@@ -14,6 +14,7 @@
 #include "CalculatorBase.h"
 #include "OptValue.h"
 #include "OptBoundary.h"
+#include "OptBoundaries.h"
 
 #ifdef DEBUG
     #include <iostream>
@@ -45,7 +46,7 @@ protected:
     OptValue
         bestCalculation;
 
-    const std::vector<OptBoundary>
+    const OptBoundaries
         optBoundaries;
 
     const unsigned int
@@ -63,7 +64,7 @@ protected:
 // METHODS ---------------------------------------------------------------------
 
 public:
-    OptBase(const std::vector<OptBoundary> &optBoundaries,
+    OptBase(const OptBoundaries &optBoundaries,
             unsigned int maxCalculations,
             CalculatorBase* pCalculator,
             OptTarget optTarget = MINIMIZE,

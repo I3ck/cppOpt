@@ -30,7 +30,7 @@ int main()
 {
     std::vector<OptBoundary> optBoundaries;
     std::vector<OptBoundary> optBoundaries2;
-    unsigned int maxCalculations = 2;
+    unsigned int maxCalculations = 2000;
     OptTarget optTarget = APPROACH;
     T coolingFactor = 0.995;
     T startChance = 0.25;
