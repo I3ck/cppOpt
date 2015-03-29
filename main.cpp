@@ -21,6 +21,7 @@ public:
 #ifdef DEBUG
         std::cout << "DEBUG: result: " << optValue.result << std::endl;
 #endif
+        log_result("log.test", optValue); ///@todo not thread safe yet
     }
 };
 
@@ -31,7 +32,7 @@ int main()
     OptBoundaries
         optBoundaries,
         optBoundaries2;
-    unsigned int maxCalculations = 2000;
+    unsigned int maxCalculations = 2;
     OptTarget optTarget = APPROACH;
     T coolingFactor = 0.995;
     T startChance = 0.25;
