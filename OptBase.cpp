@@ -164,7 +164,7 @@ void OptBase::threaded_work()
             pOptBase->pCalculator->calculate(optValue);
 
 #ifdef DEBUG
-            std::cout << optValue.to_string() << std::endl;
+            std::cout << optValue.to_string_values();
 #endif
 
             pOptBase->add_finished_calculation(optValue, pOptBase); ///@todo this method should be static (or not need the pointer argument)

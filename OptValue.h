@@ -29,7 +29,8 @@ public:
     void add_parameter(const std::string &name, T value);
     T get_parameter(const std::string &name) const;
 
-    std::string to_string() const; ///@todo also add overloads for streams etc.
+    std::string to_string_values() const; ///@todo also add overloads for streams etc.
+    std::string to_string_header() const; ///@todo also add overloads for streams etc.
 };
 
 #endif // OPTVALUE_H

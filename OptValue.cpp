@@ -34,14 +34,28 @@ T OptValue::get_parameter(const std::string &name) const
 
 //------------------------------------------------------------------------------
 
-///@todo change that it always prints one line
-///@todo add three modes: only header, only values and both (or make header printing method of Boundary)
-std::string OptValue::to_string() const
+std::string OptValue::to_string_values() const
 {
     std::string out("");
 
     for(const auto &parameter : parameters)
-        out += parameter.first + " = " + std::to_string(parameter.second) + "\n";
+        out += std::to_string(parameter.second) + " ";
+
+    out += "\n";
+
+    return out;
+}
+
+//------------------------------------------------------------------------------
+
+std::string OptValue::to_string_header() const
+{
+    std::string out("");
+
+    for(const auto &parameter : parameters)
+        out += parameter.first + " ";
+
+    out += "\n";
 
     return out;
 }

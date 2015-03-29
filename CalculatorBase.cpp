@@ -11,7 +11,7 @@ CalculatorBase::~CalculatorBase()
 void CalculatorBase::log_result(const std::string &pathLogFile, const OptValue &optValue) const
 {
     std::ofstream of(pathLogFile.c_str(), std::ios_base::app);
-    of << optValue.to_string() << std::endl;
+    of << optValue.to_string_values() << std::endl;
     of.close();
 }
 
