@@ -24,7 +24,7 @@ add_library(
 
 add_executable(
         example_1
-        src/main.cpp
+        src/example_1.cpp
 )
 
 target_link_libraries(example_1 cppOpt)
