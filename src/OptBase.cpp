@@ -25,6 +25,9 @@ bool
 std::ofstream
     OptBase::logFile;
 
+unsigned int
+    OptBase::waitTimeMs(0);
+
 //------------------------------------------------------------------------------
 
 OptBase::OptBase(const OptBoundaries &optBoundaries,
@@ -164,6 +167,13 @@ bool OptBase::enable_logging(const std::string &pathLogFile, const OptBoundaries
 
 //------------------------------------------------------------------------------
 
+void OptBase::set_wait_time(unsigned int timeInMs)
+{
+    waitTimeMs = timeInMs;
+}
+
+//------------------------------------------------------------------------------
+
 T OptBase::random_factor()
 {
     return rand()/(T)(RAND_MAX);
@@ -200,10 +210,7 @@ void OptBase::threaded_work()
             //only add the next one if there still are more
             push_todo(pOptBase->get_next_value(), pOptBase);
         }
-
-
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(0)); ///@todo sleep time must be defineable by library user [maybe add as paramter to run_optimisations]
+        std::this_thread::sleep_for(std::chrono::milliseconds(waitTimeMs));
     }
 
 }
