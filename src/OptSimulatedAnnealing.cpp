@@ -51,10 +51,7 @@ OptValue OptSimulatedAnnealing::get_next_value()
 
         if(rand() % 2)
             change *= -1.0;
-#ifdef DEBUG
-        std::cout << "DEBUG: in simulated annealing" << std::endl;
-        std::cout << "DEBUG: name is " << boundary->name << std::endl;
-#endif
+
         newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
     }
 

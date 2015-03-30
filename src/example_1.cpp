@@ -1,5 +1,10 @@
+/**
+  * \brief first example showing the usage of simulated annealing
+  *        to find the minimum of x^2
+  */
+
 #include <iostream>
-#include <cmath> ///@todo only needed for example formula, maybe remove later
+#include <cmath>
 
 #include "CalculatorBase.h"
 #include "OptSimulatedAnnealing.h"
@@ -30,14 +35,14 @@ int main()
     MyCalculator myCalculator;
 
     //number of calculations
-    unsigned int maxCalculations = 30;
+    unsigned int maxCalculations = 300;
     
     //we want to find the minimum
     OptTarget optTarget = MINIMIZE;
     
     //how fast the simulated annealing algorithm slows down
     //http://en.wikipedia.org/wiki/Simulated_annealing
-    T coolingFactor = 0.995;
+    T coolingFactor = 0.95;
     
     //the chance in the beginning to follow bad solutions
     T startChance = 0.25;

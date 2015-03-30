@@ -197,10 +197,6 @@ void OptBase::threaded_work()
             if(loggingEnabled)
                 log(optValue);
 
-#ifdef DEBUG
-            std::cout << optValue.to_string_values();
-#endif
-
             pOptBase->add_finished_calculation(optValue);
 
             if(pOptBase->previousCalculations.size() > pOptBase->maxCalculations) ///@todo maybe be >=
