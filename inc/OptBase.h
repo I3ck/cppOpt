@@ -87,7 +87,7 @@ public:
 
     ~OptBase();
 
-    static void run_optimisations(unsigned int maxThreads);
+    static void run_optimisations(unsigned int maxThreads = 1);
 
     static unsigned int number_optimizers();
 
