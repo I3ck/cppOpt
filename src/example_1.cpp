@@ -59,7 +59,7 @@ int main()
 
     //enable logging
     //boundaries object required to know the parameters names for the header
-    OptBase::enable_logging("log.test", optBoundaries);
+    OptBase::enable_logging("example_1.log", optBoundaries);
 
     //let's go
     OptBase::run_optimisations();
