@@ -14,7 +14,7 @@ public:
 
     }
 
-    void calculate(OptValue &optValue) const ///@todo make static for easier usage (may not work like this[static] or at least not help)
+    void calculate(OptValue &optValue) const
     {
 #ifdef DEBUG
         std::cout << "DEBUG: in MyCalculator" << std::endl;

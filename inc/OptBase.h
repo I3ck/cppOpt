@@ -1,7 +1,8 @@
 #ifndef OPTBASE_H
 #define OPTBASE_H
 
-#include <vector> ///@todo may not be needed anymore
+#include <vector>
+#include <list>
 #include <set>
 #include <mutex>
 #include <queue>
@@ -87,12 +88,15 @@ public:
     ~OptBase();
 
     static void run_optimisations(unsigned int maxThreads);
+
     static unsigned int number_optimizers();
+
     static bool enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries);
+
     static void set_wait_time(unsigned int timeInMs);
 
 protected:
-    virtual OptValue get_next_value() = 0;
+    virtual OptValue get_next_value() = 0; //must be implemented by algorithm derived classes
 
     void add_finished_calculation(OptValue optValue);
 

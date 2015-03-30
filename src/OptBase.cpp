@@ -1,7 +1,5 @@
 #include "OptBase.h"
 
-///@todo split this file into static and non-static
-
 namespace cppOpt
 {
 
@@ -28,7 +26,7 @@ std::ofstream
 unsigned int
     OptBase::waitTimeMs(0);
 
-//------------------------------------------------------------------------------
+// PUBLIC ----------------------------------------------------------------------
 
 OptBase::OptBase(const OptBoundaries &optBoundaries,
                  unsigned int maxCalculations,
@@ -44,7 +42,7 @@ OptBase::OptBase(const OptBoundaries &optBoundaries,
     mutexPOptimizers.lock();
     pOptimizers.insert(this);
     mutexPOptimizers.unlock();
-    srand( time(NULL) + rand() ); ///@todo maybe only seed once (on static level)
+    srand( time(NULL) + rand() );
 }
 
 //------------------------------------------------------------------------------
@@ -57,6 +55,59 @@ OptBase::~OptBase()
 }
 
 //------------------------------------------------------------------------------
+
+void OptBase::run_optimisations(unsigned int maxThreads)
+{
+    //get the first to-calculate value of every optimizer
+    //and push it onto the todo queue
+    mutexPOptimizers.lock();
+    for(const auto &pOptimizer : pOptimizers)
+    {
+        if(pOptimizer->previousCalculations.size() == 0)
+            push_todo(pOptimizer->get_next_value(), pOptimizer);
+    }
+    mutexPOptimizers.unlock();
+
+    std::list <std::thread> threads;
+
+    for (unsigned int i=0; i<maxThreads; ++i)
+        threads.emplace_back(  std::thread( std::bind(&OptBase::threaded_work) )  );
+
+    for (auto &thread :threads)
+        thread.join();
+}
+
+//------------------------------------------------------------------------------
+
+unsigned int OptBase::number_optimizers()
+{
+    unsigned int out(0);
+    mutexPOptimizers.lock();
+    out = pOptimizers.size();
+    mutexPOptimizers.unlock();
+    return out;
+}
+
+//------------------------------------------------------------------------------
+
+bool OptBase::enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries)
+{
+    logFile.open(pathLogFile);
+    if(logFile.fail())
+        return false;
+    logFile << optBoundaries.to_string() << "RESULT\n";
+    loggingEnabled = true;
+    return true;
+}
+
+//------------------------------------------------------------------------------
+
+void OptBase::set_wait_time(unsigned int timeInMs)
+{
+    waitTimeMs = timeInMs;
+}
+
+// PROTECTED -------------------------------------------------------------------
 
 void OptBase::add_finished_calculation(OptValue optValue)
 {
@@ -119,58 +170,6 @@ bool OptBase::result_better(const OptValue &result, const OptValue &other) const
     }
 }
 
-//------------------------------------------------------------------------------
-
-void OptBase::run_optimisations(unsigned int maxThreads)
-{
-    //get the first to-calculate value of every optimizer
-    //and push it onto the todo queue
-    mutexPOptimizers.lock();
-    for(const auto &pOptimizer : pOptimizers)
-    {
-        if(pOptimizer->previousCalculations.size() == 0)
-            push_todo(pOptimizer->get_next_value(), pOptimizer);
-    }
-    mutexPOptimizers.unlock();
-
-    std::vector <std::thread> threads; ///@todo vector best container type? (maybe list is enough)
-
-    for (unsigned int i=0; i<maxThreads; ++i)
-        threads.emplace_back(  std::thread( std::bind(&OptBase::threaded_work) )  );
-
-    for (auto &thread :threads ) ///@todo add proper cooldown here (or counting variable)
-        thread.join();
-}
-
-//------------------------------------------------------------------------------
-
-unsigned int OptBase::number_optimizers()
-{
-    unsigned int out(0);
-    mutexPOptimizers.lock();
-    out = pOptimizers.size();
-    mutexPOptimizers.unlock();
-    return out;
-}
-
-//------------------------------------------------------------------------------
-
-bool OptBase::enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries)
-{
-    logFile.open(pathLogFile);
-    if(logFile.fail())
-        return false;
-    logFile << optBoundaries.to_string() << "RESULT\n";
-    loggingEnabled = true;
-    return true;
-}
-
-//------------------------------------------------------------------------------
-
-void OptBase::set_wait_time(unsigned int timeInMs)
-{
-    waitTimeMs = timeInMs;
-}
 
 //------------------------------------------------------------------------------
 
@@ -179,7 +178,7 @@ T OptBase::random_factor()
     return rand()/(T)(RAND_MAX);
 }
 
-//------------------------------------------------------------------------------
+// PRIVATE ---------------------------------------------------------------------
 
 void OptBase::threaded_work()
 {
