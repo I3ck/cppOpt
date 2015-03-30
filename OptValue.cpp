@@ -1,5 +1,8 @@
 #include "OptValue.h"
 
+namespace cppOpt
+{
+
 std::atomic <unsigned int> OptValue::maxId(0); ///@todo unused?
 
 //------------------------------------------------------------------------------
@@ -77,3 +80,4 @@ OptValue::~OptValue()
 
 //------------------------------------------------------------------------------
 
+} // namespace cppOpt

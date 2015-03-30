@@ -21,6 +21,9 @@
     #include <iostream>
 #endif
 
+namespace cppOpt
+{
+
 class OptBase
 {
 
@@ -109,5 +112,7 @@ private:
 
     static void log(const OptValue &optValue);
 };
+
+} // namespace cppOpt
 
 #endif // OPTBASE_H

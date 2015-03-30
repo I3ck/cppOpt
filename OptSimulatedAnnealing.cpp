@@ -1,5 +1,8 @@
 #include "OptSimulatedAnnealing.h"
 
+namespace cppOpt
+{
+
 OptSimulatedAnnealing::OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                                              unsigned int maxCalculations,
                                              CalculatorBase *pCalculator,
@@ -93,3 +96,4 @@ void OptSimulatedAnnealing::update_chance()
 
 //------------------------------------------------------------------------------
 
+} // namespace cppOpt

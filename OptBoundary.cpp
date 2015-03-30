@@ -1,5 +1,8 @@
 #include "OptBoundary.h"
 
+namespace cppOpt
+{
+
 OptBoundary::OptBoundary(T min, T max, const std::string &name) :
     min(min),
     max(max),
@@ -14,4 +17,6 @@ OptBoundary::~OptBoundary()
 {
 
 }
+
+} // namespace cppOpt
 

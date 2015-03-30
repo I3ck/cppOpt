@@ -8,6 +8,9 @@
 #include "defines.h"
 #include "OptBoundary.h"
 
+namespace cppOpt
+{
+
 class OptBoundaries
 {
 private:
@@ -29,4 +32,7 @@ public:
     const std::vector<OptBoundary>::const_iterator cbegin() const;
     const std::vector<OptBoundary>::const_iterator cend() const;
 };
+
+} // namespace cppOpt
+
 #endif // OPTBOUNDARIES_H

@@ -7,6 +7,8 @@
 
 #include "defines.h"
 
+namespace cppOpt
+{
 
 class OptValue
 {
@@ -32,5 +34,7 @@ public:
     std::string to_string_values() const; ///@todo also add overloads for streams etc.
     std::string to_string_header() const; ///@todo also add overloads for streams etc.
 };
+
+} // namespace cppOpt
 
 #endif // OPTVALUE_H

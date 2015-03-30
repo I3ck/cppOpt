@@ -1,5 +1,7 @@
 #include "OptBoundaries.h"
 
+namespace cppOpt
+{
 
 OptBoundaries::OptBoundaries()
 {
@@ -69,3 +71,5 @@ const std::vector<OptBoundary>::const_iterator OptBoundaries::cend() const
 }
 
 //------------------------------------------------------------------------------
+
+} // namespace cppOpt

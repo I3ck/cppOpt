@@ -5,6 +5,9 @@
 
 #define T double
 
+namespace cppOpt
+{
+
 enum OptTarget
 {
     MINIMIZE,
@@ -12,6 +15,8 @@ enum OptTarget
     APPROACH,
     DIVERGE
 };
+
+} // namespace cppOpt
 
 #endif // DEFINES
 

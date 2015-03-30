@@ -3,6 +3,9 @@
 
 #include "OptBase.h"
 
+namespace cppOpt
+{
+
 class OptSimulatedAnnealing : public OptBase
 {
 private:
@@ -29,3 +32,5 @@ private:
 };
 
 #endif // OPTSIMULATEDANNEALING_H
+
+} // namespace cppOpt

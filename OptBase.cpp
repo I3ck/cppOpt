@@ -2,6 +2,9 @@
 
 ///@todo split this file into static and non-static
 
+namespace cppOpt
+{
+
 std::mutex
     OptBase::mutexQueueTodo,
     OptBase::mutexQueueCalculated,
@@ -282,3 +285,4 @@ void OptBase::log(const OptValue &optValue)
 
 //------------------------------------------------------------------------------
 
+} // namespace cppOpt

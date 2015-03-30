@@ -4,6 +4,8 @@
 #include "CalculatorBase.h"
 #include "OptSimulatedAnnealing.h"
 
+using namespace cppOpt;
+
 class MyCalculator : public CalculatorBase
 {
 public:

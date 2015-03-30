@@ -5,6 +5,8 @@
 
 #include "defines.h"
 
+namespace cppOpt
+{
 
 ///@todo make this a OptBoundaries class with add methods
 ///@todo that way the splitting would be easier aswell
@@ -22,5 +24,7 @@ public:
     OptBoundary(T min, T max, const std::string &name);
     ~OptBoundary();
 };
+
+} // namespace cppOpt
 
 #endif // OPTBOUNDARY_H
