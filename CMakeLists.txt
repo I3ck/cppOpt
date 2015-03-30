@@ -34,3 +34,10 @@ add_executable(
 )
 
 target_link_libraries(example_1 cppOpt)
+
+add_executable(
+        example_2
+        src/example_2.cpp
+)
+
+target_link_libraries(example_2 cppOpt)
