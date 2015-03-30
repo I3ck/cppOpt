@@ -4,6 +4,7 @@
 *.test
 *.swp
 *.user
+*.so
 bin/
 obj/
 build/
@@ -14,4 +15,7 @@ CMakeFiles/
 Makefile
 cmake_install.cmake
 cppOpt
+
+#binaries
+example_1
 
