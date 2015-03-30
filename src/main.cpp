@@ -9,20 +9,9 @@ using namespace cppOpt;
 class MyCalculator : public CalculatorBase
 {
 public:
-    MyCalculator()
-    {
-
-    }
-
     void calculate(OptValue &optValue) const
     {
-#ifdef DEBUG
-        std::cout << "DEBUG: in MyCalculator" << std::endl;
-#endif
         optValue.result = pow(optValue.get_parameter("X"),2);
-#ifdef DEBUG
-        std::cout << "DEBUG: result: " << optValue.result << std::endl;
-#endif
     }
 };
 
