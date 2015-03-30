@@ -90,7 +90,7 @@ public:
 protected:
     virtual OptValue get_next_value() = 0;
 
-    void add_finished_calculation(OptValue optValue, OptBase *pOptBase);
+    void add_finished_calculation(OptValue optValue);
 
     T bad_value() const;
 

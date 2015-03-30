@@ -2,8 +2,6 @@
 ##saving data
 add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
 #other
-rename to either cppOpt or heurOpt or similar
-define a namespace
 rename Calculator to Solver
 optimise for speed
 allow logging and other output solutions

@@ -55,12 +55,12 @@ OptBase::~OptBase()
 
 //------------------------------------------------------------------------------
 
-void OptBase::add_finished_calculation(OptValue optValue, OptBase* pOptBase)
+void OptBase::add_finished_calculation(OptValue optValue)
 {
     previousCalculations.push_back(optValue);
 
     mutexQueueFinished.lock();
-    queueFinished.push({optValue, pOptBase});
+    queueFinished.push({optValue, this});
     mutexQueueFinished.unlock();
 
     if(result_better(optValue, bestCalculation))
@@ -173,7 +173,7 @@ T OptBase::random_factor()
 
 void OptBase::threaded_work()
 {
-    while(true) ///@todo there has to be a check whether there still are calculations
+    while(true)
     {
         if(available_todo())
         {
@@ -192,7 +192,7 @@ void OptBase::threaded_work()
             std::cout << optValue.to_string_values();
 #endif
 
-            pOptBase->add_finished_calculation(optValue, pOptBase); ///@todo this method should be static (or not need the pointer argument)
+            pOptBase->add_finished_calculation(optValue);
 
             if(pOptBase->previousCalculations.size() > pOptBase->maxCalculations) ///@todo maybe be >=
                 break;
