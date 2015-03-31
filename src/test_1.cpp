@@ -101,4 +101,52 @@ TEST_CASE("Simulated Annealing") {
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 0.001);
     }
+
+    SECTION("Approaching") {
+        OptTarget optTarget = APPROACH;
+
+        OptSimulatedAnnealing opt(optBoundaries,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  3.3, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < 0.001);
+    }
+
+    SECTION("Diverging1") {
+        OptTarget optTarget = DIVERGE;
+
+        OptSimulatedAnnealing opt(optBoundaries,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  -100.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 0.001);
+    }
+
+    SECTION("Diverging2") {
+        OptTarget optTarget = DIVERGE;
+
+        OptSimulatedAnnealing opt(optBoundaries,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  100.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < 0.001);
+    }
 }
