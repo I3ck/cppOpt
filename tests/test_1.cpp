@@ -13,6 +13,8 @@
 using namespace std;
 using namespace cppOpt;
 
+#define DELTA 0.01
+
 
 TEST_CASE("Boundary") {
 
@@ -84,7 +86,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
 
     SECTION("Maximizing") {
@@ -100,7 +102,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
 
     SECTION("Approaching") {
@@ -116,7 +118,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < DELTA);
     }
 
     SECTION("Diverging1") {
@@ -132,7 +134,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
 
     SECTION("Diverging2") {
@@ -148,7 +150,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
 }
 
@@ -185,7 +187,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
 
     SECTION("Maximizing") {
@@ -202,7 +204,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
 
     SECTION("Approaching") {
@@ -219,7 +221,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < DELTA);
     }
 
     SECTION("Diverging1") {
@@ -236,7 +238,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
 
     SECTION("Diverging2") {
@@ -253,6 +255,123 @@ TEST_CASE("Threshold Accepting") {
 
         OptBase::run_optimisations();
 
-        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < 0.001);
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
+    }
+}
+
+TEST_CASE("Multithreading / Boundary Splitting") {
+    class MySolver : public SolverBase
+    {
+    public:
+        void calculate(OptValue &optValue) const
+        {
+            optValue.result = pow(optValue.get_parameter("X"),2);
+        }
+    };
+
+    OptBoundaries
+            optBoundaries1,
+            optBoundaries2,
+            optBoundaries3,
+            optBoundaries4;
+
+    optBoundaries1.add_boundary(-5.0, -4.0, "X");
+    optBoundaries2.add_boundary(-3.0, -1.0, "X");
+    optBoundaries3.add_boundary(-0.5, 0.5, "X");
+    optBoundaries4.add_boundary(5.0, 50.0, "X");
+
+    MySolver myCalculator;
+    unsigned int maxCalculations = 300;
+    T coolingFactor = 0.95;
+    T startChance = 0.25;
+
+    SECTION("Minimizing") {
+        OptTarget optTarget = MINIMIZE;
+
+        OptSimulatedAnnealing opt1(optBoundaries1,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptSimulatedAnnealing opt2(optBoundaries2,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptSimulatedAnnealing opt3(optBoundaries3,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptSimulatedAnnealing opt4(optBoundaries4,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt1.get_best_calculation().result - 16.0) < DELTA);
+        REQUIRE(fabs(opt2.get_best_calculation().result - 1.0) < DELTA);
+        REQUIRE(fabs(opt3.get_best_calculation().result - 0.0) < DELTA);
+        REQUIRE(fabs(opt4.get_best_calculation().result - 25.0) < DELTA);
+
+        REQUIRE(fabs(OptBase::get_best_calculation(optTarget, 0.0).result - 0.0) < DELTA);
+    }
+
+    SECTION("Maximizing") {
+        OptTarget optTarget = MAXIMIZE;
+
+        OptSimulatedAnnealing opt1(optBoundaries1,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptSimulatedAnnealing opt2(optBoundaries2,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptSimulatedAnnealing opt3(optBoundaries3,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptSimulatedAnnealing opt4(optBoundaries4,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt1.get_best_calculation().result - 25.0) < DELTA);
+        REQUIRE(fabs(opt2.get_best_calculation().result - 9.0) < DELTA);
+        REQUIRE(fabs(opt3.get_best_calculation().result - 0.25) < DELTA);
+        REQUIRE(fabs(opt4.get_best_calculation().result - 2500.0) < DELTA);
+
+        REQUIRE(fabs(OptBase::get_best_calculation(optTarget, 0.0).result - 2500.0) < DELTA);
     }
 }
