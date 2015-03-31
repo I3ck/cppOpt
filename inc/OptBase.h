@@ -12,7 +12,7 @@
 #include <cmath>
 #include <fstream>
 
-#include "defines.h"
+#include "config.h"
 #include "OptTarget.h"
 #include "SolverBase.h"
 #include "OptValue.h"

@@ -5,7 +5,7 @@
 #include <vector> ///@todo maybe switch to a list?
 ///@todo or use a map   map <BOUNDARY_NAME, BOUNDARY>
 
-#include "defines.h"
+#include "config.h"
 #include "OptBoundary.h"
 
 namespace cppOpt

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "defines.h"
+#include "config.h"
 
 namespace cppOpt
 {

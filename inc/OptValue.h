@@ -5,7 +5,7 @@
 #include <map>
 #include <atomic>
 
-#include "defines.h"
+#include "config.h"
 
 namespace cppOpt
 {

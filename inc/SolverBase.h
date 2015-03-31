@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "defines.h"
+#include "config.h"
 #include "OptValue.h"
 
 namespace cppOpt
