@@ -13,7 +13,7 @@
 #include <fstream>
 
 #include "defines.h"
-#include "CalculatorBase.h"
+#include "SolverBase.h"
 #include "OptValue.h"
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
@@ -69,7 +69,7 @@ protected:
     const unsigned int
         maxCalculations;
 
-    const CalculatorBase*
+    const SolverBase*
         pCalculator;
 
     const OptTarget
@@ -83,7 +83,7 @@ protected:
 public:
     OptBase(const OptBoundaries &optBoundaries,
             unsigned int maxCalculations,
-            CalculatorBase* pCalculator,
+            SolverBase* pCalculator,
             OptTarget optTarget = MINIMIZE,
             T targetValue = 0.0);
 

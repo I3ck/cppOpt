@@ -1,9 +1,9 @@
-#include "CalculatorBase.h"
+#include "SolverBase.h"
 
 namespace cppOpt
 {
 
-CalculatorBase::~CalculatorBase()
+SolverBase::~SolverBase()
 {
 
 }

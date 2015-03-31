@@ -20,7 +20,7 @@ aux_source_directory(
 add_library(
         cppOpt
         SHARED
-        src/CalculatorBase.cpp
+        src/SolverBase.cpp
         src/OptBase.cpp
         src/OptBoundaries.cpp
         src/OptBoundary.cpp

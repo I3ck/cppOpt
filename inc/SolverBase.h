@@ -9,10 +9,10 @@
 namespace cppOpt
 {
 
-class CalculatorBase
+class SolverBase
 {
 public:
-    virtual ~CalculatorBase();
+    virtual ~SolverBase();
     virtual void calculate(OptValue &optValue) const = 0;
 };
 

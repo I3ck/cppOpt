@@ -7,12 +7,12 @@
 #include <iostream>
 #include <cmath>
 
-#include "CalculatorBase.h"
+#include "SolverBase.h"
 #include "OptSimulatedAnnealing.h"
 
 using namespace cppOpt;
 
-class MyCalculator : public CalculatorBase
+class MySolver : public SolverBase
 {
 public:
     //define your own calculation
@@ -42,7 +42,7 @@ int main()
     optBoundaries4.add_boundary(2.5, 5.0, "X");
 
     //instansiate your calculator
-    MyCalculator myCalculator;
+    MySolver myCalculator;
 
     //number of calculations
     unsigned int maxCalculations = 300;
