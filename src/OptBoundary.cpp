@@ -18,5 +18,12 @@ OptBoundary::~OptBoundary()
 
 }
 
+//------------------------------------------------------------------------------
+
+T OptBoundary::range() const
+{
+    return max - min;
+}
+
 } // namespace cppOpt
 

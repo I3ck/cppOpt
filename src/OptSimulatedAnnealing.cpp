@@ -45,8 +45,7 @@ OptValue OptSimulatedAnnealing::get_next_value()
         ///@todo change logic could be a method
         T change, range, maxChange;
 
-        range = boundary->max - boundary->min; ///@todo maybe add range method to boundary
-        maxChange = 0.5 * range * temperature;
+        maxChange = 0.5 * boundary->range() * temperature;
         change = random_factor() * maxChange;
 
         if(rand() % 2)

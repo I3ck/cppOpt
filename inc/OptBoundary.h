@@ -23,6 +23,8 @@ public:
 
     OptBoundary(T min, T max, const std::string &name);
     ~OptBoundary();
+
+    T range() const;
 };
 
 } // namespace cppOpt
