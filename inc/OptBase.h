@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include "defines.h"
+#include "OptTarget.h"
 #include "SolverBase.h"
 #include "OptValue.h"
 #include "OptBoundary.h"
