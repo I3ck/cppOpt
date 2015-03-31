@@ -11,5 +11,3 @@ method to get the best result
 all result better usages have to pass the targetValue, otherwise they will fail on usage (simply remove the default value)
 make it possible to get the best result of an algorithm (to easily test them later)
 add a file to fest all algorithms by letting them minimize /maximize etc. a problem and have their result be close to some value
-not all tests are working yet
-currently the algorithms can leave their boundaries (prevent this)

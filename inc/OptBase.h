@@ -110,6 +110,8 @@ protected:
 
     T bad_value() const;
 
+    bool valid(const OptValue &optValue) const;
+
     static T random_factor();
 
 private:

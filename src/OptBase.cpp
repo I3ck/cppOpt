@@ -182,6 +182,21 @@ T OptBase::bad_value() const
 
 //------------------------------------------------------------------------------
 
+bool OptBase::valid(const OptValue &optValue) const
+{
+    for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+    {
+        if(
+        optValue.get_parameter(boundary->name) < boundary->min
+        ||
+        optValue.get_parameter(boundary->name) > boundary->max)
+            return false;
+    }
+    return true;
+}
+
+//------------------------------------------------------------------------------
+
 bool OptBase::result_better(const OptValue &result, const OptValue &other, OptTarget optTarget, T targetValue)
 {
     switch(optTarget)

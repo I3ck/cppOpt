@@ -40,18 +40,24 @@ OptValue OptSimulatedAnnealing::get_next_value()
     else
         referenceValue = bestCalculation; ///@todo rename bestCalculation to bestOptValue or similar
 
-    for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+    while(true)
     {
-        ///@todo change logic could be a method
-        T change, maxChange;
+        newValue = OptValue();
+        for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+        {
+            ///@todo change logic could be a method
+            T change, maxChange;
 
-        maxChange = 0.5 * boundary->range() * temperature;
-        change = random_factor() * maxChange;
+            maxChange = 0.5 * boundary->range() * temperature;
+            change = random_factor() * maxChange;
 
-        if(rand() % 2)
-            change *= -1.0;
+            if(rand() % 2)
+                change *= -1.0;
 
-        newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
+            newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
+        }
+        if(valid(newValue))
+            break;
     }
 
     update_temperature();
