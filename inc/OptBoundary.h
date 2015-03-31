@@ -8,7 +8,6 @@
 namespace cppOpt
 {
 
-///@todo that way the splitting would be easier aswell (or don't add splitting?)
 class OptBoundary
 {
 public:

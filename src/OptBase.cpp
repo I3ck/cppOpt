@@ -111,7 +111,6 @@ void OptBase::set_wait_time(unsigned int timeInMs)
 
 //------------------------------------------------------------------------------
 
-///@todo should also require the targetValue (at least with defaulted value)
 OptValue OptBase::get_best_calculation(OptTarget optTarget, T targetValue)
 {
     OptValue out;

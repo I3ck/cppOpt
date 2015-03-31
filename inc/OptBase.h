@@ -46,7 +46,7 @@ private:
         finishedCalculations;
 
     static std::set <OptBase*>
-        pOptimizers; ///@todo find better name (also update mutex name)
+        pOptimizers;
 
     static bool
         loggingEnabled; //only set with one method, no mutex required
