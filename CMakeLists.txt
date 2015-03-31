@@ -7,6 +7,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
 
 include_directories(
         inc/
@@ -19,7 +20,7 @@ aux_source_directory(
 
 add_library(
         cppOpt
-        SHARED
+        STATIC
         src/SolverBase.cpp
         src/OptBase.cpp
         src/OptBoundaries.cpp
@@ -42,3 +43,10 @@ add_executable(
 )
 
 target_link_libraries(example_2 cppOpt)
+
+add_executable(
+        test_1
+        src/test_1.cpp
+)
+
+target_link_libraries(test_1 cppOpt)
