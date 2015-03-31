@@ -1,8 +1,13 @@
 #define CATCH_CONFIG_MAIN
 #include "../dependencies/Catch.h" //https://github.com/philsquared/Catch
 
+#include <cmath>
+
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
+#include "SolverBase.h"
+#include "OptSimulatedAnnealing.h"
+
 
 using namespace std;
 using namespace cppOpt;
@@ -44,5 +49,56 @@ TEST_CASE("Boundaries") {
 
         optBoundaries.add_boundary(OptBoundary(1.0, 3.0, "test"));
         REQUIRE(optBoundaries.size() == 2);
+    }
+}
+
+TEST_CASE("Simulated Annealing") {
+    class MySolver : public SolverBase
+    {
+    public:
+        void calculate(OptValue &optValue) const
+        {
+            optValue.result = pow(optValue.get_parameter("X"),2);
+        }
+    };
+
+    OptBoundaries optBoundaries;
+    optBoundaries.add_boundary(-5.0, 5.0, "X");
+
+    MySolver myCalculator;
+    unsigned int maxCalculations = 300;
+    T coolingFactor = 0.95;
+    T startChance = 0.25;
+
+    SECTION("Minimizing") {
+        OptTarget optTarget = MINIMIZE;
+
+        OptSimulatedAnnealing opt(optBoundaries,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < 0.001);
+    }
+
+    SECTION("Maximizing") {
+        OptTarget optTarget = MAXIMIZE;
+
+        OptSimulatedAnnealing opt(optBoundaries,
+                                  maxCalculations,
+                                  &myCalculator,
+                                  optTarget,
+                                  0.0, //only required if approaching / diverging
+                                  coolingFactor,
+                                  startChance);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 0.001);
     }
 }
