@@ -26,6 +26,8 @@ public:
 
     std::string to_string() const;
 
+    size_t size() const;
+
     std::vector<OptBoundary>::iterator begin();
     std::vector<OptBoundary>::iterator end();
 

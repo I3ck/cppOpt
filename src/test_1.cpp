@@ -2,6 +2,7 @@
 #include "../dependencies/Catch.h" //https://github.com/philsquared/Catch
 
 #include "OptBoundary.h"
+#include "OptBoundaries.h"
 
 using namespace std;
 using namespace cppOpt;
@@ -24,5 +25,24 @@ TEST_CASE("Boundary") {
 
         OptBoundary optBoundary2(1.0, 10.0, "test");
         REQUIRE(optBoundary2.range() == 9.0);
+    }
+}
+
+TEST_CASE("Boundaries") {
+
+    SECTION("Constructor") {
+        OptBoundaries optBoundaries;
+    }
+
+    SECTION("Adding") {
+        OptBoundaries optBoundaries;
+
+        REQUIRE(optBoundaries.size() == 0);
+
+        optBoundaries.add_boundary(1.0, 3.0, "test");
+        REQUIRE(optBoundaries.size() == 1);
+
+        optBoundaries.add_boundary(OptBoundary(1.0, 3.0, "test"));
+        REQUIRE(optBoundaries.size() == 2);
     }
 }

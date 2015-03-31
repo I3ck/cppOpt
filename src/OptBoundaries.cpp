@@ -44,6 +44,13 @@ std::string OptBoundaries::to_string() const
 
 //------------------------------------------------------------------------------
 
+size_t OptBoundaries::size() const
+{
+    return optBoundaries.size();
+}
+
+//------------------------------------------------------------------------------
+
 std::vector<OptBoundary>::iterator OptBoundaries::begin()
 {
     return optBoundaries.begin();
