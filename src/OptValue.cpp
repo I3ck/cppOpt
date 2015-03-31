@@ -67,6 +67,7 @@ std::string OptValue::to_string_header() const
 
 OptValue::OptValue()
 {
+    ///@todo unused currently, can be removed?
     id = maxId;
     maxId++; ///@todo either add a way to reset these or don't make them static atomic and let the library user take care of it
 }

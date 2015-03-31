@@ -69,12 +69,12 @@ OptValue OptThresholdAccepting::get_next_value()
 
     OptValue center;
 
-    if(result_better(previousCalculations.back(), optValueReference, optTarget))
+    if(result_better(previousCalculations.back(), optValueReference, optTarget, targetValue))
         optValueReference = previousCalculations.back();
 
     OptValue compareValue = compare_value();
 
-    if(result_better(previousCalculations.back(), compareValue, optTarget))
+    if(result_better(previousCalculations.back(), compareValue, optTarget, targetValue))
         optValueConfigurationC = previousCalculations.back();
 
     center = optValueConfigurationC;

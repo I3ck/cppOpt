@@ -112,7 +112,7 @@ void OptBase::set_wait_time(unsigned int timeInMs)
 //------------------------------------------------------------------------------
 
 ///@todo should also require the targetValue (at least with defaulted value)
-OptValue OptBase::get_best_calculation(OptTarget optTarget)
+OptValue OptBase::get_best_calculation(OptTarget optTarget, T targetValue)
 {
     OptValue out;
     mutexFinishedCalculations.lock();
@@ -126,7 +126,7 @@ OptValue OptBase::get_best_calculation(OptTarget optTarget)
     out = finishedCalculations[0].first;
 
     for(const auto &finishedCalculation : finishedCalculations)
-        if(result_better(finishedCalculation.first, out, optTarget))
+        if(result_better(finishedCalculation.first, out, optTarget, targetValue))
             out = finishedCalculation.first;
 
     mutexFinishedCalculations.unlock();
@@ -150,7 +150,7 @@ void OptBase::add_finished_calculation(OptValue optValue)
     finishedCalculations.push_back({optValue, this});
     mutexFinishedCalculations.unlock();
 
-    if(result_better(optValue, bestCalculation, optTarget))
+    if(result_better(optValue, bestCalculation, optTarget, targetValue))
         bestCalculation = optValue;
 }
 

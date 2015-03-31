@@ -97,12 +97,14 @@ public:
 
     static void set_wait_time(unsigned int timeInMs);
 
-    static OptValue get_best_calculation(OptTarget optTarget);
+    //targetValue won't be used when maximizing or minimizing
+    static OptValue get_best_calculation(OptTarget optTarget, T targetValue);
 
     OptValue get_best_calculation() const;
 
 protected:
-    static bool result_better(const OptValue &result, const OptValue &other, OptTarget optTarget, T targetValue = 0.0);
+    //targetValue won't be used when maximizing or minimizing
+    static bool result_better(const OptValue &result, const OptValue &other, OptTarget optTarget, T targetValue);
 
     virtual OptValue get_next_value() = 0; //must be implemented by algorithm derived classes
 
