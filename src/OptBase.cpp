@@ -72,10 +72,10 @@ void OptBase::run_optimisations(unsigned int maxThreads)
 
     std::list <std::thread> threads;
 
-    for (unsigned int i=0; i<maxThreads; ++i)
+    for(unsigned int i=0; i<maxThreads; ++i)
         threads.emplace_back(  std::thread( std::bind(&OptBase::threaded_work) )  );
 
-    for (auto &thread :threads)
+    for(auto &thread :threads)
         thread.join();
 }
 
@@ -109,6 +109,29 @@ void OptBase::set_wait_time(unsigned int timeInMs)
     waitTimeMs = timeInMs;
 }
 
+//------------------------------------------------------------------------------
+
+OptValue OptBase::get_best_calculation(OptTarget optTarget)
+{
+    OptValue out;
+    mutexFinishedCalculations.lock();
+
+    if(finishedCalculations.size() == 0)
+    {
+        mutexFinishedCalculations.unlock();
+        return out;
+    }
+
+    out = finishedCalculations[0].first;
+
+    for(const auto &finishedCalculation : finishedCalculations)
+        if(result_better(finishedCalculation.first, out, optTarget))
+            out = finishedCalculation.first;
+
+    mutexFinishedCalculations.unlock();
+    return out;
+}
+
 // PROTECTED -------------------------------------------------------------------
 
 void OptBase::add_finished_calculation(OptValue optValue)
@@ -119,7 +142,7 @@ void OptBase::add_finished_calculation(OptValue optValue)
     finishedCalculations.push_back({optValue, this});
     mutexFinishedCalculations.unlock();
 
-    if(result_better(optValue, bestCalculation))
+    if(result_better(optValue, bestCalculation, optTarget))
         bestCalculation = optValue;
 }
 
@@ -151,7 +174,7 @@ T OptBase::bad_value() const
 
 //------------------------------------------------------------------------------
 
-bool OptBase::result_better(const OptValue &result, const OptValue &other) const
+bool OptBase::result_better(const OptValue &result, const OptValue &other, OptTarget optTarget, T targetValue)
 {
     switch(optTarget)
     {

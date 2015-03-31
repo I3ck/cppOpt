@@ -99,6 +99,11 @@ int main()
     //let's go
     OptBase::run_optimisations();
 
+    //print result
+    OptValue best = OptBase::get_best_calculation(optTarget);
+    cout << best.to_string_header() << endl;
+    cout << best.to_string_values() << endl;
+
     return 0;
 }
 
