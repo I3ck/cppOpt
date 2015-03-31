@@ -99,6 +99,8 @@ public:
 
     static OptValue get_best_calculation(OptTarget optTarget);
 
+    OptValue get_best_calculation() const;
+
 protected:
     static bool result_better(const OptValue &result, const OptValue &other, OptTarget optTarget, T targetValue = 0.0);
 

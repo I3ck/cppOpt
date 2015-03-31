@@ -132,6 +132,13 @@ OptValue OptBase::get_best_calculation(OptTarget optTarget)
     return out;
 }
 
+//------------------------------------------------------------------------------
+
+OptValue OptBase::get_best_calculation() const
+{
+   return bestCalculation;
+}
+
 // PROTECTED -------------------------------------------------------------------
 
 void OptBase::add_finished_calculation(OptValue optValue)
