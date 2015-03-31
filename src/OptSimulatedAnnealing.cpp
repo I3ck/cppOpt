@@ -43,7 +43,7 @@ OptValue OptSimulatedAnnealing::get_next_value()
     for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
     {
         ///@todo change logic could be a method
-        T change, range, maxChange;
+        T change, maxChange;
 
         maxChange = 0.5 * boundary->range() * temperature;
         change = random_factor() * maxChange;

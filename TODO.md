@@ -8,3 +8,4 @@ add a method to easily split OptBoundaries or vectors of them (split direction, 
 make proper cmake which will create the library, and compile examples / tests
 rename the main.cpp to something like example1 and add some more examples
 method to get the best result
+all result better usages have to pass the targetValue, otherwise they will fail on usage (simply remove the default value)

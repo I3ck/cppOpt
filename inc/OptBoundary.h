@@ -8,8 +8,7 @@
 namespace cppOpt
 {
 
-///@todo make this a OptBoundaries class with add methods
-///@todo that way the splitting would be easier aswell
+///@todo that way the splitting would be easier aswell (or don't add splitting?)
 class OptBoundary
 {
 public:
