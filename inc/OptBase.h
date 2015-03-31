@@ -34,13 +34,15 @@ private:
     static std::mutex
         mutexQueueTodo,
         mutexQueueCalculated,
-        mutexQueueFinished,
+        mutexFinishedCalculations,
         mutexPOptimizers,
         mutexLogFile;
 
     static std::queue< std::pair<OptValue, OptBase*> >
-        queueTodo,
-        queueFinished; ///@todo maybe use vector here
+        queueTodo;
+
+    static std::vector< std::pair<OptValue, OptBase*> >
+        finishedCalculations;
 
     static std::set <OptBase*>
         pOptimizers; ///@todo find better name (also update mutex name)
@@ -116,7 +118,6 @@ private:
     static bool available_finished();
 
     static std::pair<OptValue, OptBase*> pop_todo();
-    static std::pair<OptValue, OptBase*> pop_finished();
 
     static void log(const OptValue &optValue);
 };
