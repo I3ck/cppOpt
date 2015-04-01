@@ -6,6 +6,7 @@
 *.user
 *.so
 *.a
+*~
 bin/
 obj/
 build/
