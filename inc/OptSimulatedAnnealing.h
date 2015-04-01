@@ -25,8 +25,8 @@ public:
     ~OptSimulatedAnnealing();
 
 private:
-    OptValue get_next_value();
-    OptValue random_start_value();
+    OptCalculation get_next_value();
+    OptCalculation random_start_value();
     void update_temperature();
     void update_chance();
 };

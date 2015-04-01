@@ -11,10 +11,10 @@ std::mutex
     OptBase::mutexPOptimizers,
     OptBase::mutexLogFile;
 
-std::queue< std::pair<OptValue, OptBase*> >
+std::queue< std::pair<OptCalculation, OptBase*> >
     OptBase::queueTodo;
 
-std::vector< std::pair<OptValue, OptBase*> >
+std::vector< std::pair<OptCalculation, OptBase*> >
     OptBase::finishedCalculations;
 
 std::set<OptBase*>
@@ -112,9 +112,9 @@ void OptBase::set_wait_time(unsigned int timeInMs)
 
 //------------------------------------------------------------------------------
 
-OptValue OptBase::get_best_calculation(OptTarget optTarget, T targetValue)
+OptCalculation OptBase::get_best_calculation(OptTarget optTarget, T targetValue)
 {
-    OptValue out;
+    OptCalculation out;
     mutexFinishedCalculations.lock();
 
     if(finishedCalculations.size() == 0)
@@ -135,23 +135,23 @@ OptValue OptBase::get_best_calculation(OptTarget optTarget, T targetValue)
 
 //------------------------------------------------------------------------------
 
-OptValue OptBase::get_best_calculation() const
+OptCalculation OptBase::get_best_calculation() const
 {
    return bestCalculation;
 }
 
 // PROTECTED -------------------------------------------------------------------
 
-void OptBase::add_finished_calculation(OptValue optValue)
+void OptBase::add_finished_calculation(OptCalculation optCalculation)
 {
-    previousCalculations.push_back(optValue);
+    previousCalculations.push_back(optCalculation);
 
     mutexFinishedCalculations.lock();
-    finishedCalculations.push_back({optValue, this});
+    finishedCalculations.push_back({optCalculation, this});
     mutexFinishedCalculations.unlock();
 
-    if(result_better(optValue, bestCalculation, optTarget, targetValue))
-        bestCalculation = optValue;
+    if(result_better(optCalculation, bestCalculation, optTarget, targetValue))
+        bestCalculation = optCalculation;
 }
 
 //------------------------------------------------------------------------------
@@ -182,14 +182,14 @@ T OptBase::bad_value() const
 
 //------------------------------------------------------------------------------
 
-bool OptBase::valid(const OptValue &optValue) const
+bool OptBase::valid(const OptCalculation &optCalculation) const
 {
     for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
     {
         if(
-        optValue.get_parameter(boundary->name) < boundary->min
+        optCalculation.get_parameter(boundary->name) < boundary->min
         ||
-        optValue.get_parameter(boundary->name) > boundary->max)
+        optCalculation.get_parameter(boundary->name) > boundary->max)
             return false;
     }
     return true;
@@ -197,7 +197,7 @@ bool OptBase::valid(const OptValue &optValue) const
 
 //------------------------------------------------------------------------------
 
-bool OptBase::result_better(const OptValue &result, const OptValue &other, OptTarget optTarget, T targetValue)
+bool OptBase::result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, T targetValue)
 {
     switch(optTarget)
     {
@@ -240,17 +240,17 @@ void OptBase::threaded_work()
 
         else // availableTodo
         {
-            std::pair <OptValue, OptBase*> todo = pop_todo();
+            std::pair <OptCalculation, OptBase*> todo = pop_todo();
             mutexAvailabilityCheckTodo.unlock(); //pop occured, can unlock now
-            OptValue optValue = todo.first;
+            OptCalculation optCalculation = todo.first;
             OptBase* pOptBase = todo.second;
 
-            pOptBase->pCalculator->calculate(optValue);
+            pOptBase->pCalculator->calculate(optCalculation);
 
             if(loggingEnabled)
-                log(optValue);
+                log(optCalculation);
 
-            pOptBase->add_finished_calculation(optValue);
+            pOptBase->add_finished_calculation(optCalculation);
 
             if(pOptBase->previousCalculations.size() > pOptBase->maxCalculations) ///@todo maybe be >=
                 break;
@@ -266,19 +266,19 @@ void OptBase::threaded_work()
 
 //------------------------------------------------------------------------------
 
-void OptBase::push_todo(OptValue optValue, OptBase* pOptBase)
+void OptBase::push_todo(OptCalculation optCalculation, OptBase* pOptBase)
 {
     mutexQueueTodo.lock();
-    queueTodo.push({optValue, pOptBase});
+    queueTodo.push({optCalculation, pOptBase});
     mutexQueueTodo.unlock();
 }
 
 //------------------------------------------------------------------------------
 
-void OptBase::push_finished(OptValue optValue, OptBase *pOptBase)
+void OptBase::push_finished(OptCalculation optCalculation, OptBase *pOptBase)
 {
     mutexFinishedCalculations.lock();
-    finishedCalculations.push_back({optValue, pOptBase});
+    finishedCalculations.push_back({optCalculation, pOptBase});
     mutexFinishedCalculations.unlock();
 }
 
@@ -297,7 +297,7 @@ bool OptBase::available_todo()
 
 //------------------------------------------------------------------------------
 
-std::pair<OptValue, OptBase*> OptBase::pop_todo()
+std::pair<OptCalculation, OptBase*> OptBase::pop_todo()
 {
     mutexQueueTodo.lock();
     auto out = queueTodo.front();
@@ -308,10 +308,10 @@ std::pair<OptValue, OptBase*> OptBase::pop_todo()
 
 //------------------------------------------------------------------------------
 
-void OptBase::log(const OptValue &optValue)
+void OptBase::log(const OptCalculation &optCalculation)
 {
     mutexLogFile.lock();
-    logFile << optValue.to_string_values() << std::endl;
+    logFile << optCalculation.to_string_values() << std::endl;
     mutexLogFile.unlock();
 }
 

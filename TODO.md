@@ -5,9 +5,9 @@
 - logging should allow user defined value dividers and newline characters (but default to " " and "\n")  
 - make it easy to use external plotting tools
 - add some example plots to the README
-- rename OptValue to OptCalculation
 - prefix `opt` on all classnames?
 - prefix defines in config.h (and everywhere else if any)
+- create single include file which includes all (cppOpt.h)
 
 - add a method to split entire boundaries:
 ```cpp

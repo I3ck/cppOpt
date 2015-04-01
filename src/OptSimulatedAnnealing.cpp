@@ -27,22 +27,22 @@ OptSimulatedAnnealing::~OptSimulatedAnnealing()
 
 //------------------------------------------------------------------------------
 
-OptValue OptSimulatedAnnealing::get_next_value()
+OptCalculation OptSimulatedAnnealing::get_next_value()
 {
     if(previousCalculations.empty())
         return random_start_value();
 
-    OptValue referenceValue, newValue;
+    OptCalculation referenceValue, newValue;
 
     if(random_factor() < chance)
         referenceValue = previousCalculations.back();
 
     else
-        referenceValue = bestCalculation; ///@todo rename bestCalculation to bestOptValue or similar
+        referenceValue = bestCalculation; ///@todo rename bestCalculation to bestOptCalculation or similar
 
     while(true)
     {
-        newValue = OptValue();
+        newValue = OptCalculation();
         for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
         {
             ///@todo change logic could be a method
@@ -68,18 +68,18 @@ OptValue OptSimulatedAnnealing::get_next_value()
 
 //------------------------------------------------------------------------------
 
-OptValue OptSimulatedAnnealing::random_start_value()
+OptCalculation OptSimulatedAnnealing::random_start_value()
 {
-    OptValue optValue;
+    OptCalculation optCalculation;
     for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
     {
         T range = boundary->max - boundary->min;
         T newValue = boundary->min + random_factor() * range;
-        optValue.add_parameter(boundary->name, newValue);
+        optCalculation.add_parameter(boundary->name, newValue);
     }
-    bestCalculation = optValue;
+    bestCalculation = optCalculation;
     bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
-    return optValue;
+    return optCalculation;
 }
 
 //------------------------------------------------------------------------------

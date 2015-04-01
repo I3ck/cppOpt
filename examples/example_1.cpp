@@ -15,10 +15,10 @@ class MySolver : public SolverBase
 {
 public:
     //define your own calculation
-    void calculate(OptValue &optValue) const
+    void calculate(OptCalculation &optCalculation) const
     {
         //defined x^2 as function to be optimized
-        optValue.result = pow(optValue.get_parameter("X"),2);
+        optCalculation.result = pow(optCalculation.get_parameter("X"),2);
     }
 };
 
@@ -65,7 +65,7 @@ int main()
     OptBase::run_optimisations();
 
     //print result
-    OptValue best = opt.get_best_calculation();
+    OptCalculation best = opt.get_best_calculation();
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 

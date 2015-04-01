@@ -1,5 +1,5 @@
-#ifndef OPTVALUE_H
-#define OPTVALUE_H
+#ifndef OPTCALCULATION_H
+#define OPTCALCULATION_H
 
 #include <string>
 #include <map>
@@ -10,7 +10,7 @@
 namespace cppOpt
 {
 
-class OptValue
+class OptCalculation
 {
 private:
     std::map <std::string, T> parameters;
@@ -18,8 +18,8 @@ private:
 public:
     T result;
 
-    OptValue();
-    ~OptValue();
+    OptCalculation();
+    ~OptCalculation();
 
     std::map <std::string, T> get_parameters() const;
     void set_parameters(const std::map <std::string, T> &value);
@@ -33,4 +33,4 @@ public:
 
 } // namespace cppOpt
 
-#endif // OPTVALUE_H
+#endif // OPTCALCULATION_H

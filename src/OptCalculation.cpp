@@ -1,32 +1,32 @@
-#include "OptValue.h"
+#include "OptCalculation.h"
 
 namespace cppOpt
 {
 
 //------------------------------------------------------------------------------
 
-std::map <std::string, T> OptValue::get_parameters() const
+std::map <std::string, T> OptCalculation::get_parameters() const
 {
     return parameters;
 }
 
 //------------------------------------------------------------------------------
 
-void OptValue::set_parameters(const std::map <std::string, T> &value)
+void OptCalculation::set_parameters(const std::map <std::string, T> &value)
 {
     parameters = value;
 }
 
 //------------------------------------------------------------------------------
 
-void OptValue::add_parameter(const std::string &name, T value)
+void OptCalculation::add_parameter(const std::string &name, T value)
 {
     parameters[name] = value;
 }
 
 //------------------------------------------------------------------------------
 
-T OptValue::get_parameter(const std::string &name) const
+T OptCalculation::get_parameter(const std::string &name) const
 {
     if(parameters.find(name) != parameters.end())
         return parameters.at(name); ///@todo these need proper error handling
@@ -35,7 +35,7 @@ T OptValue::get_parameter(const std::string &name) const
 
 //------------------------------------------------------------------------------
 
-std::string OptValue::to_string_values() const
+std::string OptCalculation::to_string_values() const
 {
     std::string out("");
 
@@ -49,7 +49,7 @@ std::string OptValue::to_string_values() const
 
 //------------------------------------------------------------------------------
 
-std::string OptValue::to_string_header() const
+std::string OptCalculation::to_string_header() const
 {
     std::string out("");
 
@@ -63,14 +63,14 @@ std::string OptValue::to_string_header() const
 
 //------------------------------------------------------------------------------
 
-OptValue::OptValue()
+OptCalculation::OptCalculation()
 {
 
 }
 
 //------------------------------------------------------------------------------
 
-OptValue::~OptValue()
+OptCalculation::~OptCalculation()
 {
 
 }

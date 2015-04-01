@@ -15,7 +15,7 @@
 #include "config.h"
 #include "OptTarget.h"
 #include "SolverBase.h"
-#include "OptValue.h"
+#include "OptCalculation.h"
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
 
@@ -40,10 +40,10 @@ private:
         mutexPOptimizers,
         mutexLogFile;
 
-    static std::queue< std::pair<OptValue, OptBase*> >
+    static std::queue< std::pair<OptCalculation, OptBase*> >
         queueTodo;
 
-    static std::vector< std::pair<OptValue, OptBase*> >
+    static std::vector< std::pair<OptCalculation, OptBase*> >
         finishedCalculations;
 
     static std::set <OptBase*>
@@ -59,10 +59,10 @@ private:
         waitTimeMs;
 
 protected:
-    std::vector<OptValue>
+    std::vector<OptCalculation>
         previousCalculations;
 
-    OptValue
+    OptCalculation
         bestCalculation;
 
     const OptBoundaries
@@ -100,35 +100,35 @@ public:
     static void set_wait_time(unsigned int timeInMs);
 
     //targetValue won't be used when maximizing or minimizing
-    static OptValue get_best_calculation(OptTarget optTarget, T targetValue);
+    static OptCalculation get_best_calculation(OptTarget optTarget, T targetValue);
 
-    OptValue get_best_calculation() const;
+    OptCalculation get_best_calculation() const;
 
 protected:
     //targetValue won't be used when maximizing or minimizing
-    static bool result_better(const OptValue &result, const OptValue &other, OptTarget optTarget, T targetValue);
+    static bool result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, T targetValue);
 
-    virtual OptValue get_next_value() = 0; //must be implemented by algorithm derived classes
+    virtual OptCalculation get_next_value() = 0; //must be implemented by algorithm derived classes
 
-    void add_finished_calculation(OptValue optValue);
+    void add_finished_calculation(OptCalculation optCalculation);
 
     T bad_value() const;
 
-    bool valid(const OptValue &optValue) const;
+    bool valid(const OptCalculation &optCalculation) const;
 
     static T random_factor();
 
 private:
     static void threaded_work();
 
-    static void push_todo(OptValue optValue, OptBase *pOptBase);
-    static void push_finished(OptValue optValue, OptBase *pOptBase);
+    static void push_todo(OptCalculation optCalculation, OptBase *pOptBase);
+    static void push_finished(OptCalculation optCalculation, OptBase *pOptBase);
 
     static bool available_todo();
 
-    static std::pair<OptValue, OptBase*> pop_todo();
+    static std::pair<OptCalculation, OptBase*> pop_todo();
 
-    static void log(const OptValue &optValue);
+    static void log(const OptCalculation &optCalculation);
 };
 
 } // namespace cppOpt

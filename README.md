@@ -7,32 +7,32 @@ optimise any given problem by defining your very own Solver class:
 class MySolver : public SolverBase
 {
 public:
-    void calculate(OptValue &optValue) const
+    void calculate(OptCalculation &optCalculation) const
     {
-        optValue.result = YOUR_CODE_COMES_HERE;
+        optCalculation.result = YOUR_CODE_COMES_HERE;
     }
 };
 ```
 for optimising x^2 you could write:
 
 ```cpp
-void calculate(OptValue &optValue) const
+void calculate(OptCalculation &optCalculation) const
 {
     //defined x^2 as function to be optimized
-    optValue.result = pow(optValue.get_parameter("X"),2);
+    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
 }
 ```
 
 you can even run other programs:
 
 ```cpp
-void calculate(OptValue &optValue) const
+void calculate(OptCalculation &optCalculation) const
 {
-    std::string parameter1 = optValue.get_parameter("X");
-    std::string parameter2 = optValue.get_parameter("Y");
+    std::string parameter1 = optCalculation.get_parameter("X");
+    std::string parameter2 = optCalculation.get_parameter("Y");
 
     system(( "someExecuteable -p1 " + parameter1 + " -p2 " + parameter2).c_str() );
-    optValue.result = parse_generated_output_file();
+    optCalculation.result = parse_generated_output_file();
 }
 ```
 
@@ -94,9 +94,9 @@ X RESULT
 ```
 you can retrieve both the best values of all your optimisers or specific ones:
 ```cpp
-OptValue best = opt1.get_best_calculation();
-OptValue best = opt2.get_best_calculation();
-OptValue best = OptBase::get_best_calculation(optTarget, targetValue);
+OptCalculation best = opt1.get_best_calculation();
+OptCalculation best = opt2.get_best_calculation();
+OptCalculation best = OptBase::get_best_calculation(optTarget, targetValue);
 ```
 
 ##examples

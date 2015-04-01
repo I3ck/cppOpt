@@ -9,9 +9,9 @@ namespace cppOpt
 class OptThresholdAccepting : public OptBase
 {
 private:
-    OptValue
-        optValueReference,
-        optValueConfigurationC;
+    OptCalculation
+        optCalculationReference,
+        optCalculationConfigurationC;
 
     T
         temperature,
@@ -32,11 +32,11 @@ public:
     ~OptThresholdAccepting();
 
 private:
-    OptValue get_next_value();
-    OptValue random_start_value();
+    OptCalculation get_next_value();
+    OptCalculation random_start_value();
     void update_temperature();
     void update_threshold();
-    OptValue compare_value() const; ///@todo rename & use T as return value? (=> would require a new compare method)
+    OptCalculation compare_value() const; ///@todo rename & use T as return value? (=> would require a new compare method)
 };
 
 #endif // OPTTHRESHOLDACCEPTING_H

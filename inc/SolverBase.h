@@ -4,7 +4,7 @@
 #include <fstream>
 
 #include "config.h"
-#include "OptValue.h"
+#include "OptCalculation.h"
 
 namespace cppOpt
 {
@@ -13,7 +13,7 @@ class SolverBase
 {
 public:
     virtual ~SolverBase();
-    virtual void calculate(OptValue &optValue) const = 0;
+    virtual void calculate(OptCalculation &optCalculation) const = 0;
 };
 
 } // namespace cppOpt

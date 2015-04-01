@@ -29,21 +29,21 @@ OptThresholdAccepting::~OptThresholdAccepting()
 
 //------------------------------------------------------------------------------
 
-OptValue OptThresholdAccepting::get_next_value()
+OptCalculation OptThresholdAccepting::get_next_value()
 {
     if(previousCalculations.empty())
         return random_start_value();
 
-    OptValue newValue;
+    OptCalculation newValue;
 
     if(previousCalculations.size() == 1)
     {
-        optValueReference = previousCalculations[0];
-        optValueConfigurationC = previousCalculations[0];
+        optCalculationReference = previousCalculations[0];
+        optCalculationConfigurationC = previousCalculations[0];
 
         while(true)
         {
-            newValue = OptValue();
+            newValue = OptCalculation();
             for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
             {
                 ///@todo change logic could be a method
@@ -67,21 +67,21 @@ OptValue OptThresholdAccepting::get_next_value()
         return newValue;
     }
 
-    OptValue center;
+    OptCalculation center;
 
-    if(result_better(previousCalculations.back(), optValueReference, optTarget, targetValue))
-        optValueReference = previousCalculations.back();
+    if(result_better(previousCalculations.back(), optCalculationReference, optTarget, targetValue))
+        optCalculationReference = previousCalculations.back();
 
-    OptValue compareValue = compare_value();
+    OptCalculation compareValue = compare_value();
 
     if(result_better(previousCalculations.back(), compareValue, optTarget, targetValue))
-        optValueConfigurationC = previousCalculations.back();
+        optCalculationConfigurationC = previousCalculations.back();
 
-    center = optValueConfigurationC;
+    center = optCalculationConfigurationC;
 
     while(true)
     {
-        newValue = OptValue();
+        newValue = OptCalculation();
         for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
         {
             ///@todo change logic could be a method
@@ -106,18 +106,18 @@ OptValue OptThresholdAccepting::get_next_value()
 
 //------------------------------------------------------------------------------
 
-OptValue OptThresholdAccepting::random_start_value()
+OptCalculation OptThresholdAccepting::random_start_value()
 {
-    OptValue optValue;
+    OptCalculation optCalculation;
     for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
     {
         T range = boundary->max - boundary->min;
         T newValue = boundary->min + random_factor() * range;
-        optValue.add_parameter(boundary->name, newValue);
+        optCalculation.add_parameter(boundary->name, newValue);
     }
-    bestCalculation = optValue;
+    bestCalculation = optCalculation;
     bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
-    return optValue;
+    return optCalculation;
 }
 
 //------------------------------------------------------------------------------
@@ -136,35 +136,35 @@ void OptThresholdAccepting::update_threshold()
 
 //------------------------------------------------------------------------------
 
-OptValue OptThresholdAccepting::compare_value() const
+OptCalculation OptThresholdAccepting::compare_value() const
 {
-    OptValue out;
+    OptCalculation out;
     switch(optTarget)
     {
         case MINIMIZE:
-            out.result = optValueConfigurationC.result + threshold;
+            out.result = optCalculationConfigurationC.result + threshold;
             break;
 
         case MAXIMIZE:
-            out.result = optValueConfigurationC.result - threshold;
+            out.result = optCalculationConfigurationC.result - threshold;
             break;
 
         case APPROACH:
-            if(targetValue > optValueConfigurationC.result)
-                out.result = optValueConfigurationC.result - threshold;
+            if(targetValue > optCalculationConfigurationC.result)
+                out.result = optCalculationConfigurationC.result - threshold;
             else
-                out.result = optValueConfigurationC.result + threshold;
+                out.result = optCalculationConfigurationC.result + threshold;
             break;
 
         case DIVERGE:
-            if(targetValue > optValueConfigurationC.result)
-                out.result = optValueConfigurationC.result + threshold;
+            if(targetValue > optCalculationConfigurationC.result)
+                out.result = optCalculationConfigurationC.result + threshold;
             else
-                out.result = optValueConfigurationC.result - threshold;
+                out.result = optCalculationConfigurationC.result - threshold;
             break;
 
         default: // MINIMIZE
-            out.result = optValueConfigurationC.result + threshold;
+            out.result = optCalculationConfigurationC.result + threshold;
     }
     return out;
 }

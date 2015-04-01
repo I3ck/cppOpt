@@ -59,9 +59,9 @@ TEST_CASE("Simulated Annealing") {
     class MySolver : public SolverBase
     {
     public:
-        void calculate(OptValue &optValue) const
+        void calculate(OptCalculation &optCalculation) const
         {
-            optValue.result = pow(optValue.get_parameter("X"),2);
+            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
         }
     };
 
@@ -158,9 +158,9 @@ TEST_CASE("Threshold Accepting") {
     class MySolver : public SolverBase
     {
     public:
-        void calculate(OptValue &optValue) const
+        void calculate(OptCalculation &optCalculation) const
         {
-            optValue.result = pow(optValue.get_parameter("X"),2);
+            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
         }
     };
 
@@ -263,9 +263,9 @@ TEST_CASE("Multithreading / Boundary Splitting") {
     class MySolver : public SolverBase
     {
     public:
-        void calculate(OptValue &optValue) const
+        void calculate(OptCalculation &optCalculation) const
         {
-            optValue.result = pow(optValue.get_parameter("X"),2);
+            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
         }
     };
 
