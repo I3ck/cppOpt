@@ -25,10 +25,10 @@ OptGreatDeluge::OptGreatDeluge(const OptBoundaries &optBoundaries,
                                              OPT_T waterLevel,
                                              OPT_T rain) :
     OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
-    temperature(1.0),
     coolingFactor(coolingFactor),
-    waterLevel(waterLevel),
-    rain(rain)
+    rain(rain),
+    temperature(1.0),
+    waterLevel(waterLevel)
 {
 
 }

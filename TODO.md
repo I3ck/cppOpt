@@ -5,7 +5,6 @@
 - add some example plots to the README (maybe use matplotlib for this)  
 - evolutionary algorithm  
 - more examples  
-- rain / coolingFactor etc. can be defined const  
 
 - add a method to split entire boundaries:
 ```cpp

@@ -26,11 +26,13 @@ private:
         optCalculationReference,
         optCalculationConfigurationC;
 
+    const OPT_T
+        coolingFactor,
+        thresholdFactor;
+
     OPT_T
         temperature,
-        coolingFactor,
-        threshold,
-        thresholdFactor;
+        threshold;
 
 public:
     OptThresholdAccepting(const OptBoundaries &optBoundaries,

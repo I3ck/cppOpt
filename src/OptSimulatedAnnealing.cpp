@@ -24,8 +24,8 @@ OptSimulatedAnnealing::OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                                              OPT_T coolingFactor,
                                              OPT_T startChance) :
     OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
-    temperature(1.0),
     coolingFactor(coolingFactor),
+    temperature(1.0),
     chance(startChance)
 {
 

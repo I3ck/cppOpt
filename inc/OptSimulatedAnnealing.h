@@ -22,9 +22,11 @@ namespace cppOpt
 class OptSimulatedAnnealing : public OptBase
 {
 private:
+    const OPT_T
+        coolingFactor;
+
     OPT_T
         temperature,
-        coolingFactor,
         chance;
 
 public:

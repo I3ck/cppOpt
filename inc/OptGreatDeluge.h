@@ -26,11 +26,13 @@ private:
         optCalculationReference,
         optCalculationConfigurationC;
 
+    const OPT_T
+        coolingFactor,
+        rain;
+
     OPT_T
         temperature,
-        coolingFactor,
-        waterLevel,
-        rain;
+        waterLevel;
 
 public:
     OptGreatDeluge(const OptBoundaries &optBoundaries,

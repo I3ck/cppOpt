@@ -25,10 +25,10 @@ OptThresholdAccepting::OptThresholdAccepting(const OptBoundaries &optBoundaries,
                                              OPT_T threshold,
                                              OPT_T thresholdFactor) :
     OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
-    temperature(1.0),
     coolingFactor(coolingFactor),
-    threshold(threshold),
-    thresholdFactor(thresholdFactor)
+    thresholdFactor(thresholdFactor),
+    temperature(1.0),
+    threshold(threshold)
 {
 
 }
