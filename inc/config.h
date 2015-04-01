@@ -1,5 +1,5 @@
-#ifndef DEFINES
-#define DEFINES
+#ifndef CONFIG_H
+#define CONFIG_H
 
 //comment out or dont
 #define DEBUG
@@ -9,4 +9,4 @@
 #define T double
 //#define T long double
 
-#endif // DEFINES
+#endif // CONFIG_H

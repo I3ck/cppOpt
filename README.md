@@ -122,5 +122,4 @@ link your program with the library created in `lib/`
 (or feel free to directly link the source files and not use `make` at all)
 
 ##including
-include the algorithms and header files you want to use  
-I suggest looking at the examples in `examples/`
+directly include `cppOpt.h` which includes all required headers or choose the header files you want to use  

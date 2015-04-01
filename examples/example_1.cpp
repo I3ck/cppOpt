@@ -6,8 +6,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "SolverBase.h"
-#include "OptSimulatedAnnealing.h"
+#include "cppOpt.h"
 
 using namespace cppOpt;
 
@@ -30,20 +29,20 @@ int main()
     //define your boundaries
     OptBoundaries optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
-    
+
     //instansiate your calculator
     MySolver mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 300;
-    
+
     //we want to find the minimum
     OptTarget optTarget = MINIMIZE;
-    
+
     //how fast the simulated annealing algorithm slows down
     //http://en.wikipedia.org/wiki/Simulated_annealing
     T coolingFactor = 0.95;
-    
+
     //the chance in the beginning to follow bad solutions
     T startChance = 0.25;
 
@@ -71,4 +70,3 @@ int main()
 
     return 0;
 }
-
