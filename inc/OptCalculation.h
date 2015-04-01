@@ -27,10 +27,10 @@ public:
     void add_parameter(const std::string &name, OPT_T value);
     OPT_T get_parameter(const std::string &name) const;
 
-    std::string to_string_values() const;
-    std::string to_string_header() const;
+    std::string to_string_values(const std::string &delimiter = " ") const;
+    std::string to_string_header(const std::string &delimiter = " ") const;
 };
 
 } // namespace cppOpt
 
-#endif // OPTCALCULATION_H
+#endif // OPTCALCULATION_HS

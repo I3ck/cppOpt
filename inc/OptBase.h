@@ -50,7 +50,11 @@ private:
         pOptimisers;
 
     static bool
-        loggingEnabled; //only set with one method, no mutex required
+        loggingEnabled; //only set with one method and already locked when logging, no additional mutex required
+
+    static std::string
+        loggingDelimiter,
+        loggingLineEnd;
 
     static std::ofstream
         logFile;
@@ -95,7 +99,10 @@ public:
 
     static unsigned int number_optimisers();
 
-    static bool enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries);
+    static bool enable_logging(const std::string &pathLogFile,
+                               const OptBoundaries &optBoundaries,
+                               const std::string &delimiter = " ",
+                               const std::string &lineEnd = "\n");
 
     static void set_wait_time(unsigned int timeInMs);
 

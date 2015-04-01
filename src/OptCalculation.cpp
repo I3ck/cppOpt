@@ -35,12 +35,12 @@ OPT_T OptCalculation::get_parameter(const std::string &name) const
 
 //------------------------------------------------------------------------------
 
-std::string OptCalculation::to_string_values() const
+std::string OptCalculation::to_string_values(const std::string &delimiter) const
 {
     std::string out("");
 
     for(const auto &parameter : parameters)
-        out += std::to_string(parameter.second) + " ";
+        out += std::to_string(parameter.second) + delimiter;
 
     out += std::to_string(result);
 
@@ -49,12 +49,12 @@ std::string OptCalculation::to_string_values() const
 
 //------------------------------------------------------------------------------
 
-std::string OptCalculation::to_string_header() const
+std::string OptCalculation::to_string_header(const std::string &delimiter) const
 {
     std::string out("");
 
     for(const auto &parameter : parameters)
-        out += parameter.first + " ";
+        out += parameter.first + delimiter;
 
     out += "RESULT";
 

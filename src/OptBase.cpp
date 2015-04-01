@@ -23,6 +23,11 @@ std::set<OptBase*>
 bool
     OptBase::loggingEnabled(false);
 
+
+std::string
+    OptBase::loggingDelimiter(""),
+    OptBase::loggingLineEnd("");
+
 std::ofstream
     OptBase::logFile;
 
@@ -93,13 +98,15 @@ unsigned int OptBase::number_optimisers()
 
 //------------------------------------------------------------------------------
 
-bool OptBase::enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries)
+bool OptBase::enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries, const std::string &delimiter, const std::string &lineEnd)
 {
     logFile.open(pathLogFile);
     if(logFile.fail())
         return false;
-    logFile << optBoundaries.to_string() << "RESULT\n";
     loggingEnabled = true;
+    loggingDelimiter = delimiter;
+    loggingLineEnd = lineEnd;
+    logFile << optBoundaries.to_string() << "RESULT" << loggingLineEnd;
     return true;
 }
 
@@ -311,7 +318,7 @@ std::pair<OptCalculation, OptBase*> OptBase::pop_todo()
 void OptBase::log(const OptCalculation &optCalculation)
 {
     mutexLogFile.lock();
-    logFile << optCalculation.to_string_values() << std::endl;
+    logFile << optCalculation.to_string_values(loggingDelimiter) << loggingLineEnd;
     mutexLogFile.unlock();
 }
 

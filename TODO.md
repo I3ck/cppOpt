@@ -1,7 +1,6 @@
 - add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
 - optimise for speed  
 - add single opt object logging  
-- logging should allow user defined value dividers and newline characters (but default to " " and "\n")  
 - make it easy to use external plotting tools
 - add some example plots to the README
 

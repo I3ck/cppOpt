@@ -92,6 +92,10 @@ X RESULT
 3.862659 14.920135
 ...
 ```
+you can also define custom delimiters and line endings (e.g. for csv):
+```cpp
+OptBase::enable_logging("logfile.log", optBoundaries, ";", "\n");
+```
 you can retrieve both the best values of all your optimisers or specific ones:
 ```cpp
 OptCalculation best = opt1.get_best_calculation();
