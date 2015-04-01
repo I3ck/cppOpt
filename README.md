@@ -119,6 +119,7 @@ OptCalculation bestAll = OptBase::get_best_calculation(optTarget, targetValue);
 
 ##examples
 ###optimising x*x [-5.0:+5.0] with simulated annealing
+note that the optimiser doesn't "know" that the function actually is x*x
 ####minimizing:
 ![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/minimize.gif)  
 ####maximizing:
