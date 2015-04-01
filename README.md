@@ -1,5 +1,6 @@
 #cppOpt
 A C++ library which allows the numerical optimisation of any given problem, function, program or you-name-it  
+by using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
 using Catch as testing framework https://github.com/philsquared/Catch
 
 ##version 0.1
@@ -138,3 +139,6 @@ http://en.wikipedia.org/wiki/Simulated_annealing
 
 ##threshold accepting
 http://comisef.wikidot.com/concept:thresholdaccepting
+
+##great deluge
+http://en.wikipedia.org/wiki/Great_Deluge_algorithm

@@ -27,6 +27,7 @@ add_library(
         src/OptBoundary.cpp
         src/OptSimulatedAnnealing.cpp
         src/OptThresholdAccepting.cpp
+        src/OptGreatDeluge.cpp
         src/OptCalculation.cpp
 )
 

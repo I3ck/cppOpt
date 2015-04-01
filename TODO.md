@@ -1,8 +1,13 @@
 - add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
 - optimise for speed  
 - add single opt object logging  
-- make it easy to use external plotting tools
-- add some example plots to the README
+- make it easy to use external plotting tools  
+- add some example plots to the README (maybe use matplotlib for this)  
+- evolutionary algorithm  
+- more examples  
+- rain / coolingFactor etc. can be defined const  
+- rename get_next_value() to get_next_calculation()  
+- rename referenceValue to center or vice versa  
 
 - add a method to split entire boundaries:
 ```cpp
