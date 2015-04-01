@@ -5,6 +5,9 @@
 - add some example plots to the README (maybe use matplotlib for this)  
 - evolutionary algorithm  
 - more examples  
+- great deluge isn't used in an example  
+- allow algorithms to leave boundaries  
+- taboo areas  
 
 - add a method to split entire boundaries:
 ```cpp
