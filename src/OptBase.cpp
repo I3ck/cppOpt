@@ -5,6 +5,7 @@ namespace cppOpt
 
 std::mutex
     OptBase::mutexQueueTodo,
+    OptBase::mutexAvailabilityCheckTodo,
     OptBase::mutexQueueCalculated,
     OptBase::mutexFinishedCalculations,
     OptBase::mutexPOptimizers,
@@ -231,11 +232,16 @@ void OptBase::threaded_work()
 {
     while(true)
     {
-        if(available_todo())
+        mutexAvailabilityCheckTodo.lock(); //the check for availability and the pop have to be atomic
+        bool availableTodo = available_todo();
+
+        if(!availableTodo)
+            mutexAvailabilityCheckTodo.unlock(); //no pop will occur, can unlock directly
+
+        else // availableTodo
         {
-            ///@todo possible race condition here. Make it that pop checks for availability itself (return bool and have the value be a reference which is changed bool pop(out) )
-            ///@todo or add another mutex which only locks for this check mutex availabilityCheck
             std::pair <OptValue, OptBase*> todo = pop_todo();
+            mutexAvailabilityCheckTodo.unlock(); //pop occured, can unlock now
             OptValue optValue = todo.first;
             OptBase* pOptBase = todo.second;
 
@@ -252,6 +258,7 @@ void OptBase::threaded_work()
             //only add the next one if there still are more
             push_todo(pOptBase->get_next_value(), pOptBase);
         }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(waitTimeMs));
     }
 

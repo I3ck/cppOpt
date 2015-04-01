@@ -34,6 +34,7 @@ class OptBase
 private:
     static std::mutex
         mutexQueueTodo,
+        mutexAvailabilityCheckTodo,
         mutexQueueCalculated,
         mutexFinishedCalculations,
         mutexPOptimizers,
