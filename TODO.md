@@ -1,14 +1,34 @@
-#features
-##saving data
-add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
-#other
-optimise for speed
-allow logging and other output solutions
-add a method to easily split OptBoundaries or vectors of them (split direction, times) returning a vector of vector of Boundaries
-make proper cmake which will create the library, and compile examples / tests
-rename the main.cpp to something like example1 and add some more examples
-method to get the best result
-all result better usages have to pass the targetValue, otherwise they will fail on usage (simply remove the default value)
-make it possible to get the best result of an algorithm (to easily test them later)
-add a file to fest all algorithms by letting them minimize /maximize etc. a problem and have their result be close to some value
-either optimise or optimize (both correct)
+- add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
+- optimise for speed  
+- either optimise or optimize (both correct)  
+- add single opt object logging  
+- logging should allow user defined value dividers and newline characters (but default to " " and "\n")  
+- make it easy to use external plotting tools
+- add some example plots to the README
+- rename OptValue to OptCalculation
+- some examples have `MySolver myCalculation` change to: `MySolver mySolver`
+- prefix `opt` on all classnames?
+- prefix defines in config.h (and everywhere else if any)
+
+- add a method to split entire boundaries:
+```cpp
+    optBoundaries A, B, C;
+    A:
+        X => 0.0 10.0
+        Y => 3.0 11.0
+
+    A.split("X", B, C);
+
+    A:
+        X => 0.0 10.0
+        Y => 3.0 11.0
+    B:
+        X => 0.0 5.0
+        Y => 3.0 11.0
+    C:
+        X => 5.0 10.0
+        Y => 3.0 11.0
+```
+    maybe even allow the usage of any number of split targets
+    A.split("X", B, C, D, E, F, G); (or use a list of optBoundaries)
+    dividing into any number of elements
