@@ -42,7 +42,7 @@ int main()
     optBoundaries4.add_boundary(2.5, 5.0, "X");
 
     //instansiate your calculator
-    MySolver myCalculator;
+    MySolver mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 300;
@@ -62,7 +62,7 @@ int main()
     //now creating 4 to run all at once
     OptSimulatedAnnealing opt1(optBoundaries1,
                               maxCalculations / 4,
-                              &myCalculator,
+                              &mySolver,
                               optTarget,
                               0.0, //only required if approaching / diverging
                               coolingFactor,
@@ -70,7 +70,7 @@ int main()
 
     OptSimulatedAnnealing opt2(optBoundaries2,
                               maxCalculations / 4,
-                              &myCalculator,
+                              &mySolver,
                               optTarget,
                               0.0, //only required if approaching / diverging
                               coolingFactor,
@@ -78,7 +78,7 @@ int main()
 
     OptSimulatedAnnealing opt3(optBoundaries3,
                               maxCalculations / 4,
-                              &myCalculator,
+                              &mySolver,
                               optTarget,
                               0.0, //only required if approaching / diverging
                               coolingFactor,
@@ -86,7 +86,7 @@ int main()
 
     OptSimulatedAnnealing opt4(optBoundaries4,
                               maxCalculations / 4,
-                              &myCalculator,
+                              &mySolver,
                               optTarget,
                               0.0, //only required if approaching / diverging
                               coolingFactor,

@@ -32,7 +32,7 @@ int main()
     optBoundaries.add_boundary(-5.0, 5.0, "X");
     
     //instansiate your calculator
-    MySolver myCalculator;
+    MySolver mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 300;
@@ -51,7 +51,7 @@ int main()
     //using simulated annealing
     OptSimulatedAnnealing opt(optBoundaries,
                               maxCalculations,
-                              &myCalculator,
+                              &mySolver,
                               optTarget,
                               0.0, //only required if approaching / diverging
                               coolingFactor,

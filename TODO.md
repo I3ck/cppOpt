@@ -6,7 +6,6 @@
 - make it easy to use external plotting tools
 - add some example plots to the README
 - rename OptValue to OptCalculation
-- some examples have `MySolver myCalculation` change to: `MySolver mySolver`
 - prefix `opt` on all classnames?
 - prefix defines in config.h (and everywhere else if any)
 
