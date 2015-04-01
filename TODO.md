@@ -7,6 +7,7 @@
 - add some example plots to the README
 - prefix `opt` on all classnames?
 - prefix defines in config.h (and everywhere else if any)
+- rename get_parameter() to get_value() ?
 
 - add a method to split entire boundaries:
 ```cpp

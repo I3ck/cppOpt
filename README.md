@@ -28,8 +28,8 @@ you can even run other programs:
 ```cpp
 void calculate(OptCalculation &optCalculation) const
 {
-    std::string parameter1 = optCalculation.get_parameter("X");
-    std::string parameter2 = optCalculation.get_parameter("Y");
+    std::string parameter1 = optCalculation.get_parameter("X").to_string();
+    std::string parameter2 = optCalculation.get_parameter("Y").to_string();
 
     system(( "someExecuteable -p1 " + parameter1 + " -p2 " + parameter2).c_str() );
     optCalculation.result = parse_generated_output_file();
