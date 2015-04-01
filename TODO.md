@@ -8,6 +8,7 @@
 - rain / coolingFactor etc. can be defined const  
 - rename get_next_value() to get_next_calculation()  
 - rename referenceValue to center or vice versa  
+- still using myCalculator at least in README
 
 - add a method to split entire boundaries:
 ```cpp

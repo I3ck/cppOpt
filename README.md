@@ -74,6 +74,15 @@ OptThresholdAccepting opt2(optBoundaries,
                            coolingFactor,
                            threshold,
                            thresholdFactor);
+
+OptGreatDeluge opt3(optBoundaries,
+                    maxCalculations,
+                    &myCalculator,
+                    optTarget,
+                    targetValue,
+                    coolingFactor,
+                    waterLevel,
+                    rain);                           
 ```
 
 ##multithreading
