@@ -141,6 +141,11 @@ link your program with the library created in `lib/`
 ##including
 directly include `cppOpt.h` which includes all required headers or choose the header files you want to use  
 
+##testing
+after using `cmake` and `make` check `bin/` for the `test_xyz` executeables  
+since the tests check whether the algorithms reach the wanted values, it's possible that the tests might fail in some cases (due to the random nature of the algorithms). Just restart the test in such a case.  
+Only if the test fails often there's an actual bug
+
 #algorithms explained / referenced
 
 ##simulated annealing
