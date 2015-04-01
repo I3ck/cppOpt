@@ -60,7 +60,7 @@ OptTarget optTarget = DIVERGE;
 ```cpp
 OptSimulatedAnnealing opt1(optBoundaries,
                            maxCalculations,
-                           &myCalculator,
+                           &mySolver,
                            optTarget,
                            targetValue,
                            coolingFactor,
@@ -68,7 +68,7 @@ OptSimulatedAnnealing opt1(optBoundaries,
 
 OptThresholdAccepting opt2(optBoundaries,
                            maxCalculations,
-                           &myCalculator,
+                           &mySolver,
                            optTarget,
                            targetValue,
                            coolingFactor,
@@ -77,12 +77,12 @@ OptThresholdAccepting opt2(optBoundaries,
 
 OptGreatDeluge opt3(optBoundaries,
                     maxCalculations,
-                    &myCalculator,
+                    &mySolver,
                     optTarget,
                     targetValue,
                     coolingFactor,
                     waterLevel,
-                    rain);                           
+                    rain);
 ```
 
 ##multithreading
