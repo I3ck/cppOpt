@@ -98,9 +98,9 @@ OptBase::enable_logging("logfile.log", optBoundaries, ";", "\n");
 ```
 you can retrieve both the best values of all your optimisers or specific ones:
 ```cpp
-OptCalculation best = opt1.get_best_calculation();
-OptCalculation best = opt2.get_best_calculation();
-OptCalculation best = OptBase::get_best_calculation(optTarget, targetValue);
+OptCalculation best1 = opt1.get_best_calculation();
+OptCalculation best2 = opt2.get_best_calculation();
+OptCalculation bestAll = OptBase::get_best_calculation(optTarget, targetValue);
 ```
 
 ##examples
