@@ -1,7 +1,8 @@
 #cppOpt
 A C++ library which allows the numerical optimisation of any given problem, function, program or you-name-it  
-by using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
-using Catch as testing framework https://github.com/philsquared/Catch
+without knowing the "function" of the problem simply by smartly testing certain values  
+- using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
+- using Catch as testing framework https://github.com/philsquared/Catch
 
 ##version 0.1.1
 
@@ -117,7 +118,17 @@ OptCalculation bestAll = OptBase::get_best_calculation(optTarget, targetValue);
 ```
 
 ##examples
-check out `examples/` for more
+###optimising x*x [-5.0:+5.0] with simulated annealing
+####minimizing:
+![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/minimize.gif)  
+####maximizing:
+![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/maximize.gif)  
+###approaching 3.0:
+![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/approach_3.gif)  
+###diverging from 3.0:
+![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/diverge_3.gif)  
+check out https://github.com/I3ck/cppOptImages for more images  
+or `examples/` for code examples
 
 #usage
 
