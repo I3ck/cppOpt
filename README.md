@@ -134,5 +134,5 @@ directly include `cppOpt.h` which includes all required headers or choose the he
 ##simulated annealing
 http://en.wikipedia.org/wiki/Simulated_annealing
 
-#threshold accepting
+##threshold accepting
 http://comisef.wikidot.com/concept:thresholdaccepting
