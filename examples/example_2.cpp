@@ -17,7 +17,7 @@ public:
     //define your own calculation
     void calculate(OptCalculation &optCalculation) const
     {
-        //defined x^2 as function to be optimized
+        //defined x^2 as function to be optimised
         optCalculation.result = pow(optCalculation.get_parameter("X"),2);
     }
 };
@@ -26,7 +26,7 @@ using namespace std;
 
 int main()
 {
-    //setup the optimization
+    //setup the optimisation
     //define your boundaries
     //to enable 4 threads, the range of example_1 is split
     OptBoundaries
@@ -56,7 +56,7 @@ int main()
     //the chance in the beginning to follow bad solutions
     OPT_T startChance = 0.25;
 
-    //create your optimizer
+    //create your optimiser
     //using simulated annealing
     //now creating 4 to run all at once
     OptSimulatedAnnealing opt1(optBoundaries1,

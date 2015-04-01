@@ -8,7 +8,7 @@ std::mutex
     OptBase::mutexAvailabilityCheckTodo,
     OptBase::mutexQueueCalculated,
     OptBase::mutexFinishedCalculations,
-    OptBase::mutexPOptimizers,
+    OptBase::mutexPOptimisers,
     OptBase::mutexLogFile;
 
 std::queue< std::pair<OptCalculation, OptBase*> >
@@ -18,7 +18,7 @@ std::vector< std::pair<OptCalculation, OptBase*> >
     OptBase::finishedCalculations;
 
 std::set<OptBase*>
-    OptBase::pOptimizers;
+    OptBase::pOptimisers;
 
 bool
     OptBase::loggingEnabled(false);
@@ -42,9 +42,9 @@ OptBase::OptBase(const OptBoundaries &optBoundaries,
     optTarget(optTarget),
     targetValue(targetValue)
 {
-    mutexPOptimizers.lock();
-    pOptimizers.insert(this);
-    mutexPOptimizers.unlock();
+    mutexPOptimisers.lock();
+    pOptimisers.insert(this);
+    mutexPOptimisers.unlock();
     srand( time(NULL) + rand() );
 }
 
@@ -52,24 +52,24 @@ OptBase::OptBase(const OptBoundaries &optBoundaries,
 
 OptBase::~OptBase()
 {
-    mutexPOptimizers.lock();
-    pOptimizers.erase( pOptimizers.find(this) );
-    mutexPOptimizers.unlock();
+    mutexPOptimisers.lock();
+    pOptimisers.erase( pOptimisers.find(this) );
+    mutexPOptimisers.unlock();
 }
 
 //------------------------------------------------------------------------------
 
 void OptBase::run_optimisations(unsigned int maxThreads)
 {
-    //get the first to-calculate value of every optimizer
+    //get the first to-calculate value of every optimiser
     //and push it onto the todo queue
-    mutexPOptimizers.lock();
-    for(const auto &pOptimizer : pOptimizers)
+    mutexPOptimisers.lock();
+    for(const auto &pOptimiser : pOptimisers)
     {
-        if(pOptimizer->previousCalculations.size() == 0)
-            push_todo(pOptimizer->get_next_value(), pOptimizer);
+        if(pOptimiser->previousCalculations.size() == 0)
+            push_todo(pOptimiser->get_next_value(), pOptimiser);
     }
-    mutexPOptimizers.unlock();
+    mutexPOptimisers.unlock();
 
     std::list <std::thread> threads;
 
@@ -82,12 +82,12 @@ void OptBase::run_optimisations(unsigned int maxThreads)
 
 //------------------------------------------------------------------------------
 
-unsigned int OptBase::number_optimizers()
+unsigned int OptBase::number_optimisers()
 {
     unsigned int out(0);
-    mutexPOptimizers.lock();
-    out = pOptimizers.size();
-    mutexPOptimizers.unlock();
+    mutexPOptimisers.lock();
+    out = pOptimisers.size();
+    mutexPOptimisers.unlock();
     return out;
 }
 

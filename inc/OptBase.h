@@ -37,7 +37,7 @@ private:
         mutexAvailabilityCheckTodo,
         mutexQueueCalculated,
         mutexFinishedCalculations,
-        mutexPOptimizers,
+        mutexPOptimisers,
         mutexLogFile;
 
     static std::queue< std::pair<OptCalculation, OptBase*> >
@@ -47,7 +47,7 @@ private:
         finishedCalculations;
 
     static std::set <OptBase*>
-        pOptimizers;
+        pOptimisers;
 
     static bool
         loggingEnabled; //only set with one method, no mutex required
@@ -93,7 +93,7 @@ public:
 
     static void run_optimisations(unsigned int maxThreads = 1);
 
-    static unsigned int number_optimizers();
+    static unsigned int number_optimisers();
 
     static bool enable_logging(const std::string &pathLogFile, const OptBoundaries &optBoundaries);
 

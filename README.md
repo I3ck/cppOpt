@@ -18,7 +18,7 @@ for optimising x^2 you could write:
 ```cpp
 void calculate(OptCalculation &optCalculation) const
 {
-    //defined x^2 as function to be optimized
+    //defined x^2 as function to be optimised
     optCalculation.result = pow(optCalculation.get_parameter("X"),2);
 }
 ```
