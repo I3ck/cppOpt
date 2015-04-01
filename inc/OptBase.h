@@ -14,7 +14,7 @@
 
 #include "config.h"
 #include "OptTarget.h"
-#include "SolverBase.h"
+#include "OptSolverBase.h"
 #include "OptCalculation.h"
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
@@ -71,7 +71,7 @@ protected:
     const unsigned int
         maxCalculations;
 
-    const SolverBase*
+    const OptSolverBase*
         pCalculator;
 
     const OptTarget
@@ -85,7 +85,7 @@ protected:
 public:
     OptBase(const OptBoundaries &optBoundaries,
             unsigned int maxCalculations,
-            SolverBase* pCalculator,
+            OptSolverBase* pCalculator,
             OptTarget optTarget = MINIMIZE,
             OPT_T targetValue = 0.0);
 

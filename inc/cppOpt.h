@@ -9,6 +9,6 @@
 #include "OptCalculation.h"
 #include "OptSimulatedAnnealing.h"
 #include "OptThresholdAccepting.h"
-#include "SolverBase.h"
+#include "OptSolverBase.h"
 
 #endif // CPPOPT_H

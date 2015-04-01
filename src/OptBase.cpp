@@ -33,7 +33,7 @@ unsigned int
 
 OptBase::OptBase(const OptBoundaries &optBoundaries,
                  unsigned int maxCalculations,
-                 SolverBase* pCalculator,
+                 OptSolverBase* pCalculator,
                  OptTarget optTarget,
                  OPT_T targetValue) :
     maxCalculations(maxCalculations),

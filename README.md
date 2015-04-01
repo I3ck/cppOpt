@@ -4,7 +4,7 @@ A C++ library which allows the numerical optimisation of any given problem or fu
 ##optimise anything!
 optimise any given problem by defining your very own Solver class:
 ```cpp
-class MySolver : public SolverBase
+class MySolver : public OptSolverBase
 {
 public:
     void calculate(OptCalculation &optCalculation) const

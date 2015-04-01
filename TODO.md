@@ -4,7 +4,6 @@
 - logging should allow user defined value dividers and newline characters (but default to " " and "\n")  
 - make it easy to use external plotting tools
 - add some example plots to the README
-- prefix `opt` on all classnames?
 
 - add a method to split entire boundaries:
 ```cpp

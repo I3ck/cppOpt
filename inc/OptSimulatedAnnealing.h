@@ -17,7 +17,7 @@ private:
 public:
     OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                           unsigned int maxCalculations,
-                          SolverBase* pCalculator,
+                          OptSolverBase* pCalculator,
                           OptTarget optTarget,
                           OPT_T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
                           OPT_T coolingFactor,

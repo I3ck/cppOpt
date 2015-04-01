@@ -10,7 +10,7 @@
 
 using namespace cppOpt;
 
-class MySolver : public SolverBase
+class MySolver : public OptSolverBase
 {
 public:
     //define your own calculation

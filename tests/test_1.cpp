@@ -5,7 +5,7 @@
 
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
-#include "SolverBase.h"
+#include "OptSolverBase.h"
 #include "OptSimulatedAnnealing.h"
 #include "OptThresholdAccepting.h"
 
@@ -56,7 +56,7 @@ TEST_CASE("Boundaries") {
 }
 
 TEST_CASE("Simulated Annealing") {
-    class MySolver : public SolverBase
+    class MySolver : public OptSolverBase
     {
     public:
         void calculate(OptCalculation &optCalculation) const
@@ -155,7 +155,7 @@ TEST_CASE("Simulated Annealing") {
 }
 
 TEST_CASE("Threshold Accepting") {
-    class MySolver : public SolverBase
+    class MySolver : public OptSolverBase
     {
     public:
         void calculate(OptCalculation &optCalculation) const
@@ -260,7 +260,7 @@ TEST_CASE("Threshold Accepting") {
 }
 
 TEST_CASE("Multithreading / Boundary Splitting") {
-    class MySolver : public SolverBase
+    class MySolver : public OptSolverBase
     {
     public:
         void calculate(OptCalculation &optCalculation) const

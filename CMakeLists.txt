@@ -21,7 +21,7 @@ aux_source_directory(
 add_library(
         cppOpt
         STATIC
-        src/SolverBase.cpp
+        src/OptSolverBase.cpp
         src/OptBase.cpp
         src/OptBoundaries.cpp
         src/OptBoundary.cpp

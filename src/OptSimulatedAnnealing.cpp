@@ -5,7 +5,7 @@ namespace cppOpt
 
 OptSimulatedAnnealing::OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                                              unsigned int maxCalculations,
-                                             SolverBase *pCalculator,
+                                             OptSolverBase *pCalculator,
                                              OptTarget optTarget,
                                              OPT_T targetValue,
                                              OPT_T coolingFactor,
