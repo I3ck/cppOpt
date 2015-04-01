@@ -80,7 +80,7 @@ OptCalculation OptThresholdAccepting::get_next_calculation()
         return newValue;
     }
 
-    OptCalculation center;
+    OptCalculation referenceValue;
 
     if(result_better(previousCalculations.back(), optCalculationReference, optTarget, targetValue))
         optCalculationReference = previousCalculations.back();
@@ -90,7 +90,7 @@ OptCalculation OptThresholdAccepting::get_next_calculation()
     if(result_better(previousCalculations.back(), compareValue, optTarget, targetValue))
         optCalculationConfigurationC = previousCalculations.back();
 
-    center = optCalculationConfigurationC;
+    referenceValue = optCalculationConfigurationC;
 
     while(true)
     {
@@ -106,7 +106,7 @@ OptCalculation OptThresholdAccepting::get_next_calculation()
             if(rand() % 2)
                 change *= -1.0;
 
-            newValue.add_parameter(boundary->name, center.get_parameter(boundary->name) + change);
+            newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
         }
         if(valid(newValue))
             break;

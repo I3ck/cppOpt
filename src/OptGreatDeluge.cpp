@@ -49,15 +49,15 @@ OptCalculation OptGreatDeluge::get_next_calculation()
 
     ///@todo merge these definitions
     OptCalculation newValue;
-    OptCalculation center;
+    OptCalculation referenceValue;
 
     OptCalculation compareValue = compare_value();
 
     if(result_better(previousCalculations.back(), compareValue, optTarget, targetValue))
-        center = previousCalculations.back();
+        referenceValue = previousCalculations.back();
 
     else
-        center = bestCalculation;
+        referenceValue = bestCalculation;
 
     while(true)
     {
@@ -73,7 +73,7 @@ OptCalculation OptGreatDeluge::get_next_calculation()
             if(rand() % 2)
                 change *= -1.0;
 
-            newValue.add_parameter(boundary->name, center.get_parameter(boundary->name) + change);
+            newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
         }
         if(valid(newValue))
             break;

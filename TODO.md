@@ -6,7 +6,6 @@
 - evolutionary algorithm  
 - more examples  
 - rain / coolingFactor etc. can be defined const  
-- rename referenceValue to center or vice versa  
 
 - add a method to split entire boundaries:
 ```cpp
