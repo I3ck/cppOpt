@@ -1,5 +1,5 @@
 #cppOpt
-A C++ library which allows the numerical optimisation of any given problem or function or program or you-name-it  
+A C++ library which allows the numerical optimisation of any given problem, function, program or you-name-it  
 using Catch as testing framework https://github.com/philsquared/Catch
 
 ##optimise anything!
