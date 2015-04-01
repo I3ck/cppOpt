@@ -123,3 +123,11 @@ link your program with the library created in `lib/`
 
 ##including
 directly include `cppOpt.h` which includes all required headers or choose the header files you want to use  
+
+#algorithms explained / referenced
+
+##simulated annealing
+http://en.wikipedia.org/wiki/Simulated_annealing
+
+#threshold accepting
+http://comisef.wikidot.com/concept:thresholdaccepting
