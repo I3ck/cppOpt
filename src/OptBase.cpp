@@ -290,19 +290,6 @@ bool OptBase::available_todo()
 
 //------------------------------------------------------------------------------
 
-bool OptBase::available_finished()
-{
-    bool out(false);
-
-    mutexFinishedCalculations.lock();
-    out = !finishedCalculations.empty();
-    mutexFinishedCalculations.unlock();
-
-    return out;
-}
-
-//------------------------------------------------------------------------------
-
 std::pair<OptValue, OptBase*> OptBase::pop_todo()
 {
     mutexQueueTodo.lock();

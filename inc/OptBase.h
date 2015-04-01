@@ -124,7 +124,6 @@ private:
     static void push_finished(OptValue optValue, OptBase *pOptBase);
 
     static bool available_todo();
-    static bool available_finished();
 
     static std::pair<OptValue, OptBase*> pop_todo();
 
