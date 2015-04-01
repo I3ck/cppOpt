@@ -51,10 +51,10 @@ int main()
 
     //how fast the simulated annealing algorithm slows down
     //http://en.wikipedia.org/wiki/Simulated_annealing
-    T coolingFactor = 0.9;
+    OPT_T coolingFactor = 0.9;
 
     //the chance in the beginning to follow bad solutions
-    T startChance = 0.25;
+    OPT_T startChance = 0.25;
 
     //create your optimizer
     //using simulated annealing

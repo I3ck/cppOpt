@@ -9,7 +9,7 @@ namespace cppOpt
 class OptSimulatedAnnealing : public OptBase
 {
 private:
-    T
+    OPT_T
         temperature,
         coolingFactor,
         chance;
@@ -19,9 +19,9 @@ public:
                           unsigned int maxCalculations,
                           SolverBase* pCalculator,
                           OptTarget optTarget,
-                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
-                          T coolingFactor,
-                          T startChance);
+                          OPT_T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          OPT_T coolingFactor,
+                          OPT_T startChance);
     ~OptSimulatedAnnealing();
 
 private:

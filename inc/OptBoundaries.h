@@ -21,7 +21,7 @@ public:
     OptBoundaries();
     ~OptBoundaries();
 
-    void add_boundary(T min, T max, const std::string &name);
+    void add_boundary(OPT_T min, OPT_T max, const std::string &name);
     void add_boundary(const OptBoundary &optBoundary);
 
     std::string to_string() const;

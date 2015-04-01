@@ -17,7 +17,7 @@ OptBoundaries::~OptBoundaries()
 
 //------------------------------------------------------------------------------
 
-void OptBoundaries::add_boundary(T min, T max, const std::string &name)
+void OptBoundaries::add_boundary(OPT_T min, OPT_T max, const std::string &name)
 {
     OptBoundary temp(min, max, name);
     add_boundary(temp);

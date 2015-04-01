@@ -35,7 +35,7 @@ OptBase::OptBase(const OptBoundaries &optBoundaries,
                  unsigned int maxCalculations,
                  SolverBase* pCalculator,
                  OptTarget optTarget,
-                 T targetValue) :
+                 OPT_T targetValue) :
     maxCalculations(maxCalculations),
     optBoundaries(optBoundaries),
     pCalculator(pCalculator),
@@ -112,7 +112,7 @@ void OptBase::set_wait_time(unsigned int timeInMs)
 
 //------------------------------------------------------------------------------
 
-OptCalculation OptBase::get_best_calculation(OptTarget optTarget, T targetValue)
+OptCalculation OptBase::get_best_calculation(OptTarget optTarget, OPT_T targetValue)
 {
     OptCalculation out;
     mutexFinishedCalculations.lock();
@@ -156,27 +156,27 @@ void OptBase::add_finished_calculation(OptCalculation optCalculation)
 
 //------------------------------------------------------------------------------
 
-T OptBase::bad_value() const
+OPT_T OptBase::bad_value() const
 {
     switch(optTarget)
     {
         case MINIMIZE:
-            return std::numeric_limits<T>::max();
+            return std::numeric_limits<OPT_T>::max();
 
         case MAXIMIZE:
-            return std::numeric_limits<T>::min();
+            return std::numeric_limits<OPT_T>::min();
 
         case APPROACH:
             if(targetValue > 0.0)
-                return std::numeric_limits<T>::min();
+                return std::numeric_limits<OPT_T>::min();
             else
-                return std::numeric_limits<T>::max();
+                return std::numeric_limits<OPT_T>::max();
 
         case DIVERGE:
             return targetValue;
 
         default: //MINIMIZE
-            return std::numeric_limits<T>::max();
+            return std::numeric_limits<OPT_T>::max();
     }
 }
 
@@ -197,7 +197,7 @@ bool OptBase::valid(const OptCalculation &optCalculation) const
 
 //------------------------------------------------------------------------------
 
-bool OptBase::result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, T targetValue)
+bool OptBase::result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, OPT_T targetValue)
 {
     switch(optTarget)
     {
@@ -221,9 +221,9 @@ bool OptBase::result_better(const OptCalculation &result, const OptCalculation &
 
 //------------------------------------------------------------------------------
 
-T OptBase::random_factor()
+OPT_T OptBase::random_factor()
 {
-    return rand()/(T)(RAND_MAX);
+    return rand()/(OPT_T)(RAND_MAX);
 }
 
 // PRIVATE ---------------------------------------------------------------------

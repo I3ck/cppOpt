@@ -13,7 +13,7 @@ private:
         optCalculationReference,
         optCalculationConfigurationC;
 
-    T
+    OPT_T
         temperature,
         coolingFactor,
         threshold,
@@ -24,10 +24,10 @@ public:
                           unsigned int maxCalculations,
                           SolverBase* pCalculator,
                           OptTarget optTarget,
-                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
-                          T coolingFactor,
-                          T threshold,
-                          T thresholdFactor);
+                          OPT_T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          OPT_T coolingFactor,
+                          OPT_T threshold,
+                          OPT_T thresholdFactor);
 
     ~OptThresholdAccepting();
 

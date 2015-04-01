@@ -5,8 +5,8 @@
 #define DEBUG
 
 //activate either one of those
-//#define T float
-#define T double
-//#define T long double
+//#define OPT_T float
+#define OPT_T double
+//#define OPT_T long double
 
 #endif // CONFIG_H

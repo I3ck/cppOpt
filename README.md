@@ -108,9 +108,9 @@ check out `examples/` for more
 open up `inc/config.h` to enable/disable DEBUG output  
 or to define the used floating point precision
 ```cpp
-//#define T float
-#define T double
-//#define T long double
+//#define OPT_T float
+#define OPT_T double
+//#define OPT_T long double
 ```
 
 ##building

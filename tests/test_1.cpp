@@ -70,8 +70,8 @@ TEST_CASE("Simulated Annealing") {
 
     MySolver myCalculator;
     unsigned int maxCalculations = 300;
-    T coolingFactor = 0.95;
-    T startChance = 0.25;
+    OPT_T coolingFactor = 0.95;
+    OPT_T startChance = 0.25;
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;
@@ -169,9 +169,9 @@ TEST_CASE("Threshold Accepting") {
 
     MySolver myCalculator;
     unsigned int maxCalculations = 300;
-    T coolingFactor = 0.95;
-    T threshold = 5.0;
-    T thresholdFactor = 0.95;
+    OPT_T coolingFactor = 0.95;
+    OPT_T threshold = 5.0;
+    OPT_T thresholdFactor = 0.95;
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;
@@ -282,8 +282,8 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
     MySolver myCalculator;
     unsigned int maxCalculations = 300;
-    T coolingFactor = 0.95;
-    T startChance = 0.25;
+    OPT_T coolingFactor = 0.95;
+    OPT_T startChance = 0.25;
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;

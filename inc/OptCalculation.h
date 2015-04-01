@@ -13,19 +13,19 @@ namespace cppOpt
 class OptCalculation
 {
 private:
-    std::map <std::string, T> parameters;
+    std::map <std::string, OPT_T> parameters;
 
 public:
-    T result;
+    OPT_T result;
 
     OptCalculation();
     ~OptCalculation();
 
-    std::map <std::string, T> get_parameters() const;
-    void set_parameters(const std::map <std::string, T> &value);
+    std::map <std::string, OPT_T> get_parameters() const;
+    void set_parameters(const std::map <std::string, OPT_T> &value);
 
-    void add_parameter(const std::string &name, T value);
-    T get_parameter(const std::string &name) const;
+    void add_parameter(const std::string &name, OPT_T value);
+    OPT_T get_parameter(const std::string &name) const;
 
     std::string to_string_values() const;
     std::string to_string_header() const;

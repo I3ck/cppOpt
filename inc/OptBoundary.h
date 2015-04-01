@@ -12,17 +12,17 @@ class OptBoundary
 {
 public:
 
-    const T
+    const OPT_T
         min,
         max;
 
     const std::string
         name;
 
-    OptBoundary(T min, T max, const std::string &name);
+    OptBoundary(OPT_T min, OPT_T max, const std::string &name);
     ~OptBoundary();
 
-    T range() const;
+    OPT_T range() const;
 };
 
 } // namespace cppOpt

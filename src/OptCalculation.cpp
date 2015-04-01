@@ -5,28 +5,28 @@ namespace cppOpt
 
 //------------------------------------------------------------------------------
 
-std::map <std::string, T> OptCalculation::get_parameters() const
+std::map <std::string, OPT_T> OptCalculation::get_parameters() const
 {
     return parameters;
 }
 
 //------------------------------------------------------------------------------
 
-void OptCalculation::set_parameters(const std::map <std::string, T> &value)
+void OptCalculation::set_parameters(const std::map <std::string, OPT_T> &value)
 {
     parameters = value;
 }
 
 //------------------------------------------------------------------------------
 
-void OptCalculation::add_parameter(const std::string &name, T value)
+void OptCalculation::add_parameter(const std::string &name, OPT_T value)
 {
     parameters[name] = value;
 }
 
 //------------------------------------------------------------------------------
 
-T OptCalculation::get_parameter(const std::string &name) const
+OPT_T OptCalculation::get_parameter(const std::string &name) const
 {
     if(parameters.find(name) != parameters.end())
         return parameters.at(name); ///@todo these need proper error handling

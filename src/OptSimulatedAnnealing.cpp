@@ -7,9 +7,9 @@ OptSimulatedAnnealing::OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                                              unsigned int maxCalculations,
                                              SolverBase *pCalculator,
                                              OptTarget optTarget,
-                                             T targetValue,
-                                             T coolingFactor,
-                                             T startChance) :
+                                             OPT_T targetValue,
+                                             OPT_T coolingFactor,
+                                             OPT_T startChance) :
     OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
     temperature(1.0),
     coolingFactor(coolingFactor),
@@ -46,7 +46,7 @@ OptCalculation OptSimulatedAnnealing::get_next_value()
         for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
         {
             ///@todo change logic could be a method
-            T change, maxChange;
+            OPT_T change, maxChange;
 
             maxChange = 0.5 * boundary->range() * temperature;
             change = random_factor() * maxChange;
@@ -73,8 +73,8 @@ OptCalculation OptSimulatedAnnealing::random_start_value()
     OptCalculation optCalculation;
     for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
     {
-        T range = boundary->max - boundary->min;
-        T newValue = boundary->min + random_factor() * range;
+        OPT_T range = boundary->max - boundary->min; ///@todo use range method here (and propaply in threshold accepting)
+        OPT_T newValue = boundary->min + random_factor() * range;
         optCalculation.add_parameter(boundary->name, newValue);
     }
     bestCalculation = optCalculation;

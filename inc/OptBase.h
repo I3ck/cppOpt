@@ -77,7 +77,7 @@ protected:
     const OptTarget
         optTarget;
 
-    T
+    OPT_T
         targetValue;
 
 // METHODS ---------------------------------------------------------------------
@@ -87,7 +87,7 @@ public:
             unsigned int maxCalculations,
             SolverBase* pCalculator,
             OptTarget optTarget = MINIMIZE,
-            T targetValue = 0.0);
+            OPT_T targetValue = 0.0);
 
     ~OptBase();
 
@@ -100,23 +100,23 @@ public:
     static void set_wait_time(unsigned int timeInMs);
 
     //targetValue won't be used when maximizing or minimizing
-    static OptCalculation get_best_calculation(OptTarget optTarget, T targetValue);
+    static OptCalculation get_best_calculation(OptTarget optTarget, OPT_T targetValue);
 
     OptCalculation get_best_calculation() const;
 
 protected:
     //targetValue won't be used when maximizing or minimizing
-    static bool result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, T targetValue);
+    static bool result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, OPT_T targetValue);
 
     virtual OptCalculation get_next_value() = 0; //must be implemented by algorithm derived classes
 
     void add_finished_calculation(OptCalculation optCalculation);
 
-    T bad_value() const;
+    OPT_T bad_value() const;
 
     bool valid(const OptCalculation &optCalculation) const;
 
-    static T random_factor();
+    static OPT_T random_factor();
 
 private:
     static void threaded_work();
