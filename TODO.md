@@ -6,7 +6,6 @@
 - evolutionary algorithm  
 - more examples  
 - rain / coolingFactor etc. can be defined const  
-- rename get_next_value() to get_next_calculation()  
 - rename referenceValue to center or vice versa  
 
 - add a method to split entire boundaries:

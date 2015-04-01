@@ -42,7 +42,7 @@ OptGreatDeluge::~OptGreatDeluge()
 
 //------------------------------------------------------------------------------
 
-OptCalculation OptGreatDeluge::get_next_value()
+OptCalculation OptGreatDeluge::get_next_calculation()
 {
     if(previousCalculations.empty())
         return random_start_value();

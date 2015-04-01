@@ -128,7 +128,7 @@ protected:
     //targetValue won't be used when maximizing or minimizing
     static bool result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, OPT_T targetValue);
 
-    virtual OptCalculation get_next_value() = 0; //must be implemented by algorithm derived classes
+    virtual OptCalculation get_next_calculation() = 0; //must be implemented by algorithm derived classes
 
     void add_finished_calculation(OptCalculation optCalculation);
 

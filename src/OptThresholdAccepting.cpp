@@ -42,7 +42,7 @@ OptThresholdAccepting::~OptThresholdAccepting()
 
 //------------------------------------------------------------------------------
 
-OptCalculation OptThresholdAccepting::get_next_value()
+OptCalculation OptThresholdAccepting::get_next_calculation()
 {
     if(previousCalculations.empty())
         return random_start_value();

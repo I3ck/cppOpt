@@ -40,7 +40,7 @@ OptSimulatedAnnealing::~OptSimulatedAnnealing()
 
 //------------------------------------------------------------------------------
 
-OptCalculation OptSimulatedAnnealing::get_next_value()
+OptCalculation OptSimulatedAnnealing::get_next_calculation()
 {
     if(previousCalculations.empty())
         return random_start_value();

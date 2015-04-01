@@ -38,7 +38,7 @@ public:
     ~OptSimulatedAnnealing();
 
 private:
-    OptCalculation get_next_value();
+    OptCalculation get_next_calculation();
     OptCalculation random_start_value();
     void update_temperature();
     void update_chance();

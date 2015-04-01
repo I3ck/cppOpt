@@ -85,7 +85,7 @@ void OptBase::run_optimisations(unsigned int maxThreads)
     for(const auto &pOptimiser : pOptimisers)
     {
         if(pOptimiser->previousCalculations.size() == 0)
-            push_todo(pOptimiser->get_next_value(), pOptimiser);
+            push_todo(pOptimiser->get_next_calculation(), pOptimiser);
     }
     mutexPOptimisers.unlock();
 
@@ -276,7 +276,7 @@ void OptBase::threaded_work()
                 break;
 
             //only add the next one if there still are more
-            push_todo(pOptBase->get_next_value(), pOptBase);
+            push_todo(pOptBase->get_next_calculation(), pOptBase);
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(waitTimeMs));
