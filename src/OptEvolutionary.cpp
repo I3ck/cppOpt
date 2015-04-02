@@ -132,7 +132,17 @@ void OptEvolutionary::create_start_individuals()
 
 void OptEvolutionary::select_individuals()
 {
-    ///@todo
+    unsigned int i = 1;
+
+    for(const auto &individual : previousCalculationsSorted)
+    {
+        individualsSelected.push_back(individual);
+
+        if(i >= nIndividualsSelection)
+            break;
+
+        ++i;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -140,12 +150,24 @@ void OptEvolutionary::select_individuals()
 void OptEvolutionary::breed_individuals()
 {
     ///@todo
+    // for each selected
+    // find closest pairs
+    // create new x individuals between them
+    // push into bred
+    // clear selected
 }
 
 //------------------------------------------------------------------------------
 
 void OptEvolutionary::mutate_individuals()
 {
+    for(auto individual : individualsBred)
+    {
+        // for each boundary
+        //      alter values (similar to e.g. simulated annealing)
+        // push onto mutated
+    }
+    // clear bred
     ///@todo
 }
 
