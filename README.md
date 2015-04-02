@@ -121,13 +121,13 @@ OptCalculation bestAll = OptBase::get_best_calculation(optTarget, targetValue);
 ###optimising x*x [-5.0:+5.0] with simulated annealing
 note that the optimiser doesn't "know" that the function actually is x*x
 ####minimizing:
-![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/minimize.gif)  
+![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/minimize.gif)  
 ####maximizing:
-![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/maximize.gif)  
+![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/maximize.gif)  
 ###approaching 3.0:
-![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/approach_3.gif)  
+![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/approach_3.gif)  
 ###diverging from 3.0:
-![alt tag](https://github.com/I3ck/cppOptImages/raw/master/images/animations/xSquare/simulated%20annealing%20250/diverge_3.gif)  
+![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/diverge_3.gif)  
 check out https://github.com/I3ck/cppOptImages for more images  
 or `examples/` for code examples
 
