@@ -25,7 +25,7 @@ OptEvolutionary::OptEvolutionary(const OptBoundaries &optBoundaries,
                                              unsigned int nIndividualsStart,
                                              unsigned int nIndividualsSelection,
                                              unsigned int nIndividualsOffspring,
-                                             Opt_T mutation) :
+                                             OPT_T mutation) :
     OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
     coolingFactor(coolingFactor),
     nIndividualsStart(nIndividualsStart),
@@ -51,6 +51,8 @@ OptCalculation OptEvolutionary::get_next_calculation()
 
     if(previousCalculations.empty())
         create_start_individuals();
+    else
+        add_previous_to_sorted();
 
     if(individualsStart.size() != 0)
     {
@@ -97,28 +99,52 @@ OptCalculation OptEvolutionary::random_start_value()
 
 //------------------------------------------------------------------------------
 
-void create_start_individuals()
+void OptEvolutionary::add_previous_to_sorted()
+{
+    if(previousCalculations.size() > 0)
+    {
+        OPT_T sortValue = calculate_sort_value(previousCalculations.back());
+        previousCalculationsSorted.emplace(sortValue, previousCalculations.back());
+    }
+}
+
+//------------------------------------------------------------------------------
+
+void OptEvolutionary::create_start_individuals()
+{
+    individualsStart.push_back(random_start_value());
+
+    for(unsigned int i = 1; i < nIndividualsStart; ++i)
+    {
+        ///@todo use random method here when implemented
+        OptCalculation optCalculation;
+        for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+        {
+            OPT_T range = boundary->max - boundary->min; ///@todo use range method here (and propaply in threshold accepting)
+            OPT_T newValue = boundary->min + random_factor() * range;
+            optCalculation.add_parameter(boundary->name, newValue);
+        }
+        individualsStart.push_back(optCalculation);
+    }
+}
+
+//------------------------------------------------------------------------------
+
+void OptEvolutionary::select_individuals()
 {
     ///@todo
 }
 
 //------------------------------------------------------------------------------
 
-void select_individuals()
+void OptEvolutionary::breed_individuals()
 {
     ///@todo
 }
 
 //------------------------------------------------------------------------------
 
-void breed_individuals()
-{
-    ///@todo
-}
-
-//------------------------------------------------------------------------------
-
-void mutate_individuals()
+void OptEvolutionary::mutate_individuals()
 {
     ///@todo
 }
@@ -132,9 +158,25 @@ void OptEvolutionary::update_mutation()
 
 //------------------------------------------------------------------------------
 
-OPT_T calculate_sort_value(const OptCalculation &optCalculation) const
+OPT_T OptEvolutionary::calculate_sort_value(const OptCalculation &optCalculation) const
 {
-    ///@todo
+    switch(optTarget)
+    {
+        case MINIMIZE:
+            return optCalculation.result;
+
+        case MAXIMIZE:
+            return -optCalculation.result;
+
+        case APPROACH:
+            return fabs(targetValue - optCalculation.result);
+
+        case DIVERGE:
+            return -fabs(targetValue - optCalculation.result);
+
+        default: // MINIMIZE
+            return optCalculation.result;
+    }
 }
 
 //------------------------------------------------------------------------------

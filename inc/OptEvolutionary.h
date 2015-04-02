@@ -54,12 +54,13 @@ public:
                           unsigned int nIndividualsStart,
                           unsigned int nIndividualsSelection,
                           unsigned int nIndividualsOffspring,
-                          Opt_T mutation);
+                          OPT_T mutation);
     ~OptEvolutionary();
 
 private:
     OptCalculation get_next_calculation();
     OptCalculation random_start_value();
+    void add_previous_to_sorted();
     void create_start_individuals();
     void select_individuals();
     void breed_individuals();
