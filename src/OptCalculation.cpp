@@ -48,6 +48,19 @@ OPT_T OptCalculation::get_parameter(const std::string &name) const
 
 //------------------------------------------------------------------------------
 
+OPT_T OptCalculation::distance_to(const OptCalculation &other) const
+{
+    ///@todo add a test to check whether both have the exact same parameters
+    ///@todo if not return the max value for OPT_T
+    OPT_T squareSum(0.0);
+    for(const auto &parameter : parameters)
+        squareSum += pow(parameters[parameter] - other.parameters[parameter], 2);
+
+    return sqrt(squareSum);
+}
+
+//------------------------------------------------------------------------------
+
 std::string OptCalculation::to_string_values(const std::string &delimiter) const
 {
     std::string out("");

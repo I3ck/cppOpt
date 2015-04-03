@@ -40,6 +40,9 @@ public:
     void add_parameter(const std::string &name, OPT_T value);
     OPT_T get_parameter(const std::string &name) const;
 
+    ///@todo could be static
+    OPT_T distance_to(const OptCalculation &other) const;
+
     std::string to_string_values(const std::string &delimiter = " ") const;
     std::string to_string_header(const std::string &delimiter = " ") const;
 };
