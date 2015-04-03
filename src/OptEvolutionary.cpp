@@ -136,7 +136,7 @@ void OptEvolutionary::select_individuals()
 
     for(const auto &individual : previousCalculationsSorted)
     {
-        individualsSelected.push_back(individual);
+        individualsSelected.push_back(individual.second);
 
         if(i >= nIndividualsSelection)
             break;
@@ -149,12 +149,28 @@ void OptEvolutionary::select_individuals()
 
 void OptEvolutionary::breed_individuals()
 {
-    ///@todo
-    // for each selected
-    // find closest pairs
-    // create new x individuals between them
-    // push into bred
-    // clear selected
+    std::set<unsigned int> usedIndexes;
+    std::vector< std::pair<OptCalculation,OptCalculation> > parents;
+
+    ///@todo needs heavy testing
+    ///@todo make this its own method? (and parents a member?)
+    for(unsigned int i = 0; i < individualsSelected.size(); ++i)
+    {
+        unsigned int indexClosest = index_closest(individualsSelected, i);
+
+        if(usedIndexes.find(indexClosest) == usedIndexes.end())
+        {
+            parents.push_back(individualsSelected[i], individualsSelected[indexClosest]);
+            usedIndexes[indexClosest];
+        }
+    }
+
+    individualsSelected.clear();
+    for(const auto &parentPair : parents)
+    {
+        for(unsigned int i = 0; i < nIndividualsOffspring; ++i)
+            individualsBred.push_back(  calculation_between(parentPair.first, parentPair.second)  );
+    }
 }
 
 //------------------------------------------------------------------------------
