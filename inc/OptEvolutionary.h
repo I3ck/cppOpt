@@ -69,6 +69,9 @@ private:
     void update_mutation();
 
     OPT_T calculate_sort_value(const OptCalculation &optCalculation) const;
+
+    ///@todo could be static or even a member of OptBase
+    unsigned int index_closest(const std::vector<OptCalculation> &optCalculations, unsigned int indexThis) const;
 };
 
 #endif // OPTSIMULATEDANNEALING_H

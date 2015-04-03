@@ -219,4 +219,38 @@ OPT_T OptEvolutionary::calculate_sort_value(const OptCalculation &optCalculation
 
 //------------------------------------------------------------------------------
 
+unsigned int index_closest(const std::vector<OptCalculation> &optCalculations, unsigned int indexThis) const
+{
+    OPT_T closestDistance;
+    unsigned int indexClosest(0);
+    bool initialised(false);
+
+    for(unsigned int i = 0; i < optCalculations.size(); ++i)
+    {
+        if(i == indexThis)
+            continue;
+
+        if(!initialised)
+        {
+            closestDistance = distance(optCalculations[i], optCalculations[indexThis]);
+            indexClosest = i;
+            initialised = true;
+        }
+        else
+        {
+            OPT_T distance = distance(optCalculations[i], optCalculations[indexThis]);
+
+            if(distance < closestDistance)
+            {
+                closestDistance = distance;
+                indexClosest = i;
+            }
+        }
+    }
+    return i;
+}
+
+//------------------------------------------------------------------------------
+
+
 } // namespace cppOpt
