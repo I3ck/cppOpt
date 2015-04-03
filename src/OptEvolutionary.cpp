@@ -160,8 +160,8 @@ void OptEvolutionary::breed_individuals()
 
         if(usedIndexes.find(indexClosest) == usedIndexes.end())
         {
-            parents.push_back(individualsSelected[i], individualsSelected[indexClosest]);
-            usedIndexes[indexClosest];
+            parents.emplace_back(individualsSelected[i], individualsSelected[indexClosest]);
+            usedIndexes.insert(indexClosest);
         }
     }
 
@@ -232,13 +232,13 @@ unsigned int index_closest(const std::vector<OptCalculation> &optCalculations, u
 
         if(!initialised)
         {
-            closestDistance = distance(optCalculations[i], optCalculations[indexThis]);
+            closestDistance = optCalculations[i].distance_to(optCalculations[indexThis]);
             indexClosest = i;
             initialised = true;
         }
         else
         {
-            OPT_T distance = distance(optCalculations[i], optCalculations[indexThis]);
+            OPT_T distance = optCalculations[i].distance_to(optCalculations[indexThis]);
 
             if(distance < closestDistance)
             {
@@ -247,7 +247,7 @@ unsigned int index_closest(const std::vector<OptCalculation> &optCalculations, u
             }
         }
     }
-    return i;
+    return indexClosest;
 }
 
 //------------------------------------------------------------------------------
