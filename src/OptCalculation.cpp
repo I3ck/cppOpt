@@ -54,7 +54,7 @@ OPT_T OptCalculation::distance_to(const OptCalculation &other) const
     ///@todo if not return the max value for OPT_T
     OPT_T squareSum(0.0);
     for(const auto &parameter : parameters)
-        squareSum += pow(parameters[parameter] - other.parameters[parameter], 2);
+        squareSum += pow(parameters.at(parameter.first) - other.parameters.at(parameter.first), 2);
 
     return sqrt(squareSum);
 }
@@ -70,8 +70,8 @@ OptCalculation OptCalculation::calculation_between(const OptCalculation &other) 
     ///@todo rename parameter to key (same with distance method)
     for(const auto &parameter : parameters)
     {
-        OPT_T centerValue = ( parameters[parameter] + other.parameters[parameter] ) / 2.0;
-        out.add_parameter(parameter, centerValue);
+        OPT_T centerValue = ( parameters.at(parameter.first) + other.parameters.at(parameter.first) ) / 2.0;
+        out.add_parameter(parameter.first, centerValue);
     }
 
     return out;

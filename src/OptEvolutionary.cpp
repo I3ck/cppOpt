@@ -169,7 +169,7 @@ void OptEvolutionary::breed_individuals()
     for(const auto &parentPair : parents)
     {
         for(unsigned int i = 0; i < nIndividualsOffspring; ++i)
-            individualsBred.push_back(  calculation_between(parentPair.first, parentPair.second)  );
+            individualsBred.push_back(  parentPair.first.calculation_between(parentPair.second)  );
     }
 }
 
@@ -219,7 +219,7 @@ OPT_T OptEvolutionary::calculate_sort_value(const OptCalculation &optCalculation
 
 //------------------------------------------------------------------------------
 
-unsigned int index_closest(const std::vector<OptCalculation> &optCalculations, unsigned int indexThis) const
+unsigned int OptEvolutionary::index_closest(const std::vector<OptCalculation> &optCalculations, unsigned int indexThis) const
 {
     OPT_T closestDistance;
     unsigned int indexClosest(0);

@@ -17,6 +17,7 @@
 #include <string>
 #include <map>
 #include <atomic>
+#include <cmath>
 
 #include "config.h"
 
