@@ -61,6 +61,24 @@ OPT_T OptCalculation::distance_to(const OptCalculation &other) const
 
 //------------------------------------------------------------------------------
 
+OptCalculation OptCalculation::calculation_between(const OptCalculation &other) const
+{
+    ///@todo add a test to check whether both have the exact same parameters
+    ///@todo if not return one of the two as center
+    OptCalculation out;
+
+    ///@todo rename parameter to key (same with distance method)
+    for(const auto &parameter : parameters)
+    {
+        OPT_T centerValue = ( parameters[parameter] + other.parameters[parameter] ) / 2.0;
+        out.add_parameter(parameter, centerValue);
+    }
+
+    return out;
+}
+
+//------------------------------------------------------------------------------
+
 std::string OptCalculation::to_string_values(const std::string &delimiter) const
 {
     std::string out("");

@@ -43,6 +43,9 @@ public:
     ///@todo could be static
     OPT_T distance_to(const OptCalculation &other) const;
 
+    ///@todo could be static
+    OptCalculation calculation_between(const OptCalculation &other) const;
+
     std::string to_string_values(const std::string &delimiter = " ") const;
     std::string to_string_header(const std::string &delimiter = " ") const;
 };
