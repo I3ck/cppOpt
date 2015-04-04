@@ -179,12 +179,23 @@ void OptEvolutionary::mutate_individuals()
 {
     for(auto individual : individualsBred)
     {
-        // for each boundary
-        //      alter values (similar to e.g. simulated annealing)
-        // push onto mutated
+        OptCalculation mutatedIndividual;
+        for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+        {
+            OPT_T change, maxChange;
+
+            maxChange = 0.5 * boundary->range() * mutation;
+            change = random_factor() * maxChange;
+
+            if(rand() % 2)
+                change *= -1.0;
+
+            mutatedIndividual.add_parameter(boundary->name, individual.get_parameter(boundary->name) + change);
+
+        }
+        individualsMutated.push_back(mutatedIndividual);
     }
-    // clear bred
-    ///@todo
+    individualsBred.clear();
 }
 
 //------------------------------------------------------------------------------
