@@ -11,8 +11,8 @@
     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef OPTSIMULATEDANNEALING_H
-#define OPTSIMULATEDANNEALING_H
+#ifndef OPTEVOLUTIONARY_H
+#define OPTEVOLUTIONARY_H
 
 #include "OptBase.h"
 
@@ -74,6 +74,6 @@ private:
     unsigned int index_closest(const std::vector<OptCalculation> &optCalculations, unsigned int indexThis) const;
 };
 
-#endif // OPTSIMULATEDANNEALING_H
+#endif // OPTEVOLUTIONARY_H
 
 } // namespace cppOpt
