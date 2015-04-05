@@ -376,6 +376,126 @@ TEST_CASE("Great Deluge") {
     }
 }
 
+TEST_CASE("Evolutionary") {
+    class MySolver : public OptSolverBase
+    {
+    public:
+        void calculate(OptCalculation &optCalculation) const
+        {
+            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
+        }
+    };
+
+    OptBoundaries optBoundaries;
+    optBoundaries.add_boundary(-5.0, 5.0, "X");
+
+    MySolver mySolver;
+    unsigned int maxCalculations = 300;
+    OPT_T coolingFactor = 0.95;
+
+    unsigned int
+        nIndividualsStart(50),
+        nIndividualsSelection(10),
+        nIndividualsOffspring(4);
+
+    OPT_T mutation(0.1);
+
+    SECTION("Minimizing") {
+        OptTarget optTarget = MINIMIZE;
+
+        OptEvolutionary opt(optBoundaries,
+                              maxCalculations,
+                              &mySolver,
+                              optTarget,
+                              0.0, //only required if approaching / diverging
+                              coolingFactor,
+                              nIndividualsStart,
+                              nIndividualsSelection,
+                              nIndividualsOffspring,
+                              mutation);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
+    }
+
+    SECTION("Maximizing") {
+        OptTarget optTarget = MAXIMIZE;
+
+        OptEvolutionary opt(optBoundaries,
+                              maxCalculations,
+                              &mySolver,
+                              optTarget,
+                              0.0, //only required if approaching / diverging
+                              coolingFactor,
+                              nIndividualsStart,
+                              nIndividualsSelection,
+                              nIndividualsOffspring,
+                              mutation);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
+    }
+
+    SECTION("Approaching") {
+        OptTarget optTarget = APPROACH;
+
+        OptEvolutionary opt(optBoundaries,
+                              maxCalculations,
+                              &mySolver,
+                              optTarget,
+                              3.3,
+                              coolingFactor,
+                              nIndividualsStart,
+                              nIndividualsSelection,
+                              nIndividualsOffspring,
+                              mutation);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < DELTA);
+    }
+
+    SECTION("Diverging1") {
+        OptTarget optTarget = DIVERGE;
+
+        OptEvolutionary opt(optBoundaries,
+                              maxCalculations,
+                              &mySolver,
+                              optTarget,
+                              -100.0,
+                              coolingFactor,
+                              nIndividualsStart,
+                              nIndividualsSelection,
+                              nIndividualsOffspring,
+                              mutation);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
+    }
+
+    SECTION("Diverging2") {
+        OptTarget optTarget = DIVERGE;
+
+        OptEvolutionary opt(optBoundaries,
+                              maxCalculations,
+                              &mySolver,
+                              optTarget,
+                              100.0,
+                              coolingFactor,
+                              nIndividualsStart,
+                              nIndividualsSelection,
+                              nIndividualsOffspring,
+                              mutation);
+
+        OptBase::run_optimisations();
+
+        REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
+    }
+}
+
 TEST_CASE("Multithreading / Boundary Splitting") {
     class MySolver : public OptSolverBase
     {
