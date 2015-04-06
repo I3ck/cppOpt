@@ -202,6 +202,19 @@ OPT_T OptBase::bad_value() const
 
 //------------------------------------------------------------------------------
 
+OptCalculation OptBase::random_calculation() const
+{
+    OptCalculation optCalculation;
+    for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+    {
+        OPT_T newValue = boundary->min + random_factor() * boundary->range();
+        optCalculation.add_parameter(boundary->name, newValue);
+    }
+    return optCalculation;
+}
+
+//------------------------------------------------------------------------------
+
 bool OptBase::valid(const OptCalculation &optCalculation) const
 {
     for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)

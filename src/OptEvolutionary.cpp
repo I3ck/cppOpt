@@ -116,14 +116,7 @@ void OptEvolutionary::create_start_individuals()
 
     for(unsigned int i = 1; i < nIndividualsStart; ++i)
     {
-        ///@todo use random method here when implemented
-        OptCalculation optCalculation;
-        for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
-        {
-            OPT_T range = boundary->max - boundary->min; ///@todo use range method here (and propaply in threshold accepting)
-            OPT_T newValue = boundary->min + random_factor() * range;
-            optCalculation.add_parameter(boundary->name, newValue);
-        }
+        OptCalculation optCalculation = random_calculation();
         individualsStart.push_back(optCalculation);
     }
 }

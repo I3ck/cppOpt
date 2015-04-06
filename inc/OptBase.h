@@ -134,6 +134,9 @@ protected:
 
     OPT_T bad_value() const;
 
+    ///@todo could be static?
+    OptCalculation random_calculation() const;
+
     bool valid(const OptCalculation &optCalculation) const;
 
     static OPT_T random_factor();

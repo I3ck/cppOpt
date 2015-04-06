@@ -121,13 +121,7 @@ OptCalculation OptThresholdAccepting::get_next_calculation()
 
 OptCalculation OptThresholdAccepting::random_start_value()
 {
-    OptCalculation optCalculation;
-    for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
-    {
-        OPT_T range = boundary->max - boundary->min;
-        OPT_T newValue = boundary->min + random_factor() * range;
-        optCalculation.add_parameter(boundary->name, newValue);
-    }
+    OptCalculation optCalculation = random_calculation();
     bestCalculation = optCalculation;
     bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
     return optCalculation;
