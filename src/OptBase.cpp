@@ -89,7 +89,7 @@ void OptBase::run_optimisations(unsigned int maxThreads)
     }
     mutexPOptimisers.unlock();
 
-    std::list <std::thread> threads;
+    std::vector <std::thread> threads;
 
     for(unsigned int i=0; i<maxThreads; ++i)
         threads.emplace_back(  std::thread( std::bind(&OptBase::threaded_work) )  );

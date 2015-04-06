@@ -38,7 +38,7 @@ private:
     std::multimap<OPT_T, OptCalculation> // <SORT_VALUE, CALCULATION>
         previousCalculationsSorted;
 
-    std::vector<OptCalculation> ///@todo might be better to use lists here
+    std::vector<OptCalculation>
         individualsStart,
         individualsSelected,
         individualsBred,

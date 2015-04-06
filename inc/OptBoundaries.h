@@ -15,8 +15,7 @@
 #define OPTBOUNDARIES_H
 
 #include <string>
-#include <vector> ///@todo maybe switch to a list?
-///@todo or use a map   map <BOUNDARY_NAME, BOUNDARY>
+#include <vector>
 
 #include "config.h"
 #include "OptBoundary.h"

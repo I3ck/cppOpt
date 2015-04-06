@@ -15,7 +15,6 @@
 #define OPTBASE_H
 
 #include <vector>
-#include <list>
 #include <set>
 #include <mutex>
 #include <queue>
