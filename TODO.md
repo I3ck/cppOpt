@@ -1,13 +1,13 @@
 - add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
 - optimise for speed  
-- add single opt object logging  
+- add single opt object logging?
 - make it easy to use external plotting tools  
 - more examples  
-- great deluge isn't used in an example  
+- great deluge isn't used in an example (nor the evolutionary)  
 - allow algorithms to leave boundaries  
 - taboo areas  
 - carefully check the evolutionary behaviour  
-- evolutionary mutations won't check for borders
+- evolutionary mutations won't check for borders (only relevant if the algorithms should have to stay within their borders)
 
 - add a method to split entire boundaries:
 ```cpp
