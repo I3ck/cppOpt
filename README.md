@@ -84,6 +84,17 @@ OptGreatDeluge opt3(optBoundaries,
                     coolingFactor,
                     waterLevel,
                     rain);
+
+OptEvolutionary opt4(optBoundaries,
+                     maxCalculations,
+                     &mySolver,
+                     optTarget,
+                     targetValue,
+                     coolingFactor,
+                     nIndividualsStart,
+                     nIndividualsSelection,
+                     nIndividualsOffspring,
+                     mutation);
 ```
 
 ##multithreading
@@ -168,3 +179,6 @@ http://comisef.wikidot.com/concept:thresholdaccepting
 
 ##great deluge
 http://en.wikipedia.org/wiki/Great_Deluge_algorithm
+
+##evolutionary
+https://en.wikipedia.org/wiki/Evolutionary_algorithm
