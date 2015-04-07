@@ -60,6 +60,7 @@ OptBase::OptBase(const OptBoundaries &optBoundaries,
     optTarget(optTarget),
     targetValue(targetValue)
 {
+    previousCalculations.reserve(maxCalculations);
     mutexPOptimisers.lock();
     pOptimisers.insert(this);
     mutexPOptimisers.unlock();
@@ -250,7 +251,6 @@ bool OptBase::result_better(const OptCalculation &result, const OptCalculation &
             return result.result < other.result;
     }
 }
-
 
 //------------------------------------------------------------------------------
 
