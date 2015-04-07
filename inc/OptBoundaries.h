@@ -40,6 +40,8 @@ public:
 
     size_t size() const;
 
+    std::vector<OptBoundaries> split(const std::string &name, unsigned int times) const;
+
     std::vector<OptBoundary>::iterator begin();
     std::vector<OptBoundary>::iterator end();
 

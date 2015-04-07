@@ -4,7 +4,7 @@ without knowing the "function" of the problem simply by smartly testing certain 
 - using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
 - using Catch as testing framework https://github.com/philsquared/Catch
 
-##version 0.1.3
+##version 0.1.4
 
 ##optimise anything!
 optimise any given problem by defining your very own Solver class:
