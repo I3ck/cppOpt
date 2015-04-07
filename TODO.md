@@ -7,7 +7,6 @@
 - taboo areas  
 - carefully check the evolutionary behaviour  
 - evolutionary mutations won't check for borders (only relevant if the algorithms should have to stay within their borders)
-- threading isnt enabled on arch linux (check cmake flags)
 
 - add a method to split entire boundaries:
 ```cpp
