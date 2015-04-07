@@ -1,6 +1,5 @@
 - add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
 - optimise for speed  
-- add single opt object logging?
 - make it easy to use external plotting tools  
 - more examples  
 - great deluge isn't used in an example (nor the evolutionary)  
