@@ -34,7 +34,7 @@ public:
             A(10.0),
             n(1.0),
             pi(3.1415926535897932384),
-            x = optCalculation.get_parameter("x"),
+            x = optCalculation.get_parameter("x");
 
         OPT_T sum = x*x - A * cos(2.0 * pi * x);
 
