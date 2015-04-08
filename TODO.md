@@ -1,3 +1,4 @@
+- building on windows currently fails (c++11 flag doesn't seem to work)
 - add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
 - optimise for speed  
 - make it easy to use external plotting tools  
