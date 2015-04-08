@@ -135,13 +135,19 @@ note that the optimiser doesn't "know" that the function actually is x*x
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/minimize.gif)  
 ####maximizing:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/maximize.gif)  
-###approaching 3.0:
+####approaching 3.0:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/approach_3.gif)  
-###diverging from 3.0:
+####diverging from 3.0:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/diverge_3.gif)  
 check out https://github.com/I3ck/cppOptImages for more images  
 or `examples/` for code examples
 
+###optimising the rastrigrin function with simulated annealing
+http://en.wikipedia.org/wiki/Rastrigin_function
+####one-dimensional
+![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/rastrigrin/minimize_sa_1d.gif)  
+####two-dimensional
+![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/rastrigrin/minimize_sa_2d.gif)  
 #usage
 
 ##configuration
