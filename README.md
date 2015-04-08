@@ -154,7 +154,7 @@ or to define the used floating point precision
 ```
 
 ##building
-`cmake`  
+`cmake .`  
 `make`
 
 ##linking
