@@ -62,6 +62,65 @@ size_t OptBoundaries::size() const
     return optBoundaries.size();
 }
 
+
+//------------------------------------------------------------------------------
+
+std::vector<OptBoundaries> OptBoundaries::split(const std::string &name, unsigned int times) const
+{
+    std::vector<OptBoundaries> out;
+
+    OPT_T
+        range(0.0),
+        newRange(0.0);
+
+    bool found(false);
+
+    if(times < 1)
+        return out; //error case
+
+    for(const auto &boundary : optBoundaries)
+    {
+        if(boundary.name == name)
+        {
+            range = boundary.range();
+            found = true;
+        }
+    }
+
+    if(!found)
+        return out; //error case if name doesn't exist
+
+    newRange = range / (OPT_T)times;
+
+    //split
+    for(unsigned int i = 0; i < times; ++i)
+    {
+        OptBoundaries newBoundaries;
+        for(const auto &boundary : optBoundaries)
+        {
+            if(boundary.name == name)
+            {
+                OPT_T
+                    newMin,
+                    newMax;
+
+                newMin = boundary.min + i * newRange;
+                newMax = boundary.min + (i+1) * newRange;
+
+                OptBoundary newBoundary(newMin, newMax, name);
+
+                newBoundaries.add_boundary(newBoundary);
+            }
+            else
+                newBoundaries.add_boundary(boundary);
+        }
+        out.push_back(newBoundaries);
+    }
+
+    return out;
+
+}
+
 //------------------------------------------------------------------------------
 
 std::vector<OptBoundary>::iterator OptBoundaries::begin()

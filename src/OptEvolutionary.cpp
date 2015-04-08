@@ -33,6 +33,10 @@ OptEvolutionary::OptEvolutionary(const OptBoundaries &optBoundaries,
     nIndividualsOffspring(nIndividualsOffspring),
     mutation(mutation)
 {
+    individualsStart.reserve(nIndividualsStart);
+    individualsSelected.reserve(nIndividualsSelection);
+    individualsBred.reserve(  ceil(nIndividualsOffspring * nIndividualsSelection / 2.0)  );
+    individualsMutated.reserve(  ceil(nIndividualsOffspring * nIndividualsSelection / 2.0)  );
 
 }
 

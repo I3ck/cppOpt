@@ -15,6 +15,7 @@
 #include "../dependencies/Catch.h" //https://github.com/philsquared/Catch
 
 #include <cmath>
+#include <vector>
 
 #include "cppOpt.h"
 
@@ -60,6 +61,38 @@ TEST_CASE("Boundaries") {
 
         optBoundaries.add_boundary(OptBoundary(1.0, 3.0, "test"));
         REQUIRE(optBoundaries.size() == 2);
+    }
+
+    SECTION("Splitting") {
+        OptBoundaries optBoundaries;
+
+        optBoundaries.add_boundary(0.0, 10.0, "x");
+        optBoundaries.add_boundary(0.0, 10.0, "y");
+        optBoundaries.add_boundary(0.0, 10.0, "z");
+
+        std::vector<OptBoundaries> splitted = optBoundaries.split("x", 10);
+
+        for(unsigned int i = 0; i < optBoundaries.size(); ++i)
+        {
+            for(const auto &boundary : splitted[i])
+            {
+                if(boundary.name == "x")
+                {
+                    REQUIRE(boundary.min == 0.0 + i);
+                    REQUIRE(boundary.max == 1.0 + i);
+                }
+                else if(boundary.name == "y")
+                {
+                    REQUIRE(boundary.min == 0.0);
+                    REQUIRE(boundary.max == 10.0);
+                }
+                else if(boundary.name == "z")
+                {
+                    REQUIRE(boundary.min == 0.0);
+                    REQUIRE(boundary.max == 10.0);
+                }
+            }
+        }
     }
 }
 
