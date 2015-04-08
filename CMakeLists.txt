@@ -47,11 +47,11 @@ add_executable(
 target_link_libraries(example_2 cppOpt)
 
 add_executable(
-        example_3
-        examples/example_3.cpp
+        example_4
+        examples/example_4.cpp
 )
 
-target_link_libraries(example_3 cppOpt)
+target_link_libraries(example_4 cppOpt)
 
 add_executable(
         test_1
