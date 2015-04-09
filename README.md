@@ -1,10 +1,11 @@
 #cppOpt
-A C++ library which allows the numerical optimisation of any given problem, function, program or you-name-it  
+A header-only C++ library which allows the numerical optimisation of any given problem, function, program or you-name-it  
 without knowing the "function" of the problem simply by smartly testing certain values  
+- you only have to include a single header file `cppOpt.h`
 - using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
 - using Catch as testing framework https://github.com/philsquared/Catch
 
-##version 0.1.4
+##version 0.2
 
 ##optimise anything!
 optimise any given problem by defining your very own Solver class:
@@ -153,11 +154,8 @@ http://en.wikipedia.org/wiki/Rastrigin_function
 
 ##configuration
 open up `inc/config.h` to enable/disable DEBUG output  
-or to define the used floating point precision
 ```cpp
-//#define OPT_T float
-#define OPT_T double
-//#define OPT_T long double
+//#define DEBUG
 ```
 
 ##building the examples / tests
