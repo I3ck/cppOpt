@@ -24,31 +24,122 @@
 namespace cppOpt
 {
 
+template <typename T>
 class OptCalculation
 {
 private:
-    std::map <std::string, OPT_T> parameters;
+    std::map <std::string, T> parameters;
 
 public:
-    OPT_T result;
+    T result;
 
-    OptCalculation();
-    ~OptCalculation();
+//------------------------------------------------------------------------------
 
-    std::map <std::string, OPT_T> get_parameters() const;
-    void set_parameters(const std::map <std::string, OPT_T> &value);
+    OptCalculation()
+    {
 
-    void add_parameter(const std::string &name, OPT_T value);
-    OPT_T get_parameter(const std::string &name) const;
+    }
+
+//------------------------------------------------------------------------------
+
+    ~OptCalculation()
+    {
+
+    }
+
+//------------------------------------------------------------------------------
+
+    std::map <std::string, T> get_parameters() const
+    {
+        return parameters;
+    }
+
+//------------------------------------------------------------------------------
+
+    void set_parameters(const std::map <std::string, T> &value)
+    {
+        parameters = value;
+    }
+
+//------------------------------------------------------------------------------
+
+    void add_parameter(const std::string &name, T value)
+    {
+        parameters[name] = value;
+    }
+
+//------------------------------------------------------------------------------
+
+    T get_parameter(const std::string &name) const
+    {
+        if(parameters.find(name) != parameters.end())
+            return parameters.at(name); ///@todo these need proper error handling
+        else return 0.0; ///@todo better error case
+    }
+
+//------------------------------------------------------------------------------
 
     ///@todo could be static
-    OPT_T distance_to(const OptCalculation &other) const;
+    T distance_to(const OptCalculation &other) const
+    {
+        ///@todo add a test to check whether both have the exact same parameters
+        ///@todo if not return the max value for T
+        T squareSum(0.0);
+        for(const auto &parameter : parameters)
+            squareSum += pow(parameters.at(parameter.first) - other.parameters.at(parameter.first), 2);
+
+        return sqrt(squareSum);
+    }
+
+//------------------------------------------------------------------------------
 
     ///@todo could be static
-    OptCalculation calculation_between(const OptCalculation &other) const;
+    OptCalculation calculation_between(const OptCalculation &other) const
+    {
+        ///@todo add a test to check whether both have the exact same parameters
+        ///@todo if not return one of the two as center
+        OptCalculation out;
 
-    std::string to_string_values(const std::string &delimiter = " ") const;
+        ///@todo rename parameter to key (same with distance method)
+        for(const auto &parameter : parameters)
+        {
+            T centerValue = ( parameters.at(parameter.first) + other.parameters.at(parameter.first) ) / 2.0;
+            out.add_parameter(parameter.first, centerValue);
+        }
+
+        return out;
+    }
+
+//------------------------------------------------------------------------------
+
+    std::string to_string_values(const std::string &delimiter = " ") const
+    {
+        std::string out("");
+
+        for(const auto &parameter : parameters)
+            out += std::to_string(parameter.second) + delimiter;
+
+        out += std::to_string(result);
+
+        return out;
+    }
+
+//------------------------------------------------------------------------------
+
     std::string to_string_header(const std::string &delimiter = " ") const;
+    {
+        std::string out("");
+
+        for(const auto &parameter : parameters)
+            out += parameter.first + delimiter;
+
+        out += "RESULT";
+
+        return out;
+    }
+
+//------------------------------------------------------------------------------
+    
 };
 
 } // namespace cppOpt
