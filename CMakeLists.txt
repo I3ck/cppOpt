@@ -18,51 +18,28 @@ aux_source_directory(
         SRC_LIST
 )
 
-add_library(
-        cppOpt
-        STATIC
-        src/OptSolverBase.cpp
-        src/OptBase.cpp
-        src/OptBoundaries.cpp
-        src/OptBoundary.cpp
-        src/OptSimulatedAnnealing.cpp
-        src/OptThresholdAccepting.cpp
-        src/OptGreatDeluge.cpp
-        src/OptEvolutionary.cpp
-        src/OptCalculation.cpp
-)
 
 add_executable(
         example_1
         examples/example_1.cpp
 )
 
-target_link_libraries(example_1 cppOpt)
-
 add_executable(
         example_2
         examples/example_2.cpp
 )
-
-target_link_libraries(example_2 cppOpt)
 
 add_executable(
         example_3
         examples/example_3.cpp
 )
 
-target_link_libraries(example_3 cppOpt)
-
 add_executable(
         example_4
         examples/example_4.cpp
 )
 
-target_link_libraries(example_4 cppOpt)
-
 add_executable(
         test_1
         tests/test_1.cpp
 )
-
-target_link_libraries(test_1 cppOpt)
