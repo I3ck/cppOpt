@@ -21,21 +21,43 @@
 namespace cppOpt
 {
 
+template <typename T>
 class OptBoundary
 {
 public:
 
-    const OPT_T
+    const T
         min,
         max;
 
     const std::string
         name;
 
-    OptBoundary(OPT_T min, OPT_T max, const std::string &name);
-    ~OptBoundary();
+//------------------------------------------------------------------------------
 
-    OPT_T range() const;
+    OptBoundary(T min, T max, const std::string &name) :
+        min(min),
+        max(max),
+        name(name)
+    {
+
+    }
+
+//------------------------------------------------------------------------------
+
+    ~OptBoundary()
+    {
+
+    }
+
+//------------------------------------------------------------------------------
+
+    T range() const
+    {
+        return max - min;
+    }
+    
+//------------------------------------------------------------------------------
 };
 
 } // namespace cppOpt
