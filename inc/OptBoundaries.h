@@ -23,6 +23,7 @@
 namespace cppOpt
 {
 
+template <typename T>
 class OptBoundaries
 {
 private:
@@ -30,23 +31,141 @@ private:
         optBoundaries;
 
 public:
-    OptBoundaries();
-    ~OptBoundaries();
+    OptBoundaries()
+    {
 
-    void add_boundary(OPT_T min, OPT_T max, const std::string &name);
-    void add_boundary(const OptBoundary &optBoundary);
+    }
 
-    std::string to_string() const;
+//------------------------------------------------------------------------------
 
-    size_t size() const;
+    ~OptBoundaries()
+    {
 
-    std::vector<OptBoundaries> split(const std::string &name, unsigned int times) const;
+    }
 
-    std::vector<OptBoundary>::iterator begin();
-    std::vector<OptBoundary>::iterator end();
+//------------------------------------------------------------------------------
 
-    const std::vector<OptBoundary>::const_iterator cbegin() const;
-    const std::vector<OptBoundary>::const_iterator cend() const;
+    void add_boundary(T min, T max, const std::string &name)
+    {
+        OptBoundary temp(min, max, name);
+        add_boundary(temp);
+    }
+
+//------------------------------------------------------------------------------
+
+    void add_boundary(const OptBoundary &optBoundary)
+    {
+        OptBoundary temp(min, max, name);
+        add_boundary(temp);
+    }
+
+//------------------------------------------------------------------------------
+
+    std::string to_string() const
+    {
+        std::string out("");
+
+        for(const auto &boundary : optBoundaries)
+            out += boundary.name + " ";
+
+        return out;
+    }
+
+//------------------------------------------------------------------------------
+
+    size_t size() const
+    {
+        return optBoundaries.size();
+    }
+
+//------------------------------------------------------------------------------
+
+    std::vector<OptBoundaries> split(const std::string &name, unsigned int times) const
+    {
+        std::vector<OptBoundaries> out;
+
+        T
+            range(0.0),
+            newRange(0.0);
+
+        bool found(false);
+
+        if(times < 1)
+            return out; //error case
+
+        for(const auto &boundary : optBoundaries)
+        {
+            if(boundary.name == name)
+            {
+                range = boundary.range();
+                found = true;
+            }
+        }
+
+        if(!found)
+            return out; //error case if name doesn't exist
+
+        newRange = range / (T)times;
+
+        //split
+        for(unsigned int i = 0; i < times; ++i)
+        {
+            OptBoundaries newBoundaries;
+            for(const auto &boundary : optBoundaries)
+            {
+                if(boundary.name == name)
+                {
+                    T
+                        newMin,
+                        newMax;
+
+                    newMin = boundary.min + i * newRange;
+                    newMax = boundary.min + (i+1) * newRange;
+
+                    OptBoundary newBoundary(newMin, newMax, name);
+
+                    newBoundaries.add_boundary(newBoundary);
+                }
+                else
+                    newBoundaries.add_boundary(boundary);
+            }
+            out.push_back(newBoundaries);
+        }
+
+        return out;
+
+    }
+
+//------------------------------------------------------------------------------
+
+    std::vector<OptBoundary>::iterator begin()
+    {
+        return optBoundaries.begin();
+    }
+
+//------------------------------------------------------------------------------
+
+    std::vector<OptBoundary>::iterator end()
+    {
+        return optBoundaries.end();
+    }
+
+//------------------------------------------------------------------------------
+
+    const std::vector<OptBoundary>::const_iterator cbegin() const
+    {
+        return optBoundaries.cbegin();
+    }
+
+//------------------------------------------------------------------------------
+
+    const std::vector<OptBoundary>::const_iterator cend() const
+    {
+        return optBoundaries.cend();
+    }
+
+//------------------------------------------------------------------------------
+
 };
 
 } // namespace cppOpt
