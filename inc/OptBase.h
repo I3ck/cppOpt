@@ -37,7 +37,7 @@
 
 namespace cppOpt
 {
-
+template <typename T> 
 class OptBase
 {
 
@@ -93,7 +93,7 @@ protected:
     const OptTarget
         optTarget;
 
-    OPT_T
+    T
         targetValue;
 
 // METHODS ---------------------------------------------------------------------
@@ -103,54 +103,342 @@ public:
             unsigned int maxCalculations,
             OptSolverBase* pCalculator,
             OptTarget optTarget = MINIMIZE,
-            OPT_T targetValue = 0.0);
+            T targetValue = 0.0) :
+        maxCalculations(maxCalculations),
+        optBoundaries(optBoundaries),
+        pCalculator(pCalculator),
+        optTarget(optTarget),
+        targetValue(targetValue)
+    {
+        previousCalculations.reserve(maxCalculations);
+        mutexPOptimisers.lock();
+        pOptimisers.insert(this);
+        mutexPOptimisers.unlock();
+        srand( time(NULL) + rand() );
+    }
 
-    ~OptBase();
+//------------------------------------------------------------------------------
 
-    static void run_optimisations(unsigned int maxThreads = 1);
+    ~OptBase()
+    {
+        mutexPOptimisers.lock();
+        pOptimisers.erase( pOptimisers.find(this) );
+        mutexPOptimisers.unlock();
+    }
 
-    static unsigned int number_optimisers();
+//------------------------------------------------------------------------------
+
+    static void run_optimisations(unsigned int maxThreads = 1)
+    {
+        //get the first to-calculate value of every optimiser
+        //and push it onto the todo queue
+        mutexPOptimisers.lock();
+        for(const auto &pOptimiser : pOptimisers)
+        {
+            if(pOptimiser->previousCalculations.size() == 0)
+                push_todo(pOptimiser->get_next_calculation(), pOptimiser);
+        }
+        mutexPOptimisers.unlock();
+
+        std::vector <std::thread> threads;
+
+        for(unsigned int i=0; i<maxThreads; ++i)
+            threads.emplace_back(  std::thread( std::bind(&OptBase::threaded_work) )  );
+
+        for(auto &thread :threads)
+            thread.join();
+    }
+
+//------------------------------------------------------------------------------
+
+    static unsigned int number_optimisers()
+    {
+        unsigned int out(0);
+        mutexPOptimisers.lock();
+        out = pOptimisers.size();
+        mutexPOptimisers.unlock();
+        return out;
+    }
+
+//------------------------------------------------------------------------------
 
     static bool enable_logging(const std::string &pathLogFile,
                                const OptBoundaries &optBoundaries,
                                const std::string &delimiter = " ",
-                               const std::string &lineEnd = "\n");
+                               const std::string &lineEnd = "\n")
+    {
+        logFile.open(pathLogFile);
+        if(logFile.fail())
+            return false;
+        loggingEnabled = true;
+        loggingDelimiter = delimiter;
+        loggingLineEnd = lineEnd;
+        logFile << optBoundaries.to_string() << "RESULT" << loggingLineEnd;
+        return true;
+    }
 
-    static void set_wait_time(unsigned int timeInMs);
+//------------------------------------------------------------------------------
+
+    static void set_wait_time(unsigned int timeInMs)
+    {
+        waitTimeMs = timeInMs;
+    }
+
+//------------------------------------------------------------------------------
 
     //targetValue won't be used when maximizing or minimizing
-    static OptCalculation get_best_calculation(OptTarget optTarget, OPT_T targetValue);
+    static OptCalculation get_best_calculation(OptTarget optTarget, T targetValue)
+    {
+        OptCalculation out;
+        mutexFinishedCalculations.lock();
 
-    OptCalculation get_best_calculation() const;
+        if(finishedCalculations.size() == 0)
+        {
+            mutexFinishedCalculations.unlock();
+            return out;
+        }
+
+        out = finishedCalculations[0].first;
+
+        for(const auto &finishedCalculation : finishedCalculations)
+            if(result_better(finishedCalculation.first, out, optTarget, targetValue))
+                out = finishedCalculation.first;
+
+        mutexFinishedCalculations.unlock();
+        return out;
+    }
+
+//------------------------------------------------------------------------------
+
+    OptCalculation get_best_calculation() const
+    {
+       return bestCalculation;
+    }
+
+//------------------------------------------------------------------------------
 
 protected:
     //targetValue won't be used when maximizing or minimizing
-    static bool result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, OPT_T targetValue);
+    static bool result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, T targetValue)
+    {
+        switch(optTarget)
+        {
+            case MINIMIZE:
+                return result.result < other.result;
+
+            case MAXIMIZE:
+                return result.result > other.result;
+
+            case APPROACH:
+                return fabs(targetValue - result.result) < fabs(targetValue - other.result);
+
+            case DIVERGE:
+                return fabs(targetValue - result.result) > fabs(targetValue - other.result);
+
+            default: //MINIMIZE
+                return result.result < other.result;
+        }
+    }
+
+//------------------------------------------------------------------------------
 
     virtual OptCalculation get_next_calculation() = 0; //must be implemented by algorithm derived classes
 
-    void add_finished_calculation(OptCalculation optCalculation);
+    void add_finished_calculation(OptCalculation optCalculation)
+    {
+        previousCalculations.push_back(optCalculation);
 
-    OPT_T bad_value() const;
+        mutexFinishedCalculations.lock();
+        finishedCalculations.push_back({optCalculation, this});
+        mutexFinishedCalculations.unlock();
 
-    OptCalculation random_calculation() const;
+        if(result_better(optCalculation, bestCalculation, optTarget, targetValue))
+            bestCalculation = optCalculation;
+    }
 
-    bool valid(const OptCalculation &optCalculation) const;
+//------------------------------------------------------------------------------
 
-    static OPT_T random_factor();
+    T bad_value() const
+    {
+        switch(optTarget)
+        {
+            case MINIMIZE:
+                return std::numeric_limits<T>::max();
+
+            case MAXIMIZE:
+                return std::numeric_limits<T>::min();
+
+            case APPROACH:
+                if(targetValue > 0.0)
+                    return std::numeric_limits<T>::min();
+                else
+                    return std::numeric_limits<T>::max();
+
+            case DIVERGE:
+                return targetValue;
+
+            default: //MINIMIZE
+                return std::numeric_limits<T>::max();
+        }
+    }
+
+//------------------------------------------------------------------------------
+
+    OptCalculation random_calculation() const
+    {
+        OptCalculation optCalculation;
+        for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+        {
+            T newValue = boundary->min + random_factor() * boundary->range();
+            optCalculation.add_parameter(boundary->name, newValue);
+        }
+        return optCalculation;
+    }
+
+//------------------------------------------------------------------------------
+
+    bool valid(const OptCalculation &optCalculation) const
+    {
+        for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+        {
+            if(
+            optCalculation.get_parameter(boundary->name) < boundary->min
+            ||
+            optCalculation.get_parameter(boundary->name) > boundary->max)
+                return false;
+        }
+        return true;
+    }
+
+//------------------------------------------------------------------------------
+
+    static T random_factor()
+    {
+        return rand()/(T)(RAND_MAX);
+    }
 
 private:
-    static void threaded_work();
+    static void threaded_work()
+    {
+        while(true)
+        {
+            mutexAvailabilityCheckTodo.lock(); //the check for availability and the pop have to be atomic
+            bool availableTodo = available_todo();
 
-    static void push_todo(OptCalculation optCalculation, OptBase *pOptBase);
-    static void push_finished(OptCalculation optCalculation, OptBase *pOptBase);
+            if(!availableTodo)
+                mutexAvailabilityCheckTodo.unlock(); //no pop will occur, can unlock directly
 
-    static bool available_todo();
+            else // availableTodo
+            {
+                std::pair <OptCalculation, OptBase*> todo = pop_todo();
+                mutexAvailabilityCheckTodo.unlock(); //pop occured, can unlock now
+                OptCalculation optCalculation = todo.first;
+                OptBase* pOptBase = todo.second;
 
-    static std::pair<OptCalculation, OptBase*> pop_todo();
+                pOptBase->pCalculator->calculate(optCalculation);
 
-    static void log(const OptCalculation &optCalculation);
+                if(loggingEnabled)
+                    log(optCalculation);
+
+                pOptBase->add_finished_calculation(optCalculation);
+
+                if(pOptBase->previousCalculations.size() > pOptBase->maxCalculations) ///@todo maybe be >=
+                    break;
+
+                //only add the next one if there still are more
+                push_todo(pOptBase->get_next_calculation(), pOptBase);
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(waitTimeMs));
+        }
+
+    }
+
+//------------------------------------------------------------------------------
+
+    static void push_todo(OptCalculation optCalculation, OptBase *pOptBase)
+    {
+        mutexQueueTodo.lock();
+        queueTodo.push({optCalculation, pOptBase});
+        mutexQueueTodo.unlock();
+    }
+
+//------------------------------------------------------------------------------
+
+    static void push_finished(OptCalculation optCalculation, OptBase *pOptBase)
+    {
+        mutexFinishedCalculations.lock();
+        finishedCalculations.push_back({optCalculation, pOptBase});
+        mutexFinishedCalculations.unlock();
+    }
+
+//------------------------------------------------------------------------------
+
+    static bool available_todo()
+    {
+        bool out(false);
+
+        mutexQueueTodo.lock();
+        out = !queueTodo.empty();
+        mutexQueueTodo.unlock();
+
+        return out;
+    }
+
+//------------------------------------------------------------------------------
+
+    static std::pair<OptCalculation, OptBase*> pop_todo()
+    {
+        mutexQueueTodo.lock();
+        auto out = queueTodo.front();
+        queueTodo.pop();
+        mutexQueueTodo.unlock();
+        return out;
+    }
+
+//------------------------------------------------------------------------------
+
+    static void log(const OptCalculation &optCalculation)
+    {
+        mutexLogFile.lock();
+        logFile << optCalculation.to_string_values(loggingDelimiter) << loggingLineEnd;
+        mutexLogFile.unlock();
+    }
+
+//------------------------------------------------------------------------------
+    
 };
+
+std::mutex
+    OptBase::mutexQueueTodo,
+    OptBase::mutexAvailabilityCheckTodo,
+    OptBase::mutexQueueCalculated,
+    OptBase::mutexFinishedCalculations,
+    OptBase::mutexPOptimisers,
+    OptBase::mutexLogFile;
+
+std::queue< std::pair<OptCalculation, OptBase*> >
+    OptBase::queueTodo;
+
+std::vector< std::pair<OptCalculation, OptBase*> >
+    OptBase::finishedCalculations;
+
+std::set<OptBase*>
+    OptBase::pOptimisers;
+
+bool
+    OptBase::loggingEnabled(false);
+
+
+std::string
+    OptBase::loggingDelimiter(""),
+    OptBase::loggingLineEnd("");
+
+std::ofstream
+    OptBase::logFile;
+
+unsigned int
+    OptBase::waitTimeMs(0);
 
 } // namespace cppOpt
 
