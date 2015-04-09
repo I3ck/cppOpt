@@ -19,31 +19,111 @@
 namespace cppOpt
 {
 
+template <typename T>
 class OptSimulatedAnnealing : public OptBase
 {
 private:
-    const OPT_T
+    const T
         coolingFactor;
 
-    OPT_T
+    T
         temperature,
         chance;
+        
+//------------------------------------------------------------------------------
 
 public:
     OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
                           unsigned int maxCalculations,
                           OptSolverBase* pCalculator,
                           OptTarget optTarget,
-                          OPT_T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
-                          OPT_T coolingFactor,
-                          OPT_T startChance);
-    ~OptSimulatedAnnealing();
+                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          T coolingFactor,
+                          T startChance) : 
+        OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        coolingFactor(coolingFactor),
+        temperature(1.0),
+        chance(startChance)
+    {
+
+    }
+
+//------------------------------------------------------------------------------
+
+    ~OptSimulatedAnnealing()
+    {
+
+    }
+
+//------------------------------------------------------------------------------
 
 private:
-    OptCalculation get_next_calculation();
-    OptCalculation random_start_value();
-    void update_temperature();
-    void update_chance();
+
+//------------------------------------------------------------------------------
+
+    OptCalculation get_next_calculation()
+    {
+        if(previousCalculations.empty())
+            return random_start_value();
+
+        OptCalculation referenceValue, newValue;
+
+        if(random_factor() < chance)
+            referenceValue = previousCalculations.back();
+
+        else
+            referenceValue = bestCalculation; ///@todo rename bestCalculation to bestOptCalculation or similar
+
+        while(true)
+        {
+            newValue = OptCalculation();
+            for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+            {
+                ///@todo change logic could be a method
+                T change, maxChange;
+
+                maxChange = 0.5 * boundary->range() * temperature;
+                change = random_factor() * maxChange;
+
+                if(rand() % 2)
+                    change *= -1.0;
+
+                newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
+            }
+            if(valid(newValue))
+                break;
+        }
+
+        update_temperature();
+        update_chance();
+
+        return newValue;
+    }
+
+//------------------------------------------------------------------------------
+
+    OptCalculation random_start_value()
+    {
+        OptCalculation optCalculation = random_calculation();
+        bestCalculation = optCalculation;
+        bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
+        return optCalculation;
+    }
+
+//------------------------------------------------------------------------------
+
+    void update_temperature()
+    {
+        temperature *= coolingFactor;
+    }
+
+//------------------------------------------------------------------------------
+
+    void update_chance()
+    {
+        chance *= coolingFactor;
+    }
+
 };
 
 #endif // OPTSIMULATEDANNEALING_H
