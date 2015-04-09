@@ -126,7 +126,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    std::string to_string_header(const std::string &delimiter = " ") const;
+    std::string to_string_header(const std::string &delimiter = " ") const
     {
         std::string out("");
 

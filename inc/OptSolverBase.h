@@ -22,11 +22,15 @@
 namespace cppOpt
 {
 
+template <typename T>
 class OptSolverBase
 {
 public:
-    virtual ~OptSolverBase();
-    virtual void calculate(OptCalculation &optCalculation) const = 0;
+    virtual ~OptSolverBase()
+    {
+
+    }
+    virtual void calculate(OptCalculation<T> &optCalculation) const = 0;
 };
 
 } // namespace cppOpt

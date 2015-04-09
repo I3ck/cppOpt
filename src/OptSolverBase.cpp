@@ -16,10 +16,6 @@
 namespace cppOpt
 {
 
-OptSolverBase::~OptSolverBase()
-{
-
-}
 
 } // namespace cppOpt
 
