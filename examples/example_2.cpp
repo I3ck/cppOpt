@@ -24,11 +24,12 @@
 
 using namespace cppOpt;
 
-class MySolver : public OptSolverBase
+template <typename T>
+class MySolver : public OptSolverBase<T>
 {
 public:
     //define your own calculation
-    void calculate(OptCalculation &optCalculation) const
+    void calculate(OptCalculation<T> &optCalculation) const
     {
         //defined x^2 as function to be optimised
         optCalculation.result = pow(optCalculation.get_parameter("X"),2);
@@ -42,7 +43,7 @@ int main()
     //setup the optimisation
     //define your boundaries
     //to enable 4 threads, the range of example_1 is split
-    OptBoundaries
+    OptBoundaries<double>
             optBoundaries1,
             optBoundaries2,
             optBoundaries3,
@@ -54,7 +55,7 @@ int main()
     optBoundaries4.add_boundary(2.5, 5.0, "X");
 
     //instansiate your calculator
-    MySolver mySolver;
+    MySolver<double> mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 300;
@@ -64,55 +65,55 @@ int main()
 
     //how fast the simulated annealing algorithm slows down
     //http://en.wikipedia.org/wiki/Simulated_annealing
-    OPT_T coolingFactor = 0.9;
+    double coolingFactor = 0.9;
 
     //the chance in the beginning to follow bad solutions
-    OPT_T startChance = 0.25;
+    double startChance = 0.25;
 
     //create your optimiser
     //using simulated annealing
     //now creating 4 to run all at once
-    OptSimulatedAnnealing opt1(optBoundaries1,
-                              maxCalculations / 4,
-                              &mySolver,
-                              optTarget,
-                              0.0, //only required if approaching / diverging
-                              coolingFactor,
-                              startChance);
+    OptSimulatedAnnealing<double> opt1(optBoundaries1,
+                                       maxCalculations / 4,
+                                       &mySolver,
+                                       optTarget,
+                                       0.0, //only required if approaching / diverging
+                                       coolingFactor,
+                                       startChance);
 
-    OptSimulatedAnnealing opt2(optBoundaries2,
-                              maxCalculations / 4,
-                              &mySolver,
-                              optTarget,
-                              0.0, //only required if approaching / diverging
-                              coolingFactor,
-                              startChance);
+    OptSimulatedAnnealing<double> opt2(optBoundaries2,
+                                       maxCalculations / 4,
+                                       &mySolver,
+                                       optTarget,
+                                       0.0, //only required if approaching / diverging
+                                       coolingFactor,
+                                       startChance);
 
-    OptSimulatedAnnealing opt3(optBoundaries3,
-                              maxCalculations / 4,
-                              &mySolver,
-                              optTarget,
-                              0.0, //only required if approaching / diverging
-                              coolingFactor,
-                              startChance);
+    OptSimulatedAnnealing<double> opt3(optBoundaries3,
+                                       maxCalculations / 4,
+                                       &mySolver,
+                                       optTarget,
+                                       0.0, //only required if approaching / diverging
+                                       coolingFactor,
+                                       startChance);
 
-    OptSimulatedAnnealing opt4(optBoundaries4,
-                              maxCalculations / 4,
-                              &mySolver,
-                              optTarget,
-                              0.0, //only required if approaching / diverging
-                              coolingFactor,
-                              startChance);
+    OptSimulatedAnnealing<double> opt4(optBoundaries4,
+                                       maxCalculations / 4,
+                                       &mySolver,
+                                       optTarget,
+                                       0.0, //only required if approaching / diverging
+                                       coolingFactor,
+                                       startChance);
 
     //enable logging
     //boundaries object required to know the parameters names for the header
-    OptBase::enable_logging("example2.log", optBoundaries1);
+    OptBase<double>::enable_logging("example2.log", optBoundaries1);
 
     //let's go
-    OptBase::run_optimisations();
+    OptBase<double>::run_optimisations();
 
     //print result
-    OptCalculation best = OptBase::get_best_calculation(optTarget, 0.0);
+    OptCalculation<double> best = OptBase<double>::get_best_calculation(optTarget, 0.0);
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 

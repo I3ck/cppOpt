@@ -27,7 +27,7 @@ template <typename T>
 class OptBoundaries
 {
 private:
-    std::vector<OptBoundary>
+    std::vector< OptBoundary<T> >
         optBoundaries;
 
 public:
@@ -47,16 +47,15 @@ public:
 
     void add_boundary(T min, T max, const std::string &name)
     {
-        OptBoundary temp(min, max, name);
+        OptBoundary<T> temp(min, max, name);
         add_boundary(temp);
     }
 
 //------------------------------------------------------------------------------
 
-    void add_boundary(const OptBoundary &optBoundary)
+    void add_boundary(const OptBoundary<T> &optBoundary)
     {
-        OptBoundary temp(min, max, name);
-        add_boundary(temp);
+        optBoundaries.push_back(optBoundary);
     }
 
 //------------------------------------------------------------------------------
@@ -122,7 +121,7 @@ public:
                     newMin = boundary.min + i * newRange;
                     newMax = boundary.min + (i+1) * newRange;
 
-                    OptBoundary newBoundary(newMin, newMax, name);
+                    OptBoundary<T> newBoundary(newMin, newMax, name);
 
                     newBoundaries.add_boundary(newBoundary);
                 }
@@ -138,28 +137,28 @@ public:
 
 //------------------------------------------------------------------------------
 
-    std::vector<OptBoundary>::iterator begin()
+    typename std::vector< OptBoundary<T> >::iterator begin()
     {
         return optBoundaries.begin();
     }
 
 //------------------------------------------------------------------------------
 
-    std::vector<OptBoundary>::iterator end()
+    typename std::vector< OptBoundary<T> >::iterator end()
     {
         return optBoundaries.end();
     }
 
 //------------------------------------------------------------------------------
 
-    const std::vector<OptBoundary>::const_iterator cbegin() const
+    const typename std::vector< OptBoundary<T> >::const_iterator cbegin() const
     {
         return optBoundaries.cbegin();
     }
 
 //------------------------------------------------------------------------------
 
-    const std::vector<OptBoundary>::const_iterator cend() const
+    const typename std::vector< OptBoundary<T> >::const_iterator cend() const
     {
         return optBoundaries.cend();
     }

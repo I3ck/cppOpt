@@ -23,21 +23,22 @@
 
 using namespace cppOpt;
 
-class MySolver : public OptSolverBase
+template <typename T>
+class MySolver : public OptSolverBase<T>
 {
 public:
     //define your own calculation
-    void calculate(OptCalculation &optCalculation) const
+    void calculate(OptCalculation<T> &optCalculation) const
     {
         //defining the two-dimensional rastrigrin function
-        OPT_T
+        T
             A(10.0),
             n(2.0),
             pi(3.1415926535897932384),
             x1 = optCalculation.get_parameter("x1"),
             x2 = optCalculation.get_parameter("x2");
 
-        OPT_T sum = (x1*x1 - A * cos(2.0 * pi * x1))
+        T sum = (x1*x1 - A * cos(2.0 * pi * x1))
                   + (x2*x2 - A * cos(2.0 * pi * x2));
 
         optCalculation.result = A * n + sum;
@@ -50,12 +51,12 @@ int main()
 {
     //setup the optimisation
     //define your boundaries
-    OptBoundaries optBoundaries;
+    OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.12, 5.12, "x1");
     optBoundaries.add_boundary(-5.12, 5.12, "x2");
 
     //instansiate your calculator
-    MySolver mySolver;
+    MySolver<double> mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 3000;
@@ -65,30 +66,30 @@ int main()
 
     //how fast the simulated annealing algorithm slows down
     //http://en.wikipedia.org/wiki/Simulated_annealing
-    OPT_T coolingFactor = 0.99;
+    double coolingFactor = 0.99;
 
     //the chance in the beginning to follow bad solutions
-    OPT_T startChance = 0.25;
+    double startChance = 0.25;
 
     //create your optimiser
     //using simulated annealing
-    OptSimulatedAnnealing opt(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              0.0, //only required if approaching / diverging
-                              coolingFactor,
-                              startChance);
+    OptSimulatedAnnealing<double> opt(optBoundaries,
+                                      maxCalculations,
+                                      &mySolver,
+                                      optTarget,
+                                      0.0, //only required if approaching / diverging
+                                      coolingFactor,
+                                      startChance);
 
     //enable logging
     //boundaries object required to know the parameters names for the header
-    OptBase::enable_logging("example_4.log", optBoundaries);
+    OptBase<double>::enable_logging("example_4.log", optBoundaries);
 
     //let's go
-    OptBase::run_optimisations();
+    OptBase<double>::run_optimisations();
 
     //print result
-    OptCalculation best = opt.get_best_calculation();
+    OptCalculation<double> best = opt.get_best_calculation();
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 

@@ -24,11 +24,21 @@ using namespace cppOpt;
 
 #define DELTA 0.01
 
+template <typename T>
+class MySolver : public OptSolverBase<T>
+{
+public:
+    void calculate(OptCalculation<T> &optCalculation) const
+    {
+        optCalculation.result = pow(optCalculation.get_parameter("X"),2);
+    }
+};
+
 
 TEST_CASE("Boundary") {
 
     SECTION("Constructor") {
-        OptBoundary optBoundary(0.0, 1.0, "test");
+        OptBoundary<double> optBoundary(0.0, 1.0, "test");
 
         REQUIRE(optBoundary.min == 0.0);
         REQUIRE(optBoundary.max == 1.0);
@@ -36,11 +46,11 @@ TEST_CASE("Boundary") {
     }
 
     SECTION("Range") {
-        OptBoundary optBoundary(0.0, 1.0, "test");
+        OptBoundary<double> optBoundary(0.0, 1.0, "test");
 
         REQUIRE(optBoundary.range() == 1.0);
 
-        OptBoundary optBoundary2(1.0, 10.0, "test");
+        OptBoundary<double> optBoundary2(1.0, 10.0, "test");
         REQUIRE(optBoundary2.range() == 9.0);
     }
 }
@@ -48,29 +58,29 @@ TEST_CASE("Boundary") {
 TEST_CASE("Boundaries") {
 
     SECTION("Constructor") {
-        OptBoundaries optBoundaries;
+        OptBoundaries<double> optBoundaries;
     }
 
     SECTION("Adding") {
-        OptBoundaries optBoundaries;
+        OptBoundaries<double> optBoundaries;
 
         REQUIRE(optBoundaries.size() == 0);
 
         optBoundaries.add_boundary(1.0, 3.0, "test");
         REQUIRE(optBoundaries.size() == 1);
 
-        optBoundaries.add_boundary(OptBoundary(1.0, 3.0, "test"));
+        optBoundaries.add_boundary(OptBoundary<double>(1.0, 3.0, "test"));
         REQUIRE(optBoundaries.size() == 2);
     }
 
     SECTION("Splitting") {
-        OptBoundaries optBoundaries;
+        OptBoundaries<double> optBoundaries;
 
         optBoundaries.add_boundary(0.0, 10.0, "x");
         optBoundaries.add_boundary(0.0, 10.0, "y");
         optBoundaries.add_boundary(0.0, 10.0, "z");
 
-        std::vector<OptBoundaries> splitted = optBoundaries.split("x", 10);
+        std::vector< OptBoundaries<double> > splitted = optBoundaries.split("x", 10);
 
         for(unsigned int i = 0; i < optBoundaries.size(); ++i)
         {
@@ -97,35 +107,27 @@ TEST_CASE("Boundaries") {
 }
 
 TEST_CASE("Simulated Annealing") {
-    class MySolver : public OptSolverBase
-    {
-    public:
-        void calculate(OptCalculation &optCalculation) const
-        {
-            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-        }
-    };
 
-    OptBoundaries optBoundaries;
+    OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver mySolver;
+    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
-    OPT_T coolingFactor = 0.95;
-    OPT_T startChance = 0.25;
+    double coolingFactor = 0.95;
+    double startChance = 0.25;
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;
 
-        OptSimulatedAnnealing opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          0.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          startChance);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -133,15 +135,15 @@ TEST_CASE("Simulated Annealing") {
     SECTION("Maximizing") {
         OptTarget optTarget = MAXIMIZE;
 
-        OptSimulatedAnnealing opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          0.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          startChance);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -149,15 +151,15 @@ TEST_CASE("Simulated Annealing") {
     SECTION("Approaching") {
         OptTarget optTarget = APPROACH;
 
-        OptSimulatedAnnealing opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  3.3, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          3.3, //only required if approaching / diverging
+                                          coolingFactor,
+                                          startChance);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < DELTA);
     }
@@ -165,15 +167,15 @@ TEST_CASE("Simulated Annealing") {
     SECTION("Diverging1") {
         OptTarget optTarget = DIVERGE;
 
-        OptSimulatedAnnealing opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  -100.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          -100.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          startChance);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -181,52 +183,44 @@ TEST_CASE("Simulated Annealing") {
     SECTION("Diverging2") {
         OptTarget optTarget = DIVERGE;
 
-        OptSimulatedAnnealing opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  100.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          100.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          startChance);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
 }
 
 TEST_CASE("Threshold Accepting") {
-    class MySolver : public OptSolverBase
-    {
-    public:
-        void calculate(OptCalculation &optCalculation) const
-        {
-            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-        }
-    };
 
-    OptBoundaries optBoundaries;
+    OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver mySolver;
+    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
-    OPT_T coolingFactor = 0.95;
-    OPT_T threshold = 5.0;
-    OPT_T thresholdFactor = 0.95;
+    double coolingFactor = 0.95;
+    double threshold = 5.0;
+    double thresholdFactor = 0.95;
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;
 
-        OptThresholdAccepting opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  threshold,
-                                  thresholdFactor);
+        OptThresholdAccepting<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          0.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          threshold,
+                                          thresholdFactor);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -234,16 +228,16 @@ TEST_CASE("Threshold Accepting") {
     SECTION("Maximizing") {
         OptTarget optTarget = MAXIMIZE;
 
-        OptThresholdAccepting opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  threshold,
-                                  thresholdFactor);
+        OptThresholdAccepting<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          0.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          threshold,
+                                          thresholdFactor);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -251,16 +245,16 @@ TEST_CASE("Threshold Accepting") {
     SECTION("Approaching") {
         OptTarget optTarget = APPROACH;
 
-        OptThresholdAccepting opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  3.3, //only required if approaching / diverging
-                                  coolingFactor,
-                                  threshold,
-                                  thresholdFactor);
+        OptThresholdAccepting<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          3.3, //only required if approaching / diverging
+                                          coolingFactor,
+                                          threshold,
+                                          thresholdFactor);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < DELTA);
     }
@@ -268,16 +262,16 @@ TEST_CASE("Threshold Accepting") {
     SECTION("Diverging1") {
         OptTarget optTarget = DIVERGE;
 
-        OptThresholdAccepting opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  -100.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  threshold,
-                                  thresholdFactor);
+        OptThresholdAccepting<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          -100.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          threshold,
+                                          thresholdFactor);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -285,169 +279,153 @@ TEST_CASE("Threshold Accepting") {
     SECTION("Diverging2") {
         OptTarget optTarget = DIVERGE;
 
-        OptThresholdAccepting opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  100.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  threshold,
-                                  thresholdFactor);
+        OptThresholdAccepting<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          100.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          threshold,
+                                          thresholdFactor);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
 }
 
 TEST_CASE("Great Deluge") {
-    class MySolver : public OptSolverBase
-    {
-    public:
-        void calculate(OptCalculation &optCalculation) const
-        {
-            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-        }
-    };
 
-    OptBoundaries optBoundaries;
+    OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver mySolver;
+    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
-    OPT_T coolingFactor = 0.95;
-    OPT_T rain = 0.2;
+    double coolingFactor = 0.95;
+    double rain = 0.2;
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;
-        OPT_T waterLevel = 15.0;
+        double waterLevel = 15.0;
 
-        OptGreatDeluge opt(optBoundaries,
-                           maxCalculations,
-                           &mySolver,
-                           optTarget,
-                           0.0, //only required if approaching / diverging
-                           coolingFactor,
-                           waterLevel,
-                           rain);
+        OptGreatDeluge<double> opt(optBoundaries,
+                                   maxCalculations,
+                                   &mySolver,
+                                   optTarget,
+                                   0.0, //only required if approaching / diverging
+                                   coolingFactor,
+                                   waterLevel,
+                                   rain);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
 
     SECTION("Maximizing") {
         OptTarget optTarget = MAXIMIZE;
-        OPT_T waterLevel = 10.0;
+        double waterLevel = 10.0;
 
-        OptGreatDeluge opt(optBoundaries,
-                           maxCalculations,
-                           &mySolver,
-                           optTarget,
-                           0.0, //only required if approaching / diverging
-                           coolingFactor,
-                           waterLevel,
-                           rain);
+        OptGreatDeluge<double> opt(optBoundaries,
+                                   maxCalculations,
+                                   &mySolver,
+                                   optTarget,
+                                   0.0, //only required if approaching / diverging
+                                   coolingFactor,
+                                   waterLevel,
+                                   rain);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
 
     SECTION("Approaching") {
         OptTarget optTarget = APPROACH;
-        OPT_T waterLevel = 18.0;
+        double waterLevel = 18.0;
 
-        OptGreatDeluge opt(optBoundaries,
-                           maxCalculations,
-                           &mySolver,
-                           optTarget,
-                           3.3, //only required if approaching / diverging
-                           coolingFactor,
-                           waterLevel,
-                           rain);
+        OptGreatDeluge<double> opt(optBoundaries,
+                                   maxCalculations,
+                                   &mySolver,
+                                   optTarget,
+                                   3.3, //only required if approaching / diverging
+                                   coolingFactor,
+                                   waterLevel,
+                                   rain);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < DELTA);
     }
 
     SECTION("Diverging1") {
         OptTarget optTarget = DIVERGE;
-        OPT_T waterLevel = 10.0;
+        double waterLevel = 10.0;
 
-        OptGreatDeluge opt(optBoundaries,
-                           maxCalculations,
-                           &mySolver,
-                           optTarget,
-                           -100.0, //only required if approaching / diverging
-                           coolingFactor,
-                           waterLevel,
-                           rain);
+        OptGreatDeluge<double> opt(optBoundaries,
+                                   maxCalculations,
+                                   &mySolver,
+                                   optTarget,
+                                   -100.0, //only required if approaching / diverging
+                                   coolingFactor,
+                                   waterLevel,
+                                   rain);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < DELTA);
     }
 
     SECTION("Diverging2") {
         OptTarget optTarget = DIVERGE;
-        OPT_T waterLevel = 10.0;
+        double waterLevel = 10.0;
 
-        OptGreatDeluge opt(optBoundaries,
-                           maxCalculations,
-                           &mySolver,
-                           optTarget,
-                           100.0, //only required if approaching / diverging
-                           coolingFactor,
-                           waterLevel,
-                           rain);
+        OptGreatDeluge<double> opt(optBoundaries,
+                                   maxCalculations,
+                                   &mySolver,
+                                   optTarget,
+                                   100.0, //only required if approaching / diverging
+                                   coolingFactor,
+                                   waterLevel,
+                                   rain);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
 }
 
 TEST_CASE("Evolutionary") {
-    class MySolver : public OptSolverBase
-    {
-    public:
-        void calculate(OptCalculation &optCalculation) const
-        {
-            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-        }
-    };
 
-    OptBoundaries optBoundaries;
+    OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver mySolver;
+    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
-    OPT_T coolingFactor = 0.95;
+    double coolingFactor = 0.95;
 
     unsigned int
         nIndividualsStart(50),
         nIndividualsSelection(10),
         nIndividualsOffspring(4);
 
-    OPT_T mutation(0.3);
+    double mutation(0.3);
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;
 
-        OptEvolutionary opt(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              0.0, //only required if approaching / diverging
-                              coolingFactor,
-                              nIndividualsStart,
-                              nIndividualsSelection,
-                              nIndividualsOffspring,
-                              mutation);
+        OptEvolutionary<double> opt(optBoundaries,
+                                    maxCalculations,
+                                    &mySolver,
+                                    optTarget,
+                                    0.0, //only required if approaching / diverging
+                                    coolingFactor,
+                                    nIndividualsStart,
+                                    nIndividualsSelection,
+                                    nIndividualsOffspring,
+                                    mutation);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -455,18 +433,18 @@ TEST_CASE("Evolutionary") {
     SECTION("Maximizing") {
         OptTarget optTarget = MAXIMIZE;
 
-        OptEvolutionary opt(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              0.0, //only required if approaching / diverging
-                              coolingFactor,
-                              nIndividualsStart,
-                              nIndividualsSelection,
-                              nIndividualsOffspring,
-                              mutation);
+        OptEvolutionary<double> opt(optBoundaries,
+                                    maxCalculations,
+                                    &mySolver,
+                                    optTarget,
+                                    0.0, //only required if approaching / diverging
+                                    coolingFactor,
+                                    nIndividualsStart,
+                                    nIndividualsSelection,
+                                    nIndividualsOffspring,
+                                    mutation);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
@@ -474,18 +452,18 @@ TEST_CASE("Evolutionary") {
     SECTION("Approaching") {
         OptTarget optTarget = APPROACH;
 
-        OptEvolutionary opt(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              3.3,
-                              coolingFactor,
-                              nIndividualsStart,
-                              nIndividualsSelection,
-                              nIndividualsOffspring,
-                              mutation);
+        OptEvolutionary<double> opt(optBoundaries,
+                                    maxCalculations,
+                                    &mySolver,
+                                    optTarget,
+                                    3.3,
+                                    coolingFactor,
+                                    nIndividualsStart,
+                                    nIndividualsSelection,
+                                    nIndividualsOffspring,
+                                    mutation);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 3.3) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
@@ -493,18 +471,18 @@ TEST_CASE("Evolutionary") {
     SECTION("Diverging1") {
         OptTarget optTarget = DIVERGE;
 
-        OptEvolutionary opt(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              -100.0,
-                              coolingFactor,
-                              nIndividualsStart,
-                              nIndividualsSelection,
-                              nIndividualsOffspring,
-                              mutation);
+        OptEvolutionary<double> opt(optBoundaries,
+                                    maxCalculations,
+                                    &mySolver,
+                                    optTarget,
+                                    -100.0,
+                                    coolingFactor,
+                                    nIndividualsStart,
+                                    nIndividualsSelection,
+                                    nIndividualsOffspring,
+                                    mutation);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 25.0) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
@@ -512,34 +490,26 @@ TEST_CASE("Evolutionary") {
     SECTION("Diverging2") {
         OptTarget optTarget = DIVERGE;
 
-        OptEvolutionary opt(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              100.0,
-                              coolingFactor,
-                              nIndividualsStart,
-                              nIndividualsSelection,
-                              nIndividualsOffspring,
-                              mutation);
+        OptEvolutionary<double> opt(optBoundaries,
+                                    maxCalculations,
+                                    &mySolver,
+                                    optTarget,
+                                    100.0,
+                                    coolingFactor,
+                                    nIndividualsStart,
+                                    nIndividualsSelection,
+                                    nIndividualsOffspring,
+                                    mutation);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt.get_best_calculation().result - 0.0) < 100.0);
     }
 }
 
 TEST_CASE("Multithreading / Boundary Splitting") {
-    class MySolver : public OptSolverBase
-    {
-    public:
-        void calculate(OptCalculation &optCalculation) const
-        {
-            optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-        }
-    };
-
-    OptBoundaries
+    
+    OptBoundaries<double>
             optBoundaries1,
             optBoundaries2,
             optBoundaries3,
@@ -550,98 +520,98 @@ TEST_CASE("Multithreading / Boundary Splitting") {
     optBoundaries3.add_boundary(-0.5, 0.5, "X");
     optBoundaries4.add_boundary(5.0, 50.0, "X");
 
-    MySolver mySolver;
+    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
-    OPT_T coolingFactor = 0.95;
-    OPT_T startChance = 0.25;
+    double coolingFactor = 0.95;
+    double startChance = 0.25;
 
     SECTION("Minimizing") {
         OptTarget optTarget = MINIMIZE;
 
-        OptSimulatedAnnealing opt1(optBoundaries1,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt1(optBoundaries1,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptSimulatedAnnealing opt2(optBoundaries2,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt2(optBoundaries2,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptSimulatedAnnealing opt3(optBoundaries3,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt3(optBoundaries3,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptSimulatedAnnealing opt4(optBoundaries4,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt4(optBoundaries4,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt1.get_best_calculation().result - 16.0) < DELTA);
         REQUIRE(fabs(opt2.get_best_calculation().result - 1.0) < DELTA);
         REQUIRE(fabs(opt3.get_best_calculation().result - 0.0) < DELTA);
         REQUIRE(fabs(opt4.get_best_calculation().result - 25.0) < DELTA);
 
-        REQUIRE(fabs(OptBase::get_best_calculation(optTarget, 0.0).result - 0.0) < DELTA);
+        REQUIRE(fabs(OptBase<double>::get_best_calculation(optTarget, 0.0).result - 0.0) < DELTA);
     }
 
     SECTION("Maximizing") {
         OptTarget optTarget = MAXIMIZE;
 
-        OptSimulatedAnnealing opt1(optBoundaries1,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt1(optBoundaries1,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptSimulatedAnnealing opt2(optBoundaries2,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt2(optBoundaries2,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptSimulatedAnnealing opt3(optBoundaries3,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt3(optBoundaries3,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptSimulatedAnnealing opt4(optBoundaries4,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+        OptSimulatedAnnealing<double> opt4(optBoundaries4,
+                                           maxCalculations,
+                                           &mySolver,
+                                           optTarget,
+                                           0.0, //only required if approaching / diverging
+                                           coolingFactor,
+                                           startChance);
 
-        OptBase::run_optimisations();
+        OptBase<double>::run_optimisations();
 
         REQUIRE(fabs(opt1.get_best_calculation().result - 25.0) < DELTA);
         REQUIRE(fabs(opt2.get_best_calculation().result - 9.0) < DELTA);
         REQUIRE(fabs(opt3.get_best_calculation().result - 0.25) < DELTA);
         REQUIRE(fabs(opt4.get_best_calculation().result - 2500.0) < DELTA);
 
-        REQUIRE(fabs(OptBase::get_best_calculation(optTarget, 0.0).result - 2500.0) < DELTA);
+        REQUIRE(fabs(OptBase<double>::get_best_calculation(optTarget, 0.0).result - 2500.0) < DELTA);
     }
 }

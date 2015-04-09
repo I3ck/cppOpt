@@ -52,10 +52,10 @@ private:
         mutexPOptimisers,
         mutexLogFile;
 
-    static std::queue< std::pair<OptCalculation, OptBase*> >
+    static std::queue< std::pair<OptCalculation<T>, OptBase<T>*> >
         queueTodo;
 
-    static std::vector< std::pair<OptCalculation, OptBase*> >
+    static std::vector< std::pair<OptCalculation<T>, OptBase<T>*> >
         finishedCalculations;
 
     static std::set <OptBase*>
@@ -75,19 +75,19 @@ private:
         waitTimeMs;
 
 protected:
-    std::vector<OptCalculation>
+    std::vector< OptCalculation<T> >
         previousCalculations;
 
-    OptCalculation
+    OptCalculation<T>
         bestCalculation;
 
-    const OptBoundaries
+    const OptBoundaries<T>
         optBoundaries;
 
     const unsigned int
         maxCalculations;
 
-    const OptSolverBase*
+    const OptSolverBase<T>*
         pCalculator;
 
     const OptTarget
@@ -99,9 +99,9 @@ protected:
 // METHODS ---------------------------------------------------------------------
 
 public:
-    OptBase(const OptBoundaries &optBoundaries,
+    OptBase(const OptBoundaries<T> &optBoundaries,
             unsigned int maxCalculations,
-            OptSolverBase* pCalculator,
+            OptSolverBase<T>* pCalculator,
             OptTarget optTarget = MINIMIZE,
             T targetValue = 0.0) :
         maxCalculations(maxCalculations),
@@ -163,7 +163,7 @@ public:
 //------------------------------------------------------------------------------
 
     static bool enable_logging(const std::string &pathLogFile,
-                               const OptBoundaries &optBoundaries,
+                               const OptBoundaries<T> &optBoundaries,
                                const std::string &delimiter = " ",
                                const std::string &lineEnd = "\n")
     {
@@ -187,9 +187,9 @@ public:
 //------------------------------------------------------------------------------
 
     //targetValue won't be used when maximizing or minimizing
-    static OptCalculation get_best_calculation(OptTarget optTarget, T targetValue)
+    static OptCalculation<T> get_best_calculation(OptTarget optTarget, T targetValue)
     {
-        OptCalculation out;
+        OptCalculation<T> out;
         mutexFinishedCalculations.lock();
 
         if(finishedCalculations.size() == 0)
@@ -210,7 +210,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation get_best_calculation() const
+    OptCalculation<T> get_best_calculation() const
     {
        return bestCalculation;
     }
@@ -219,7 +219,7 @@ public:
 
 protected:
     //targetValue won't be used when maximizing or minimizing
-    static bool result_better(const OptCalculation &result, const OptCalculation &other, OptTarget optTarget, T targetValue)
+    static bool result_better(const OptCalculation<T> &result, const OptCalculation<T> &other, OptTarget optTarget, T targetValue)
     {
         switch(optTarget)
         {
@@ -242,9 +242,11 @@ protected:
 
 //------------------------------------------------------------------------------
 
-    virtual OptCalculation get_next_calculation() = 0; //must be implemented by algorithm derived classes
+    virtual OptCalculation<T> get_next_calculation() = 0; //must be implemented by algorithm derived classes
 
-    void add_finished_calculation(OptCalculation optCalculation)
+//------------------------------------------------------------------------------
+
+    void add_finished_calculation(OptCalculation<T> optCalculation)
     {
         previousCalculations.push_back(optCalculation);
 
@@ -284,9 +286,9 @@ protected:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation random_calculation() const
+    OptCalculation<T> random_calculation() const
     {
-        OptCalculation optCalculation;
+        OptCalculation<T> optCalculation;
         for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
         {
             T newValue = boundary->min + random_factor() * boundary->range();
@@ -297,7 +299,7 @@ protected:
 
 //------------------------------------------------------------------------------
 
-    bool valid(const OptCalculation &optCalculation) const
+    bool valid(const OptCalculation<T> &optCalculation) const
     {
         for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
         {
@@ -330,9 +332,9 @@ private:
 
             else // availableTodo
             {
-                std::pair <OptCalculation, OptBase*> todo = pop_todo();
+                std::pair <OptCalculation<T>, OptBase<T>*> todo = pop_todo();
                 mutexAvailabilityCheckTodo.unlock(); //pop occured, can unlock now
-                OptCalculation optCalculation = todo.first;
+                OptCalculation<T> optCalculation = todo.first;
                 OptBase* pOptBase = todo.second;
 
                 pOptBase->pCalculator->calculate(optCalculation);
@@ -356,7 +358,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    static void push_todo(OptCalculation optCalculation, OptBase *pOptBase)
+    static void push_todo(OptCalculation<T> optCalculation, OptBase<T> *pOptBase)
     {
         mutexQueueTodo.lock();
         queueTodo.push({optCalculation, pOptBase});
@@ -365,7 +367,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    static void push_finished(OptCalculation optCalculation, OptBase *pOptBase)
+    static void push_finished(OptCalculation<T> optCalculation, OptBase<T> *pOptBase)
     {
         mutexFinishedCalculations.lock();
         finishedCalculations.push_back({optCalculation, pOptBase});
@@ -387,7 +389,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    static std::pair<OptCalculation, OptBase*> pop_todo()
+    static std::pair<OptCalculation<T>, OptBase<T>*> pop_todo()
     {
         mutexQueueTodo.lock();
         auto out = queueTodo.front();
@@ -398,7 +400,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    static void log(const OptCalculation &optCalculation)
+    static void log(const OptCalculation<T> &optCalculation)
     {
         mutexLogFile.lock();
         logFile << optCalculation.to_string_values(loggingDelimiter) << loggingLineEnd;
@@ -409,36 +411,54 @@ private:
     
 };
 
-std::mutex
-    OptBase::mutexQueueTodo,
-    OptBase::mutexAvailabilityCheckTodo,
-    OptBase::mutexQueueCalculated,
-    OptBase::mutexFinishedCalculations,
-    OptBase::mutexPOptimisers,
-    OptBase::mutexLogFile;
+template <typename T>
+std::mutex OptBase<T>::mutexQueueTodo;
+    
+template <typename T>
+std::mutex OptBase<T>::mutexAvailabilityCheckTodo;
+    
+template <typename T>
+std::mutex OptBase<T>::mutexQueueCalculated;
+    
+template <typename T>
+std::mutex OptBase<T>::mutexFinishedCalculations;
+    
+template <typename T>
+std::mutex OptBase<T>::mutexPOptimisers;
+    
+template <typename T>
+std::mutex OptBase<T>::mutexLogFile;
 
-std::queue< std::pair<OptCalculation, OptBase*> >
-    OptBase::queueTodo;
+template <typename T>
+std::queue< std::pair<OptCalculation<T>, OptBase<T>*> >
+    OptBase<T>::queueTodo;
 
-std::vector< std::pair<OptCalculation, OptBase*> >
-    OptBase::finishedCalculations;
+template <typename T>
+std::vector< std::pair<OptCalculation<T>, OptBase<T>*> >
+    OptBase<T>::finishedCalculations;
 
-std::set<OptBase*>
-    OptBase::pOptimisers;
+template <typename T>
+std::set<OptBase<T>*>
+    OptBase<T>::pOptimisers;
 
+template <typename T>
 bool
-    OptBase::loggingEnabled(false);
+    OptBase<T>::loggingEnabled(false);
 
 
-std::string
-    OptBase::loggingDelimiter(""),
-    OptBase::loggingLineEnd("");
+template <typename T>
+std::string OptBase<T>::loggingDelimiter("");
 
+template <typename T>
+std::string OptBase<T>::loggingLineEnd("");
+
+template <typename T>
 std::ofstream
-    OptBase::logFile;
+    OptBase<T>::logFile;
 
+template <typename T>
 unsigned int
-    OptBase::waitTimeMs(0);
+    OptBase<T>::waitTimeMs(0);
 
 } // namespace cppOpt
 

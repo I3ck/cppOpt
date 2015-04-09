@@ -20,18 +20,21 @@ namespace cppOpt
 {
 
 template <typename T>
-class OptGreatDeluge : public OptBase
+class OptGreatDeluge : public OptBase<T>
 {
 private:
-    OptCalculation
+
+    typedef OptBase<T> super;
+
+    OptCalculation<T>
         optCalculationReference,
         optCalculationConfigurationC;
 
-    const OPT_T
+    const T
         coolingFactor,
         rain;
 
-    OPT_T
+    T
         temperature,
         waterLevel;
 
@@ -41,15 +44,15 @@ public:
 
 //------------------------------------------------------------------------------
 
-    OptGreatDeluge(const OptBoundaries &optBoundaries,
+    OptGreatDeluge(const OptBoundaries<T> &optBoundaries,
                           unsigned int maxCalculations,
-                          OptSolverBase* pCalculator,
+                          OptSolverBase<T>* pCalculator,
                           OptTarget optTarget,
-                          OPT_T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
-                          OPT_T coolingFactor,
-                          OPT_T waterLevel,
-                          OPT_T rain) : 
-        OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          T coolingFactor,
+                          T waterLevel,
+                          T rain) : 
+        super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
         coolingFactor(coolingFactor),
         rain(rain),
         temperature(1.0),
@@ -71,40 +74,40 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation get_next_calculation()
+    OptCalculation<T> get_next_calculation()
     {
-        if(previousCalculations.empty())
+        if(super::previousCalculations.empty())
             return random_start_value();
 
         ///@todo merge these definitions
-        OptCalculation newValue;
-        OptCalculation referenceValue;
+        OptCalculation<T> newValue;
+        OptCalculation<T> referenceValue;
 
-        OptCalculation compareValue = compare_value();
+        OptCalculation<T> compareValue = compare_value();
 
-        if(result_better(previousCalculations.back(), compareValue, optTarget, targetValue))
-            referenceValue = previousCalculations.back();
+        if(super::result_better(super::previousCalculations.back(), compareValue, super::optTarget, super::targetValue))
+            referenceValue = super::previousCalculations.back();
 
         else
-            referenceValue = bestCalculation;
+            referenceValue = super::bestCalculation;
 
         while(true)
         {
-            newValue = OptCalculation();
-            for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+            newValue = OptCalculation<T>();
+            for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
             {
                 ///@todo change logic could be a method
-                OPT_T change, maxChange;
+                T change, maxChange;
 
                 maxChange = 0.5 * boundary->range() * temperature;
-                change = random_factor() * maxChange;
+                change = super::random_factor() * maxChange;
 
                 if(rand() % 2)
                     change *= -1.0;
 
                 newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
             }
-            if(valid(newValue))
+            if(super::valid(newValue))
                 break;
         }
 
@@ -115,11 +118,11 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation random_start_value()
+    OptCalculation<T> random_start_value()
     {
-        OptCalculation optCalculation = random_calculation();
-        bestCalculation = optCalculation;
-        bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
+        OptCalculation<T> optCalculation = super::random_calculation();
+        super::bestCalculation = optCalculation;
+        super::bestCalculation.result = super::bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
         return optCalculation;
     }
 
@@ -134,7 +137,7 @@ private:
 
     void update_water_level()
     {
-        switch(optTarget)
+        switch(super::optTarget)
         {
             case MINIMIZE:
                 waterLevel -= rain;
@@ -145,14 +148,14 @@ private:
                 break;
 
             case APPROACH:
-                if(targetValue > waterLevel)
+                if(super::targetValue > waterLevel)
                     waterLevel += rain;
                 else
                     waterLevel -= rain;
                 break;
 
             case DIVERGE:
-                if(targetValue > waterLevel)
+                if(super::targetValue > waterLevel)
                     waterLevel -= rain;
                 else
                     waterLevel += rain;
@@ -165,9 +168,9 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation compare_value() const ///@todo rename & use T as return value? (=> would require a new compare method)
+    OptCalculation<T> compare_value() const ///@todo rename & use T as return value? (=> would require a new compare method)
     {
-        OptCalculation out;
+        OptCalculation<T> out;
         out.result = waterLevel;
         return out;
     }

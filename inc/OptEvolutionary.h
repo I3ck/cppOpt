@@ -20,9 +20,11 @@ namespace cppOpt
 {
 
 template <typename T>
-class OptEvolutionary : public OptBase
+class OptEvolutionary : public OptBase<T>
 {
 private:
+
+    typedef OptBase<T> super;
 
     const unsigned int
         nIndividualsStart,
@@ -36,10 +38,10 @@ private:
         mutation,
         chance;
 
-    std::multimap<T, OptCalculation> // <SORT_VALUE, CALCULATION>
+    std::multimap< T, OptCalculation<T> > // <SORT_VALUE, CALCULATION>
         previousCalculationsSorted;
 
-    std::vector<OptCalculation>
+    std::vector< OptCalculation<T> >
         individualsStart,
         individualsSelected,
         individualsBred,
@@ -48,9 +50,9 @@ private:
 //------------------------------------------------------------------------------
 
 public:
-    OptEvolutionary(const OptBoundaries &optBoundaries,
+    OptEvolutionary(const OptBoundaries<T> &optBoundaries,
                           unsigned int maxCalculations,
-                          OptSolverBase* pCalculator,
+                          OptSolverBase<T>* pCalculator,
                           OptTarget optTarget,
                           T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
                           T coolingFactor,
@@ -58,7 +60,7 @@ public:
                           unsigned int nIndividualsSelection,
                           unsigned int nIndividualsOffspring,
                           T mutation) : 
-        OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
         coolingFactor(coolingFactor),
         nIndividualsStart(nIndividualsStart),
         nIndividualsSelection(nIndividualsSelection),
@@ -85,11 +87,11 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation get_next_calculation()
+    OptCalculation<T> get_next_calculation()
     {
-        OptCalculation out;
+        OptCalculation<T> out;
 
-        if(previousCalculations.empty())
+        if(super::previousCalculations.empty())
             create_start_individuals();
         else
             add_previous_to_sorted();
@@ -121,17 +123,17 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation random_start_value()
+    OptCalculation<T> random_start_value()
     {
-        OptCalculation optCalculation;
-        for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+        OptCalculation<T> optCalculation;
+        for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
         {
             T range = boundary->max - boundary->min; ///@todo use range method here (and propaply in threshold accepting)
-            T newValue = boundary->min + random_factor() * range;
+            T newValue = boundary->min + super::random_factor() * range;
             optCalculation.add_parameter(boundary->name, newValue);
         }
-        bestCalculation = optCalculation;
-        bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
+        super::bestCalculation = optCalculation;
+        super::bestCalculation.result = super::bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
         return optCalculation;
     }
 
@@ -139,10 +141,10 @@ private:
 
     void add_previous_to_sorted()
     {
-        if(previousCalculations.size() > 0)
+        if(super::previousCalculations.size() > 0)
         {
-            T sortValue = calculate_sort_value(previousCalculations.back());
-            previousCalculationsSorted.emplace(sortValue, previousCalculations.back());
+            T sortValue = calculate_sort_value(super::previousCalculations.back());
+            previousCalculationsSorted.emplace(sortValue, super::previousCalculations.back());
         }
     }
 
@@ -154,7 +156,7 @@ private:
 
         for(unsigned int i = 1; i < nIndividualsStart; ++i)
         {
-            OptCalculation optCalculation = random_calculation();
+            OptCalculation<T> optCalculation = super::random_calculation();
             individualsStart.push_back(optCalculation);
         }
     }
@@ -181,7 +183,7 @@ private:
     void breed_individuals()
     {
         std::set<unsigned int> usedIndexes;
-        std::vector< std::pair<OptCalculation,OptCalculation> > parents;
+        std::vector< std::pair< OptCalculation<T> ,OptCalculation<T> > > parents;
 
         ///@todo needs heavy testing
         ///@todo make this its own method? (and parents a member?)
@@ -210,13 +212,13 @@ private:
     {
         for(auto individual : individualsBred)
         {
-            OptCalculation mutatedIndividual;
-            for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+            OptCalculation<T> mutatedIndividual;
+            for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
             {
                 T change, maxChange;
 
                 maxChange = 0.5 * boundary->range() * mutation;
-                change = random_factor() * maxChange;
+                change = super::random_factor() * maxChange;
 
                 if(rand() % 2)
                     change *= -1.0;
@@ -238,9 +240,9 @@ private:
 
 //------------------------------------------------------------------------------
 
-    T calculate_sort_value(const OptCalculation &optCalculation) const
+    T calculate_sort_value(const OptCalculation<T> &optCalculation) const
     {
-        switch(optTarget)
+        switch(super::optTarget)
         {
             case MINIMIZE:
                 return optCalculation.result;
@@ -249,10 +251,10 @@ private:
                 return -optCalculation.result;
 
             case APPROACH:
-                return fabs(targetValue - optCalculation.result);
+                return fabs(super::targetValue - optCalculation.result);
 
             case DIVERGE:
-                return -fabs(targetValue - optCalculation.result);
+                return -fabs(super::targetValue - optCalculation.result);
 
             default: // MINIMIZE
                 return optCalculation.result;
@@ -262,7 +264,7 @@ private:
 //------------------------------------------------------------------------------
 
     ///@todo could be static or even a member of OptBase
-    unsigned int index_closest(const std::vector<OptCalculation> &optCalculations, unsigned int indexThis) const
+    unsigned int index_closest(const std::vector< OptCalculation<T> > &optCalculations, unsigned int indexThis) const
     {
         T closestDistance;
         unsigned int indexClosest(0);

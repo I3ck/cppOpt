@@ -20,9 +20,12 @@ namespace cppOpt
 {
 
 template <typename T>
-class OptSimulatedAnnealing : public OptBase
+class OptSimulatedAnnealing : public OptBase<T>
 {
 private:
+
+    typedef OptBase<T> super;
+
     const T
         coolingFactor;
 
@@ -33,14 +36,14 @@ private:
 //------------------------------------------------------------------------------
 
 public:
-    OptSimulatedAnnealing(const OptBoundaries &optBoundaries,
+    OptSimulatedAnnealing(const OptBoundaries<T> &optBoundaries,
                           unsigned int maxCalculations,
-                          OptSolverBase* pCalculator,
+                          OptSolverBase<T>* pCalculator,
                           OptTarget optTarget,
                           T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
                           T coolingFactor,
                           T startChance) : 
-        OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
         coolingFactor(coolingFactor),
         temperature(1.0),
         chance(startChance)
@@ -61,36 +64,36 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation get_next_calculation()
+    OptCalculation<T> get_next_calculation()
     {
-        if(previousCalculations.empty())
+        if(super::previousCalculations.empty())
             return random_start_value();
 
-        OptCalculation referenceValue, newValue;
+        OptCalculation<T> referenceValue, newValue;
 
-        if(random_factor() < chance)
-            referenceValue = previousCalculations.back();
+        if(super::random_factor() < chance)
+            referenceValue = super::previousCalculations.back();
 
         else
-            referenceValue = bestCalculation; ///@todo rename bestCalculation to bestOptCalculation or similar
+            referenceValue = super::bestCalculation; ///@todo rename bestCalculation to bestOptCalculation or similar
 
         while(true)
         {
-            newValue = OptCalculation();
-            for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+            newValue = OptCalculation<T>();
+            for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
             {
                 ///@todo change logic could be a method
                 T change, maxChange;
 
                 maxChange = 0.5 * boundary->range() * temperature;
-                change = random_factor() * maxChange;
+                change = super::random_factor() * maxChange;
 
                 if(rand() % 2)
                     change *= -1.0;
 
                 newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
             }
-            if(valid(newValue))
+            if(super::valid(newValue))
                 break;
         }
 
@@ -102,11 +105,11 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation random_start_value()
+    OptCalculation<T> random_start_value()
     {
-        OptCalculation optCalculation = random_calculation();
-        bestCalculation = optCalculation;
-        bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
+        OptCalculation<T> optCalculation = super::random_calculation();
+        super::bestCalculation = optCalculation;
+        super::bestCalculation.result = super::bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
         return optCalculation;
     }
 
