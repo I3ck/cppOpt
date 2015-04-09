@@ -19,6 +19,7 @@
 namespace cppOpt
 {
 
+template <typename T>
 class OptThresholdAccepting : public OptBase
 {
 private:
@@ -42,16 +43,162 @@ public:
                           OPT_T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
                           OPT_T coolingFactor,
                           OPT_T threshold,
-                          OPT_T thresholdFactor);
+                          OPT_T thresholdFactor) : 
+        OptBase(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        coolingFactor(coolingFactor),
+        thresholdFactor(thresholdFactor),
+        temperature(1.0),
+        threshold(threshold)
+    {
 
-    ~OptThresholdAccepting();
+    }
+
+//------------------------------------------------------------------------------
+
+    ~OptThresholdAccepting()
+    {
+
+    }
+
+//------------------------------------------------------------------------------
 
 private:
-    OptCalculation get_next_calculation();
-    OptCalculation random_start_value();
-    void update_temperature();
-    void update_threshold();
-    OptCalculation compare_value() const; ///@todo rename & use T as return value? (=> would require a new compare method)
+    OptCalculation get_next_calculation()
+    {
+        if(previousCalculations.empty())
+            return random_start_value();
+
+        OptCalculation newValue;
+
+        if(previousCalculations.size() == 1)
+        {
+            optCalculationReference = previousCalculations[0];
+            optCalculationConfigurationC = previousCalculations[0];
+
+            while(true)
+            {
+                newValue = OptCalculation();
+                for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+                {
+                    ///@todo change logic could be a method
+                    OPT_T change, maxChange;
+
+                    maxChange = 0.5 * boundary->range() * temperature;
+                    change = random_factor() * maxChange;
+
+                    if(rand() % 2)
+                        change *= -1.0;
+
+                    newValue.add_parameter(boundary->name, previousCalculations[0].get_parameter(boundary->name) + change);
+                }
+                if(valid(newValue))
+                    break;
+            }
+
+            update_temperature();
+            update_threshold();
+
+            return newValue;
+        }
+
+        OptCalculation referenceValue;
+
+        if(result_better(previousCalculations.back(), optCalculationReference, optTarget, targetValue))
+            optCalculationReference = previousCalculations.back();
+
+        OptCalculation compareValue = compare_value();
+
+        if(result_better(previousCalculations.back(), compareValue, optTarget, targetValue))
+            optCalculationConfigurationC = previousCalculations.back();
+
+        referenceValue = optCalculationConfigurationC;
+
+        while(true)
+        {
+            newValue = OptCalculation();
+            for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
+            {
+                ///@todo change logic could be a method
+                OPT_T change, maxChange;
+
+                maxChange = 0.5 * boundary->range() * temperature;
+                change = random_factor() * maxChange;
+
+                if(rand() % 2)
+                    change *= -1.0;
+
+                newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
+            }
+            if(valid(newValue))
+                break;
+        }
+
+        update_temperature();
+        update_threshold();
+        return newValue;
+    }
+
+//------------------------------------------------------------------------------
+
+    OptCalculation random_start_value()
+    {
+        OptCalculation optCalculation = random_calculation();
+        bestCalculation = optCalculation;
+        bestCalculation.result = bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
+        return optCalculation;
+    }
+
+//------------------------------------------------------------------------------
+
+    void update_temperature()
+    {
+        temperature *= coolingFactor;
+    }
+
+//------------------------------------------------------------------------------
+
+    void update_threshold()
+    {
+        threshold *= thresholdFactor;
+    }
+
+//------------------------------------------------------------------------------
+
+    OptCalculation compare_value() const ///@todo rename & use T as return value? (=> would require a new compare method)
+    {
+        OptCalculation out;
+        switch(optTarget)
+        {
+            case MINIMIZE:
+                out.result = optCalculationConfigurationC.result + threshold;
+                break;
+
+            case MAXIMIZE:
+                out.result = optCalculationConfigurationC.result - threshold;
+                break;
+
+            case APPROACH:
+                if(targetValue > optCalculationConfigurationC.result)
+                    out.result = optCalculationConfigurationC.result - threshold;
+                else
+                    out.result = optCalculationConfigurationC.result + threshold;
+                break;
+
+            case DIVERGE:
+                if(targetValue > optCalculationConfigurationC.result)
+                    out.result = optCalculationConfigurationC.result + threshold;
+                else
+                    out.result = optCalculationConfigurationC.result - threshold;
+                break;
+
+            default: // MINIMIZE
+                out.result = optCalculationConfigurationC.result + threshold;
+        }
+        return out;
+    }
+    
+//------------------------------------------------------------------------------
+
 };
 
 #endif // OPTTHRESHOLDACCEPTING_H
