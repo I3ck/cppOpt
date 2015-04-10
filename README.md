@@ -45,7 +45,7 @@ void calculate(OptCalculation<T> &optCalculation) const
 
 ##define your parameters and boundaries
 ```cpp
-OptBoundaries optBoundaries;
+OptBoundaries<T> optBoundaries;
 optBoundaries.add_boundary(-5.0, 5.0, "X");
 optBoundaries.add_boundary(-50.0, 55.0, "Y");
 optBoundaries.add_boundary(33.0, 3.0, "potatoe");
@@ -59,44 +59,52 @@ OptTarget optTarget = APPROACH;
 OptTarget optTarget = DIVERGE;
 ```
 
+##templated
+use any of these:
+```cpp
+<float>  
+<double>  
+<long double>
+```
+
 ##choose your algorithm
 ```cpp
 OptSimulatedAnnealing<double> opt1(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              targetValue,
-                              coolingFactor,
-                              startChance);
+                                   maxCalculations,
+                                   &mySolver,
+                                   optTarget,
+                                   targetValue,
+                                   coolingFactor,
+                                   startChance);
 
 OptThresholdAccepting<double> opt2(optBoundaries,
-                              maxCalculations,
-                              &mySolver,
-                              optTarget,
-                              targetValue,
-                              coolingFactor,
-                              threshold,
-                              thresholdFactor);
+                                   maxCalculations,
+                                   &mySolver,
+                                   optTarget,
+                                   targetValue,
+                                   coolingFactor,
+                                   threshold,
+                                   thresholdFactor);
 
 OptGreatDeluge<double> opt3(optBoundaries,
-                       maxCalculations,
-                       &mySolver,
-                       optTarget,
-                       targetValue,
-                       coolingFactor,
-                       waterLevel,
-                       rain);
+                            maxCalculations,
+                            &mySolver,
+                            optTarget,
+                            targetValue,
+                            coolingFactor,
+                            waterLevel,
+                            rain);
 
 OptEvolutionary<double> opt4(optBoundaries,
-                        maxCalculations,
-                        &mySolver,
-                        optTarget,
-                        targetValue,
-                        coolingFactor,
-                        nIndividualsStart,
-                        nIndividualsSelection,
-                        nIndividualsOffspring,
-                        mutation);
+                             maxCalculations,
+                             &mySolver,
+                             optTarget,
+                             targetValue,
+                             coolingFactor,
+                             nIndividualsStart,
+                             nIndividualsSelection,
+                             nIndividualsOffspring,
+                             mutation);
 ```
 
 ##multithreading
@@ -104,7 +112,7 @@ you can spawn any number of objects with different algorithms, boundaries, confi
 
 ##go!
 ```cpp
-OptBase::run_optimisations(NUMBER_OF_WORKER_THREADS);
+OptBase<double>::run_optimisations(NUMBER_OF_WORKER_THREADS);
 ```
 
 ##logging / outputting results
@@ -127,7 +135,7 @@ you can retrieve both the best values of all your optimisers or specific ones:
 ```cpp
 OptCalculation<double> best1 = opt1.get_best_calculation();
 OptCalculation<double> best2 = opt2.get_best_calculation();
-OptCalculation<double> bestAll = OptBase::get_best_calculation(optTarget, targetValue);
+OptCalculation<double> bestAll = OptBase<double>::get_best_calculation(optTarget, targetValue);
 ```
 
 ##examples
