@@ -168,7 +168,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation<T> compare_value() const ///@todo rename & use T as return value? (=> would require a new compare method)
+    OptCalculation<T> compare_value() const
     {
         OptCalculation<T> out;
         out.result = waterLevel;
