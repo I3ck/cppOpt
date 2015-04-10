@@ -79,7 +79,6 @@ public:
 
 //------------------------------------------------------------------------------
 
-    ///@todo could be static
     T distance_to(const OptCalculation &other) const
     {
         ///@todo add a test to check whether both have the exact same parameters
@@ -93,14 +92,12 @@ public:
 
 //------------------------------------------------------------------------------
 
-    ///@todo could be static
     OptCalculation calculation_between(const OptCalculation &other) const
     {
         ///@todo add a test to check whether both have the exact same parameters
         ///@todo if not return one of the two as center
         OptCalculation out;
 
-        ///@todo rename parameter to key (same with distance method)
         for(const auto &parameter : parameters)
         {
             T centerValue = ( parameters.at(parameter.first) + other.parameters.at(parameter.first) ) / 2.0;
@@ -139,7 +136,7 @@ public:
     }
 
 //------------------------------------------------------------------------------
-    
+
 };
 
 } // namespace cppOpt
