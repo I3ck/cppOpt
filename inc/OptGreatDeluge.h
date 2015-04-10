@@ -79,11 +79,10 @@ private:
         if(super::previousCalculations.empty())
             return random_start_value();
 
-        ///@todo merge these definitions
-        OptCalculation<T> newValue;
-        OptCalculation<T> referenceValue;
-
-        OptCalculation<T> compareValue = compare_value();
+        OptCalculation<T> 
+            newValue,
+            referenceValue,
+            compareValue = compare_value();
 
         if(super::result_better(super::previousCalculations.back(), compareValue, super::optTarget, super::targetValue))
             referenceValue = super::previousCalculations.back();
