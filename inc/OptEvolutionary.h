@@ -46,7 +46,7 @@ private:
         individualsSelected,
         individualsBred,
         individualsMutated; ///@todo might be better to use a stack/queue here
-        
+
 //------------------------------------------------------------------------------
 
 public:
@@ -59,7 +59,7 @@ public:
                           unsigned int nIndividualsStart,
                           unsigned int nIndividualsSelection,
                           unsigned int nIndividualsOffspring,
-                          T mutation) : 
+                          T mutation) :
         super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
         coolingFactor(coolingFactor),
         nIndividualsStart(nIndividualsStart),
@@ -128,8 +128,7 @@ private:
         OptCalculation<T> optCalculation;
         for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
         {
-            T range = boundary->max - boundary->min; ///@todo use range method here (and propaply in threshold accepting)
-            T newValue = boundary->min + super::random_factor() * range;
+            T newValue = boundary->min + super::random_factor() * boundary->range();
             optCalculation.add_parameter(boundary->name, newValue);
         }
         super::bestCalculation = optCalculation;
