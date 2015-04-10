@@ -365,7 +365,7 @@ private:
 
                 pOptBase->add_finished_calculation(optCalculation);
 
-                if(pOptBase->previousCalculations.size() > pOptBase->maxCalculations) ///@todo maybe be >=
+                if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
                     break;
 
                 //only add the next one if there still are more
