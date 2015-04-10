@@ -147,6 +147,8 @@ public:
 
         for(auto &thread :threads)
             thread.join();
+
+        ///@todo close logfile?
     }
 
 //------------------------------------------------------------------------------
@@ -186,6 +188,17 @@ public:
 
 //------------------------------------------------------------------------------
 
+    static unsigned int number_finished_calculations()
+    {
+        mutexFinishedCalculations.lock();
+        unsigned int nFinishedCalculations = finishedCalculations.size();
+        mutexFinishedCalculations.unlock();
+
+        return nFinishedCalculations;
+    }
+
+//------------------------------------------------------------------------------
+
     //targetValue won't be used when maximizing or minimizing
     static OptCalculation<T> get_best_calculation(OptTarget optTarget, T targetValue)
     {
@@ -216,6 +229,14 @@ public:
     }
 
 //------------------------------------------------------------------------------
+
+    unsigned int number_previous_calculations() const
+    {
+        return previousCalculations.size();
+    }
+
+//------------------------------------------------------------------------------
+
 
 protected:
     //targetValue won't be used when maximizing or minimizing
