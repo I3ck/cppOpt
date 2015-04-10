@@ -43,10 +43,10 @@ public:
                           unsigned int maxCalculations,
                           OptSolverBase<T>* pCalculator,
                           OptTarget optTarget,
-                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          T targetValue,
                           T coolingFactor,
                           T threshold,
-                          T thresholdFactor) : 
+                          T thresholdFactor) :
         super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
         coolingFactor(coolingFactor),
         thresholdFactor(thresholdFactor),
@@ -199,7 +199,7 @@ private:
         }
         return out;
     }
-    
+
 //------------------------------------------------------------------------------
 
 };

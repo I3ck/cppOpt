@@ -48,10 +48,10 @@ public:
                           unsigned int maxCalculations,
                           OptSolverBase<T>* pCalculator,
                           OptTarget optTarget,
-                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          T targetValue,
                           T coolingFactor,
                           T waterLevel,
-                          T rain) : 
+                          T rain) :
         super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
         coolingFactor(coolingFactor),
         rain(rain),

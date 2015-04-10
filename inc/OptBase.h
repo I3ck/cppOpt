@@ -37,7 +37,7 @@
 
 namespace cppOpt
 {
-template <typename T> 
+template <typename T>
 class OptBase
 {
 
@@ -102,8 +102,8 @@ public:
     OptBase(const OptBoundaries<T> &optBoundaries,
             unsigned int maxCalculations,
             OptSolverBase<T>* pCalculator,
-            OptTarget optTarget = MINIMIZE,
-            T targetValue = 0.0) :
+            OptTarget optTarget,
+            T targetValue) :
         maxCalculations(maxCalculations),
         optBoundaries(optBoundaries),
         pCalculator(pCalculator),
@@ -408,24 +408,24 @@ private:
     }
 
 //------------------------------------------------------------------------------
-    
+
 };
 
 template <typename T>
 std::mutex OptBase<T>::mutexQueueTodo;
-    
+
 template <typename T>
 std::mutex OptBase<T>::mutexAvailabilityCheckTodo;
-    
+
 template <typename T>
 std::mutex OptBase<T>::mutexQueueCalculated;
-    
+
 template <typename T>
 std::mutex OptBase<T>::mutexFinishedCalculations;
-    
+
 template <typename T>
 std::mutex OptBase<T>::mutexPOptimisers;
-    
+
 template <typename T>
 std::mutex OptBase<T>::mutexLogFile;
 

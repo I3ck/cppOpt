@@ -32,7 +32,7 @@ private:
     T
         temperature,
         chance;
-        
+
 //------------------------------------------------------------------------------
 
 public:
@@ -40,9 +40,9 @@ public:
                           unsigned int maxCalculations,
                           OptSolverBase<T>* pCalculator,
                           OptTarget optTarget,
-                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          T targetValue,
                           T coolingFactor,
-                          T startChance) : 
+                          T startChance) :
         super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
         coolingFactor(coolingFactor),
         temperature(1.0),

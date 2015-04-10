@@ -54,7 +54,7 @@ public:
                           unsigned int maxCalculations,
                           OptSolverBase<T>* pCalculator,
                           OptTarget optTarget,
-                          T targetValue, ///@todo move defaulted ones to the end? or Base => Child like it is currently?
+                          T targetValue,
                           T coolingFactor,
                           unsigned int nIndividualsStart,
                           unsigned int nIndividualsSelection,
