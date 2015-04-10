@@ -106,6 +106,51 @@ TEST_CASE("Boundaries") {
     }
 }
 
+TEST_CASE("Number of Calculations") {
+
+    OptBoundaries<double> optBoundaries;
+    optBoundaries.add_boundary(-5.0, 5.0, "X");
+
+    MySolver<double> mySolver;
+    double coolingFactor = 0.95;
+    double startChance = 0.25;
+
+    OptTarget optTarget = MINIMIZE;
+
+    SECTION("Single Calculation") {
+        unsigned int maxCalculations = 1;
+
+        OptSimulatedAnnealing<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          0.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          startChance);
+
+        OptBase<double>::run_optimisations();
+
+        REQUIRE(opt.number_previous_calculations() == maxCalculations);
+    }
+
+    SECTION("Many Calculations") {
+        unsigned int maxCalculations = 1000;
+
+        OptSimulatedAnnealing<double> opt(optBoundaries,
+                                          maxCalculations,
+                                          &mySolver,
+                                          optTarget,
+                                          0.0, //only required if approaching / diverging
+                                          coolingFactor,
+                                          startChance);
+
+        OptBase<double>::run_optimisations();
+
+        REQUIRE(opt.number_previous_calculations() == maxCalculations);
+    }
+
+}
+
 TEST_CASE("Simulated Annealing") {
 
     OptBoundaries<double> optBoundaries;
