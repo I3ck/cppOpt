@@ -385,6 +385,21 @@ protected:
 
 //------------------------------------------------------------------------------
 
+    T calculate_random_change(const OptBoundary<T> &boundary, T temperature) const
+    {
+        T change, maxChange;
+
+        maxChange = 0.5 * boundary.range() * temperature;
+        change = random_factor() * maxChange;
+
+        if(rand() % 2)
+            change *= -1.0;
+
+        return change;
+    }
+
+//------------------------------------------------------------------------------
+
 private:
     static void threaded_work()
     {
