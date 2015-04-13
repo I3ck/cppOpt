@@ -123,21 +123,6 @@ private:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation<T> random_start_value()
-    {
-        OptCalculation<T> optCalculation;
-        for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
-        {
-            T newValue = boundary->min + super::random_factor() * boundary->range();
-            optCalculation.add_parameter(boundary->name, newValue);
-        }
-        super::bestCalculation = optCalculation;
-        super::bestCalculation.result = super::bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
-        return optCalculation;
-    }
-
-//------------------------------------------------------------------------------
-
     void add_previous_to_sorted()
     {
         if(super::previousCalculations.size() > 0)
@@ -151,7 +136,7 @@ private:
 
     void create_start_individuals()
     {
-        individualsStart.push_back(random_start_value());
+        individualsStart.push_back(super::random_start_value());
 
         for(unsigned int i = 1; i < nIndividualsStart; ++i)
         {

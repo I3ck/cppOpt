@@ -69,7 +69,7 @@ private:
     OptCalculation<T> get_next_calculation()
     {
         if(super::previousCalculations.empty())
-            return random_start_value();
+            return super::random_start_value();
 
         OptCalculation<T> newValue;
 
@@ -139,16 +139,6 @@ private:
         update_temperature();
         update_threshold();
         return newValue;
-    }
-
-//------------------------------------------------------------------------------
-
-    OptCalculation<T> random_start_value()
-    {
-        OptCalculation<T> optCalculation = super::random_calculation();
-        super::bestCalculation = optCalculation;
-        super::bestCalculation.result = super::bad_value(); ///@todo bestCalculation logic should be moved to general OptBase (since it's gonna repeat itself)
-        return optCalculation;
     }
 
 //------------------------------------------------------------------------------

@@ -342,6 +342,16 @@ protected:
 
 //------------------------------------------------------------------------------
 
+    OptCalculation<T> random_start_value()
+    {
+        OptCalculation<T> optCalculation = random_calculation();
+        bestCalculation = optCalculation;
+        bestCalculation.result = bad_value();
+        return optCalculation;
+    }
+
+//------------------------------------------------------------------------------
+
     unsigned int index_closest_calculation(const std::vector< OptCalculation<T> > &optCalculations, unsigned int indexThis) const
     {
         T closestDistance;
