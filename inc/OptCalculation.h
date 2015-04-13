@@ -81,8 +81,9 @@ public:
 
     T distance_to(const OptCalculation &other) const
     {
-        ///@todo add a test to check whether both have the exact same parameters
-        ///@todo if not return the max value for T
+        if(!using_same_parameters(other))
+            throw std::runtime_error("Can't calculate the distance between two OptCalculation if they're not using the same parameters");
+
         T squareSum(0.0);
         for(const auto &parameter : parameters)
             squareSum += pow(parameters.at(parameter.first) - other.parameters.at(parameter.first), 2);
@@ -94,8 +95,9 @@ public:
 
     OptCalculation calculation_between(const OptCalculation &other) const
     {
-        ///@todo add a test to check whether both have the exact same parameters
-        ///@todo if not return one of the two as center
+        if(!using_same_parameters(other))
+            throw std::runtime_error("Can't calculate the center of two OptCalculation not having them same parameters");
+
         OptCalculation out;
 
         for(const auto &parameter : parameters)
@@ -105,6 +107,24 @@ public:
         }
 
         return out;
+    }
+
+//------------------------------------------------------------------------------
+
+    bool using_same_parameters(const OptCalculation &other) const
+    {
+        for(const auto &parameter : parameters)
+        {
+            if(other.parameters.find(parameter.first) == other.parameters.end())
+                return false;
+        }
+
+        for(const auto &parameter : other.parameters)
+        {
+            if(parameters.find(parameter.first) == parameters.end())
+                return false;
+        }
+        return true;
     }
 
 //------------------------------------------------------------------------------
