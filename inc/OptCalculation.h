@@ -72,9 +72,9 @@ public:
 
     T get_parameter(const std::string &name) const
     {
-        if(parameters.find(name) != parameters.end())
-            return parameters.at(name); ///@todo these need proper error handling
-        else return 0.0; ///@todo better error case
+        if(parameters.find(name) == parameters.end())
+            throw std::runtime_error("Trying to access a non-existing parameter");
+        return parameters.at(name);
     }
 
 //------------------------------------------------------------------------------
