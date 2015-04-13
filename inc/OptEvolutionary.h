@@ -188,7 +188,7 @@ private:
         ///@todo make this its own method? (and parents a member?)
         for(unsigned int i = 0; i < individualsSelected.size(); ++i)
         {
-            unsigned int indexClosest = index_closest(individualsSelected, i);
+            unsigned int indexClosest = super::index_closest_calculation(individualsSelected, i);
 
             if(usedIndexes.find(indexClosest) == usedIndexes.end())
             {
@@ -258,40 +258,6 @@ private:
             default: // MINIMIZE
                 return optCalculation.result;
         }
-    }
-
-//------------------------------------------------------------------------------
-
-    ///@todo could be static or even a member of OptBase
-    unsigned int index_closest(const std::vector< OptCalculation<T> > &optCalculations, unsigned int indexThis) const
-    {
-        T closestDistance;
-        unsigned int indexClosest(0);
-        bool initialised(false);
-
-        for(unsigned int i = 0; i < optCalculations.size(); ++i)
-        {
-            if(i == indexThis)
-                continue;
-
-            if(!initialised)
-            {
-                closestDistance = optCalculations[i].distance_to(optCalculations[indexThis]);
-                indexClosest = i;
-                initialised = true;
-            }
-            else
-            {
-                T distance = optCalculations[i].distance_to(optCalculations[indexThis]);
-
-                if(distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    indexClosest = i;
-                }
-            }
-        }
-        return indexClosest;
     }
 
 //------------------------------------------------------------------------------

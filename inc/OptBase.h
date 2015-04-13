@@ -340,6 +340,41 @@ protected:
         return rand()/(T)(RAND_MAX);
     }
 
+//------------------------------------------------------------------------------
+
+    unsigned int index_closest_calculation(const std::vector< OptCalculation<T> > &optCalculations, unsigned int indexThis) const
+    {
+        T closestDistance;
+        unsigned int indexClosest(0);
+        bool initialised(false);
+
+        for(unsigned int i = 0; i < optCalculations.size(); ++i)
+        {
+            if(i == indexThis)
+                continue;
+
+            if(!initialised)
+            {
+                closestDistance = optCalculations[i].distance_to(optCalculations[indexThis]);
+                indexClosest = i;
+                initialised = true;
+            }
+            else
+            {
+                T distance = optCalculations[i].distance_to(optCalculations[indexThis]);
+
+                if(distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    indexClosest = i;
+                }
+            }
+        }
+        return indexClosest;
+    }
+
+//------------------------------------------------------------------------------
+
 private:
     static void threaded_work()
     {
