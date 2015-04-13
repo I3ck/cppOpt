@@ -192,3 +192,6 @@ http://en.wikipedia.org/wiki/Great_Deluge_algorithm
 
 ##evolutionary
 https://en.wikipedia.org/wiki/Evolutionary_algorithm
+
+#contribute
+feel free to open issues if you'd like to have new algorithms added, would like to have a new feature or found a bug
