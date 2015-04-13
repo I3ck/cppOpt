@@ -43,9 +43,11 @@ private:
 
     std::vector< OptCalculation<T> >
         individualsStart,
-        individualsSelected,
+        individualsSelected;
+
+    std::queue< OptCalculation<T> >
         individualsBred,
-        individualsMutated; ///@todo might be better to use a stack/queue here
+        individualsMutated;
 
 //------------------------------------------------------------------------------
 
@@ -69,9 +71,6 @@ public:
     {
         individualsStart.reserve(nIndividualsStart);
         individualsSelected.reserve(nIndividualsSelection);
-        individualsBred.reserve(  ceil(nIndividualsOffspring * nIndividualsSelection / 2.0)  );
-        individualsMutated.reserve(  ceil(nIndividualsOffspring * nIndividualsSelection / 2.0)  );
-
     }
 
 //------------------------------------------------------------------------------
@@ -113,8 +112,8 @@ private:
             mutate_individuals();
         }
 
-        out = individualsMutated.back();
-        individualsMutated.pop_back();
+        out = individualsMutated.front();
+        individualsMutated.pop();
 
         update_mutation();
 
@@ -169,8 +168,6 @@ private:
         std::set<unsigned int> usedIndexes;
         std::vector< std::pair< OptCalculation<T> ,OptCalculation<T> > > parents;
 
-        ///@todo needs heavy testing
-        ///@todo make this its own method? (and parents a member?)
         for(unsigned int i = 0; i < individualsSelected.size(); ++i)
         {
             unsigned int indexClosest = super::index_closest_calculation(individualsSelected, i);
@@ -186,7 +183,7 @@ private:
         for(const auto &parentPair : parents)
         {
             for(unsigned int i = 0; i < nIndividualsOffspring; ++i)
-                individualsBred.push_back(  parentPair.first.calculation_between(parentPair.second)  );
+                individualsBred.push(  parentPair.first.calculation_between(parentPair.second)  );
         }
     }
 
@@ -194,8 +191,11 @@ private:
 
     void mutate_individuals()
     {
-        for(auto individual : individualsBred)
+        while(individualsBred.size() != 0)
         {
+            auto individual = individualsBred.front();
+            individualsBred.pop();
+
             OptCalculation<T> mutatedIndividual;
             for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
             {
@@ -210,9 +210,8 @@ private:
                 mutatedIndividual.add_parameter(boundary->name, individual.get_parameter(boundary->name) + change);
 
             }
-            individualsMutated.push_back(mutatedIndividual);
+            individualsMutated.push(mutatedIndividual);
         }
-        individualsBred.clear();
     }
 
 //------------------------------------------------------------------------------

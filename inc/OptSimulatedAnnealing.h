@@ -75,7 +75,7 @@ private:
             referenceValue = super::previousCalculations.back();
 
         else
-            referenceValue = super::bestCalculation; ///@todo rename bestCalculation to bestOptCalculation or similar
+            referenceValue = super::bestCalculation;
 
         while(true)
         {
