@@ -147,8 +147,6 @@ public:
 
         for(auto &thread :threads)
             thread.join();
-
-        ///@todo close logfile?
     }
 
 //------------------------------------------------------------------------------
