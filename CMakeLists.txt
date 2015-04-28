@@ -20,23 +20,23 @@ aux_source_directory(
 
 
 add_executable(
-        example_1
-        examples/example_1.cpp
+        example_simulated_annealing_x_square
+        examples/example_simulated_annealing_x_square.cpp
 )
 
 add_executable(
-        example_2
-        examples/example_2.cpp
+        example_simulated_annealing_x_square_threaded
+        examples/example_simulated_annealing_x_square_threaded.cpp
 )
 
 add_executable(
-        example_3
-        examples/example_3.cpp
+        example_simulated_annealing_rastrigrin_one_dimensionS
+        examples/example_simulated_annealing_rastrigrin_one_dimension.cpp
 )
 
 add_executable(
-        example_4
-        examples/example_4.cpp
+        example_simulated_annealing_rastrigrin_two_dimensions
+        examples/example_simulated_annealing_rastrigrin_two_dimensions.cpp
 )
 
 add_executable(

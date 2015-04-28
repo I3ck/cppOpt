@@ -12,7 +12,7 @@
 */
 
 /**
-  * \brief third example showing the usage of simulated annealing
+  * \brief fourth example showing the usage of simulated annealing
   *        to find the minimum of the 2-dimensional rastrigrin function
   */
 
