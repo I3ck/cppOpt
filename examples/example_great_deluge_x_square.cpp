@@ -81,7 +81,7 @@ int main()
 
     //enable logging
     //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example_1.log", optBoundaries);
+    OptBase<double>::enable_logging("example_great_deluge_x_square.log", optBoundaries);
 
     //let's go
     OptBase<double>::run_optimisations();

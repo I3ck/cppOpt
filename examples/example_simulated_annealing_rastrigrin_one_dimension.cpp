@@ -80,7 +80,7 @@ int main()
 
     //enable logging
     //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example_3.log", optBoundaries);
+    OptBase<double>::enable_logging("example_simulated_annealing_rastrigrin_one_dimension.log", optBoundaries);
 
     //let's go
     OptBase<double>::run_optimisations();

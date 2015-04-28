@@ -107,7 +107,7 @@ int main()
 
     //enable logging
     //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example2.log", optBoundaries1);
+    OptBase<double>::enable_logging("example_simulated_annealing_x_square_threaded.log", optBoundaries1);
 
     //let's go
     OptBase<double>::run_optimisations();
