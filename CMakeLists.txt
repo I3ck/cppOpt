@@ -50,6 +50,11 @@ add_executable(
 )
 
 add_executable(
+        example_threshold_accepting
+        examples/example_threshold_accepting.cpp
+)
+
+add_executable(
         test_1
         tests/test_1.cpp
 )
