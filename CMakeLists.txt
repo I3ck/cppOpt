@@ -40,6 +40,11 @@ add_executable(
 )
 
 add_executable(
+        example_great_deluge_x_square
+        examples/example_great_deluge_x_square.cpp
+)
+
+add_executable(
         test_1
         tests/test_1.cpp
 )

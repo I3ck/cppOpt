@@ -12,7 +12,7 @@
 */
 
 /**
-  * \brief second example showing the usage of simulated annealing
+  * \brief example showing the usage of simulated annealing
   *        to find the minimum of x^2
   *        but now using 4 threads
   */

@@ -12,7 +12,7 @@
 */
 
 /**
-  * \brief example showing the usage of simulated annealing
+  * \brief first example showing the usage of great deluge
   *        to find the minimum of x^2
   */
 
@@ -53,22 +53,31 @@ int main()
     //we want to find the minimum
     OptTarget optTarget = MINIMIZE;
 
-    //how fast the simulated annealing algorithm slows down
-    //http://en.wikipedia.org/wiki/Simulated_annealing
+    //how fast the great deluge algorithm slows down
+    //http://en.wikipedia.org/wiki/Great_Deluge_algorithm
     double coolingFactor = 0.95;
 
-    //the chance in the beginning to follow bad solutions
-    double startChance = 0.25;
+    //the initial water level
+    //http://en.wikipedia.org/wiki/Great_Deluge_algorithm
+    double waterLevel = 25.0;
+
+    //how much rain is added to the water level per iteration
+    //with x^2 from -5 to +5 the max value is 25, while the min and wanted value is 0
+    //with 300 calculations, the water level should be pretty close to the optimum of 0
+    //25/300 => 0.083333 [rain should AT LEAST be that much] => make it 0.15
+    //http://en.wikipedia.org/wiki/Great_Deluge_algorithm
+    double rain = 0.15;
 
     //create your optimiser
-    //using simulated annealing
-    OptSimulatedAnnealing<double> opt(optBoundaries,
-                                  maxCalculations,
-                                  &mySolver,
-                                  optTarget,
-                                  0.0, //only required if approaching / diverging
-                                  coolingFactor,
-                                  startChance);
+    //using great deluge
+    OptGreatDeluge<double> opt(optBoundaries,
+                               maxCalculations,
+                               &mySolver,
+                               optTarget,
+                               0.0, //only required if approaching / diverging
+                               coolingFactor,
+                               waterLevel,
+                               rain);
 
     //enable logging
     //boundaries object required to know the parameters names for the header
