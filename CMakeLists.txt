@@ -30,7 +30,7 @@ add_executable(
 )
 
 add_executable(
-        example_simulated_annealing_rastrigrin_one_dimensionS
+        example_simulated_annealing_rastrigrin_one_dimension
         examples/example_simulated_annealing_rastrigrin_one_dimension.cpp
 )
 
