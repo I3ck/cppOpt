@@ -78,7 +78,7 @@ int main()
     double mutation = 0.1;
 
     //create your optimiser
-    //using great deluge
+    //using the evolutionary algorithm
     OptEvolutionary<double> opt(optBoundaries,
                                 maxCalculations,
                                 &mySolver,
