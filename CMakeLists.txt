@@ -45,6 +45,11 @@ add_executable(
 )
 
 add_executable(
+        example_evolutionary_x_square
+        examples/example_evolutionary_x_square.cpp
+)
+
+add_executable(
         test_1
         tests/test_1.cpp
 )
