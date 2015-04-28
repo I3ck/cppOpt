@@ -1,9 +1,7 @@
 - add ways to store data (maybe make this user-implementable aswell or provide sub-classes)
 - optimise for speed  
 - make it easy to use external plotting tools  
-- more examples  
 - allow algorithms to leave boundaries  
 - taboo areas  
 - carefully check the evolutionary behaviour  
 - evolutionary mutations won't check for borders (only relevant if the algorithms should have to stay within their borders)  
-- add splitting example to examples
