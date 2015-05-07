@@ -83,9 +83,9 @@ private:
                 newValue = OptCalculation<T>();
                 for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
                 {
-                    T change = super::calculate_random_change(*boundary, temperature);
+                    T change = super::calculate_random_change(boundary->second, temperature);
 
-                    newValue.add_parameter(boundary->name, super::previousCalculations[0].get_parameter(boundary->name) + change);
+                    newValue.add_parameter(boundary->first, super::previousCalculations[0].get_parameter(boundary->first) + change);
                 }
                 if(super::valid(newValue))
                     break;
@@ -114,9 +114,9 @@ private:
             newValue = OptCalculation<T>();
             for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
             {
-                T change = super::calculate_random_change(*boundary, temperature);
+                T change = super::calculate_random_change(boundary->second, temperature);
 
-                newValue.add_parameter(boundary->name, referenceValue.get_parameter(boundary->name) + change);
+                newValue.add_parameter(boundary->first, referenceValue.get_parameter(boundary->first) + change);
             }
             if(super::valid(newValue))
                 break;

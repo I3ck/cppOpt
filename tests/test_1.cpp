@@ -69,7 +69,7 @@ TEST_CASE("Boundaries") {
         optBoundaries.add_boundary(1.0, 3.0, "test");
         REQUIRE(optBoundaries.size() == 1);
 
-        optBoundaries.add_boundary(OptBoundary<double>(1.0, 3.0, "test"));
+        optBoundaries.add_boundary(OptBoundary<double>(1.0, 3.0, "test2"));
         REQUIRE(optBoundaries.size() == 2);
     }
 
@@ -86,20 +86,20 @@ TEST_CASE("Boundaries") {
         {
             for(const auto &boundary : splitted[i])
             {
-                if(boundary.name == "x")
+                if(boundary.first == "x")
                 {
-                    REQUIRE(boundary.min == 0.0 + i);
-                    REQUIRE(boundary.max == 1.0 + i);
+                    REQUIRE(boundary.second.min == 0.0 + i);
+                    REQUIRE(boundary.second.max == 1.0 + i);
                 }
-                else if(boundary.name == "y")
+                else if(boundary.first == "y")
                 {
-                    REQUIRE(boundary.min == 0.0);
-                    REQUIRE(boundary.max == 10.0);
+                    REQUIRE(boundary.second.min == 0.0);
+                    REQUIRE(boundary.second.max == 10.0);
                 }
-                else if(boundary.name == "z")
+                else if(boundary.first == "z")
                 {
-                    REQUIRE(boundary.min == 0.0);
-                    REQUIRE(boundary.max == 10.0);
+                    REQUIRE(boundary.second.min == 0.0);
+                    REQUIRE(boundary.second.max == 10.0);
                 }
             }
         }

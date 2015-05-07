@@ -15,7 +15,7 @@
 #define OPTBOUNDARIES_H
 
 #include <string>
-#include <vector>
+#include <map>
 
 #include "config.h"
 #include "OptBoundary.h"
@@ -27,7 +27,7 @@ template <typename T>
 class OptBoundaries
 {
 private:
-    std::vector< OptBoundary<T> >
+    std::map<std::string, OptBoundary<T> >
         optBoundaries;
 
 public:
@@ -55,7 +55,7 @@ public:
 
     void add_boundary(const OptBoundary<T> &optBoundary)
     {
-        optBoundaries.push_back(optBoundary);
+        optBoundaries.insert(make_pair(optBoundary.name, optBoundary));
     }
 
 //------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ public:
         std::string out("");
 
         for(const auto &boundary : optBoundaries)
-            out += boundary.name + " ";
+            out += boundary.first + " ";
 
         return out;
     }
@@ -94,9 +94,9 @@ public:
 
         for(const auto &boundary : optBoundaries)
         {
-            if(boundary.name == name)
+            if(boundary.first == name)
             {
-                range = boundary.range();
+                range = boundary.second.range();
                 found = true;
             }
         }
@@ -112,21 +112,21 @@ public:
             OptBoundaries newBoundaries;
             for(const auto &boundary : optBoundaries)
             {
-                if(boundary.name == name)
+                if(boundary.first == name)
                 {
                     T
                         newMin,
                         newMax;
 
-                    newMin = boundary.min + i * newRange;
-                    newMax = boundary.min + (i+1) * newRange;
+                    newMin = boundary.second.min + i * newRange;
+                    newMax = boundary.second.min + (i+1) * newRange;
 
                     OptBoundary<T> newBoundary(newMin, newMax, name);
 
                     newBoundaries.add_boundary(newBoundary);
                 }
                 else
-                    newBoundaries.add_boundary(boundary);
+                    newBoundaries.add_boundary(boundary.second);
             }
             out.push_back(newBoundaries);
         }
@@ -137,28 +137,28 @@ public:
 
 //------------------------------------------------------------------------------
 
-    typename std::vector< OptBoundary<T> >::iterator begin()
+    typename std::map< std::string, OptBoundary<T> >::iterator begin()
     {
         return optBoundaries.begin();
     }
 
 //------------------------------------------------------------------------------
 
-    typename std::vector< OptBoundary<T> >::iterator end()
+    typename std::map< std::string, OptBoundary<T> >::iterator end()
     {
         return optBoundaries.end();
     }
 
 //------------------------------------------------------------------------------
 
-    const typename std::vector< OptBoundary<T> >::const_iterator cbegin() const
+    const typename std::map< std::string, OptBoundary<T> >::const_iterator cbegin() const
     {
         return optBoundaries.cbegin();
     }
 
 //------------------------------------------------------------------------------
 
-    const typename std::vector< OptBoundary<T> >::const_iterator cend() const
+    const typename std::map< std::string, OptBoundary<T> >::const_iterator cend() const
     {
         return optBoundaries.cend();
     }

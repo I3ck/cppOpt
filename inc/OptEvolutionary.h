@@ -201,13 +201,13 @@ private:
             {
                 T change, maxChange;
 
-                maxChange = 0.5 * boundary->range() * mutation;
+                maxChange = 0.5 * boundary->second.range() * mutation;
                 change = super::random_factor() * maxChange;
 
                 if(rand() % 2)
                     change *= -1.0;
 
-                mutatedIndividual.add_parameter(boundary->name, individual.get_parameter(boundary->name) + change);
+                mutatedIndividual.add_parameter(boundary->second.name, individual.get_parameter(boundary->second.name) + change);
 
             }
             individualsMutated.push(mutatedIndividual);

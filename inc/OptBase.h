@@ -310,8 +310,8 @@ protected:
         OptCalculation<T> optCalculation;
         for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
         {
-            T newValue = boundary->min + random_factor() * boundary->range();
-            optCalculation.add_parameter(boundary->name, newValue);
+            T newValue = boundary->second.min + random_factor() * boundary->second.range();
+            optCalculation.add_parameter(boundary->second.name, newValue);
         }
         return optCalculation;
     }
@@ -323,9 +323,9 @@ protected:
         for(auto boundary = optBoundaries.cbegin(); boundary != optBoundaries.cend(); ++boundary)
         {
             if(
-            optCalculation.get_parameter(boundary->name) < boundary->min
+            optCalculation.get_parameter(boundary->first) < boundary->second.min
             ||
-            optCalculation.get_parameter(boundary->name) > boundary->max)
+            optCalculation.get_parameter(boundary->first) > boundary->second.max)
                 return false;
         }
         return true;
