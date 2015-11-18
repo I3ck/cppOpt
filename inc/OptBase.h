@@ -111,10 +111,10 @@ public:
         targetValue(targetValue)
     {
         previousCalculations.reserve(maxCalculations);
+
         mutexPOptimisers.lock();
         pOptimisers.insert(this);
         mutexPOptimisers.unlock();
-        srand( time(NULL) + rand() );
     }
 
 //------------------------------------------------------------------------------
@@ -130,6 +130,13 @@ public:
 
     static void run_optimisations(unsigned int maxThreads = 1)
     {
+        run_optimisations(maxThreads, time(NULL));
+    }
+
+    static void run_optimisations(unsigned int maxThreads, unsigned int randomSeed)
+    {
+        srand(randomSeed);
+
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
         mutexPOptimisers.lock();
