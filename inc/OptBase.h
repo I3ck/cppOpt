@@ -394,7 +394,7 @@ protected:
     {
         T change, maxChange;
 
-        maxChange = 0.5 * boundary.range() * temperature;
+        maxChange = (T)0.5 * boundary.range() * temperature;
         change = random_factor() * maxChange;
 
         if(rand() % 2)
