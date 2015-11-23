@@ -26,17 +26,18 @@ private:
 
     typedef OptBase<T> super;
 
+    const T
+        coolingFactor;
+
     const unsigned int
         nIndividualsStart,
         nIndividualsSelection,
         nIndividualsOffspring;
 
-    const T
-        coolingFactor;
-
     T
         mutation,
         chance;
+
 
     std::multimap< T, OptCalculation<T> > // <SORT_VALUE, CALCULATION>
         previousCalculationsSorted;

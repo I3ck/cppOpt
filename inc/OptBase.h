@@ -81,11 +81,11 @@ protected:
     OptCalculation<T>
         bestCalculation;
 
-    const OptBoundaries<T>
-        optBoundaries;
-
     const unsigned int
         maxCalculations;
+
+    const OptBoundaries<T>
+        optBoundaries;
 
     const OptSolverBase<T>*
         pCalculator;
