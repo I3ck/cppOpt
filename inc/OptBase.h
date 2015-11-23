@@ -294,11 +294,11 @@ protected:
                 return std::numeric_limits<T>::max();
 
             case MAXIMIZE:
-                return std::numeric_limits<T>::min();
+                return std::numeric_limits<T>::lowest();
 
             case APPROACH:
                 if(targetValue > 0.0)
-                    return std::numeric_limits<T>::min();
+                    return std::numeric_limits<T>::lowest();
                 else
                     return std::numeric_limits<T>::max();
 
