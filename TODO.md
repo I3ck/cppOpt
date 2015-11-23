@@ -5,3 +5,5 @@
 - taboo areas  
 - carefully check the evolutionary behaviour  
 - evolutionary mutations won't check for borders (only relevant if the algorithms should have to stay within their borders)  
+- use better mutex locking (read/write RAII)
+- way to reset static state
