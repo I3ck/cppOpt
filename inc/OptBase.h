@@ -64,6 +64,12 @@ private:
     static bool
         loggingEnabled; //only set with one method and already locked when logging, no additional mutex required
 
+    static std::atomic<bool>
+        abortEarly;
+
+    static std::atomic<T>
+        abortValue;
+
     static std::string
         loggingDelimiter,
         loggingLineEnd;
@@ -176,6 +182,14 @@ public:
         loggingLineEnd = lineEnd;
         logFile << optBoundaries.to_string() << "RESULT" << loggingLineEnd;
         return true;
+    }
+
+//------------------------------------------------------------------------------
+
+    static void enable_early_abort(const T abortVal)
+    {
+        abortEarly = true;
+        abortValue = abortVal;
     }
 
 //------------------------------------------------------------------------------
@@ -416,6 +430,15 @@ private:
             if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
                 break;
 
+            if(abortEarly)
+            {
+                OptCalculation<T> calcEarly;
+                calcEarly.result = abortValue;
+
+                if(result_better(optCalculation, calcEarly, pOptBase->optTarget , pOptBase->targetValue))
+                    break;
+            }
+
             //only add the next one if there still are more
             push_todo(pOptBase->get_next_calculation(), pOptBase);
         }
@@ -501,6 +524,13 @@ template <typename T>
 bool
     OptBase<T>::loggingEnabled(false);
 
+template <typename T>
+std::atomic<bool>
+    OptBase<T>::abortEarly(false);
+
+template <typename T>
+std::atomic<T>
+    OptBase<T>::abortValue(0);
 
 template <typename T>
 std::string OptBase<T>::loggingDelimiter("");

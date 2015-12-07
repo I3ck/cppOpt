@@ -5,7 +5,7 @@ without knowing the "function" of the problem simply by smartly testing certain 
 - using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
 - using Catch as testing framework https://github.com/philsquared/Catch
 
-##version 0.2.13
+##version 0.2.14
 
 ##optimise anything!
 optimise any given problem by defining your very own Solver class:
@@ -117,6 +117,12 @@ OptBase<double>::run_optimisations();
 OptBase<double>::run_optimisations(NUMBER_OF_WORKER_THREADS);
 //or
 OptBase<double>::run_optimisations(NUMBER_OF_WORKER_THREADS, SPECIFIC_RANDOM_SEED);
+```
+
+##aborting early
+you can also define when to abort the optimisation, in case the value is good enough
+```cpp
+OptBase<double>::enable_early_abort(13.37);
 ```
 
 ##logging / outputting results
