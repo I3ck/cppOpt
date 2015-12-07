@@ -8,3 +8,4 @@
 - way to reset static state
 - use lambda and std::function<> as callback for calculations
 - read/write locks and a mode where when selecting only one thread to run on, the locking is disabled
+- add abort condition to break quickly if the result was found
