@@ -112,7 +112,7 @@ public:
     {
         previousCalculations.reserve(maxCalculations);
 
-        mutexPOptimisers.lock();
+        std::lock_guard<std::mutex> lck(mutexPOptimisers);
         pOptimisers.insert(this);
         mutexPOptimisers.unlock();
     }
@@ -121,9 +121,8 @@ public:
 
     ~OptBase()
     {
-        mutexPOptimisers.lock();
+        std::lock_guard<std::mutex> lck(mutexPOptimisers);
         pOptimisers.erase( pOptimisers.find(this) );
-        mutexPOptimisers.unlock();
     }
 
 //------------------------------------------------------------------------------
@@ -139,13 +138,14 @@ public:
 
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
-        mutexPOptimisers.lock();
-        for(const auto &pOptimiser : pOptimisers)
         {
-            if(pOptimiser->previousCalculations.size() == 0)
-                push_todo(pOptimiser->get_next_calculation(), pOptimiser);
+            std::lock_guard<std::mutex> lck(mutexPOptimisers);
+            for(const auto &pOptimiser : pOptimisers)
+            {
+                if(pOptimiser->previousCalculations.size() == 0)
+                    push_todo(pOptimiser->get_next_calculation(), pOptimiser);
+            }
         }
-        mutexPOptimisers.unlock();
 
         std::vector <std::thread> threads;
 
@@ -160,11 +160,8 @@ public:
 
     static unsigned int number_optimisers()
     {
-        unsigned int out(0);
-        mutexPOptimisers.lock();
-        out = pOptimisers.size();
-        mutexPOptimisers.unlock();
-        return out;
+        std::lock_guard<std::mutex> lck(mutexPOptimisers);
+        return pOptimisers.size();
     }
 
 //------------------------------------------------------------------------------
@@ -195,11 +192,8 @@ public:
 
     static unsigned int number_finished_calculations()
     {
-        mutexFinishedCalculations.lock();
-        unsigned int nFinishedCalculations = finishedCalculations.size();
-        mutexFinishedCalculations.unlock();
-
-        return nFinishedCalculations;
+        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+        return finishedCalculations.size();
     }
 
 //------------------------------------------------------------------------------
@@ -207,14 +201,11 @@ public:
     //targetValue won't be used when maximizing or minimizing
     static OptCalculation<T> get_best_calculation(OptTarget optTarget, T targetValue)
     {
+        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
         OptCalculation<T> out;
-        mutexFinishedCalculations.lock();
 
         if(finishedCalculations.size() == 0)
-        {
-            mutexFinishedCalculations.unlock();
             return out;
-        }
 
         out = finishedCalculations[0].first;
 
@@ -222,7 +213,6 @@ public:
             if(result_better(finishedCalculation.first, out, optTarget, targetValue))
                 out = finishedCalculation.first;
 
-        mutexFinishedCalculations.unlock();
         return out;
     }
 
@@ -276,9 +266,10 @@ protected:
     {
         previousCalculations.push_back(optCalculation);
 
-        mutexFinishedCalculations.lock();
-        finishedCalculations.push_back({optCalculation, this});
-        mutexFinishedCalculations.unlock();
+        {
+            std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+            finishedCalculations.push_back({optCalculation, this});
+        }
 
         if(result_better(optCalculation, bestCalculation, optTarget, targetValue))
             bestCalculation = optCalculation;
@@ -410,16 +401,17 @@ private:
     {
         while(true)
         {
-            mutexAvailabilityCheckTodo.lock(); //the check for availability and the pop have to be atomic
-            bool availableTodo = available_todo();
-
-            if(!availableTodo)
-                mutexAvailabilityCheckTodo.unlock(); //no pop will occur, can unlock directly
-
-            else // availableTodo
+            bool availableTodo(false);
+            std::pair <OptCalculation<T>, OptBase<T>*> todo;
             {
-                std::pair <OptCalculation<T>, OptBase<T>*> todo = pop_todo();
-                mutexAvailabilityCheckTodo.unlock(); //pop occured, can unlock now
+                std::lock_guard<std::mutex> lck(mutexAvailabilityCheckTodo); //the check for availability and the pop have to be atomic
+                availableTodo = available_todo();
+                if(availableTodo)
+                    todo = pop_todo();
+            }
+
+            if(availableTodo)
+            {
                 OptCalculation<T> optCalculation = todo.first;
                 OptBase* pOptBase = todo.second;
 
@@ -446,41 +438,33 @@ private:
 
     static void push_todo(OptCalculation<T> optCalculation, OptBase<T> *pOptBase)
     {
-        mutexQueueTodo.lock();
+        std::lock_guard<std::mutex> lck(mutexQueueTodo);
         queueTodo.push({optCalculation, pOptBase});
-        mutexQueueTodo.unlock();
     }
 
 //------------------------------------------------------------------------------
 
     static void push_finished(OptCalculation<T> optCalculation, OptBase<T> *pOptBase)
     {
-        mutexFinishedCalculations.lock();
+        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
         finishedCalculations.push_back({optCalculation, pOptBase});
-        mutexFinishedCalculations.unlock();
     }
 
 //------------------------------------------------------------------------------
 
     static bool available_todo()
     {
-        bool out(false);
-
-        mutexQueueTodo.lock();
-        out = !queueTodo.empty();
-        mutexQueueTodo.unlock();
-
-        return out;
+        std::lock_guard<std::mutex> lck(mutexQueueTodo);
+        return !queueTodo.empty();
     }
 
 //------------------------------------------------------------------------------
 
     static std::pair<OptCalculation<T>, OptBase<T>*> pop_todo()
     {
-        mutexQueueTodo.lock();
+        std::lock_guard<std::mutex> lck(mutexQueueTodo);
         auto out = queueTodo.front();
         queueTodo.pop();
-        mutexQueueTodo.unlock();
         return out;
     }
 
@@ -488,9 +472,8 @@ private:
 
     static void log(const OptCalculation<T> &optCalculation)
     {
-        mutexLogFile.lock();
+        std::lock_guard<std::mutex> lck(mutexLogFile);
         logFile << optCalculation.to_string_values(loggingDelimiter) << loggingLineEnd;
-        mutexLogFile.unlock();
     }
 
 //------------------------------------------------------------------------------
