@@ -71,9 +71,6 @@ private:
     static std::ofstream
         logFile;
 
-    static unsigned int
-        waitTimeMs;
-
 protected:
     std::vector< OptCalculation<T> >
         previousCalculations;
@@ -179,13 +176,6 @@ public:
         loggingLineEnd = lineEnd;
         logFile << optBoundaries.to_string() << "RESULT" << loggingLineEnd;
         return true;
-    }
-
-//------------------------------------------------------------------------------
-
-    static void set_wait_time(unsigned int timeInMs)
-    {
-        waitTimeMs = timeInMs;
     }
 
 //------------------------------------------------------------------------------
@@ -410,28 +400,25 @@ private:
                     todo = pop_todo();
             }
 
-            if(availableTodo)
-            {
-                OptCalculation<T> optCalculation = todo.first;
-                OptBase* pOptBase = todo.second;
+            if(!availableTodo)
+                break;
 
-                pOptBase->pCalculator->calculate(optCalculation);
+            OptCalculation<T> optCalculation = todo.first;
+            OptBase* pOptBase = todo.second;
 
-                if(loggingEnabled)
-                    log(optCalculation);
+            pOptBase->pCalculator->calculate(optCalculation);
 
-                pOptBase->add_finished_calculation(optCalculation);
+            if(loggingEnabled)
+                log(optCalculation);
 
-                if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
-                    break;
+            pOptBase->add_finished_calculation(optCalculation);
 
-                //only add the next one if there still are more
-                push_todo(pOptBase->get_next_calculation(), pOptBase);
-            }
+            if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
+                break;
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(waitTimeMs));
+            //only add the next one if there still are more
+            push_todo(pOptBase->get_next_calculation(), pOptBase);
         }
-
     }
 
 //------------------------------------------------------------------------------
@@ -524,10 +511,6 @@ std::string OptBase<T>::loggingLineEnd("");
 template <typename T>
 std::ofstream
     OptBase<T>::logFile;
-
-template <typename T>
-unsigned int
-    OptBase<T>::waitTimeMs(0);
 
 } // namespace cppOpt
 
