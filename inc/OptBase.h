@@ -161,6 +161,14 @@ public:
 
 //------------------------------------------------------------------------------
 
+    static void clear_results()
+    {
+        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+        finishedCalculations.clear();
+    }
+
+//------------------------------------------------------------------------------
+
     static unsigned int number_optimisers()
     {
         std::lock_guard<std::mutex> lck(mutexPOptimisers);
