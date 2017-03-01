@@ -72,7 +72,7 @@ public:
 
     bool has_parameter(const std::string &name) const
     {
-        return (parameters.find(name) != parameters.end())
+        return (parameters.find(name) != parameters.end());
     }    
     
 //------------------------------------------------------------------------------
