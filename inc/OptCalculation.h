@@ -79,7 +79,7 @@ public:
 
     T get_parameter(const std::string &name) const
     {
-        if(parameters.find(name) == parameters.end())
+        if(!has_parameter(name))
             throw std::runtime_error("Trying to access a non-existing parameter");
         return parameters.at(name);
     }
