@@ -70,9 +70,16 @@ public:
 
 //------------------------------------------------------------------------------
 
+    bool has_parameter(const std::string &name) const
+    {
+        return (parameters.find(name) != parameters.end());
+    }    
+    
+//------------------------------------------------------------------------------
+
     T get_parameter(const std::string &name) const
     {
-        if(parameters.find(name) == parameters.end())
+        if(!has_parameter(name))
             throw std::runtime_error("Trying to access a non-existing parameter");
         return parameters.at(name);
     }
