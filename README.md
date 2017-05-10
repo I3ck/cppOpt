@@ -1,13 +1,18 @@
-#cppOpt
+cppOpt
+======
+
 A header-only C++ library which allows the numerical optimisation of any given problem, function, program or you-name-it  
 without knowing the "function" of the problem simply by smartly testing certain values  
 - you only have to include a single header file `cppOpt.h`
 - using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
 - using Catch as testing framework https://github.com/philsquared/Catch
 
-##version 0.2.14
+version 0.2.15
+--------------
 
-##optimise anything!
+optimise anything!
+------------------
+
 optimise any given problem by defining your very own Solver class:
 ```cpp
 template <typename T>
@@ -43,7 +48,9 @@ void calculate(OptCalculation<T> &optCalculation) const
 }
 ```
 
-##define your parameters and boundaries
+define your parameters and boundaries
+-------------------------------------
+
 ```cpp
 OptBoundaries<T> optBoundaries;
 optBoundaries.add_boundary(-5.0, 5.0, "X");
@@ -51,7 +58,9 @@ optBoundaries.add_boundary(-50.0, 55.0, "Y");
 optBoundaries.add_boundary(33.0, 3.0, "potatoe");
 ```
 
-##minimize, maximize, approach or diverge
+minimize, maximize, approach or diverge
+---------------------------------------
+
 ```cpp
 OptTarget optTarget = MINIMIZE;
 OptTarget optTarget = MAXIMIZE;
@@ -59,7 +68,9 @@ OptTarget optTarget = APPROACH;
 OptTarget optTarget = DIVERGE;
 ```
 
-##templated
+templated
+---------
+
 use any of these:
 ```cpp
 <float>  
@@ -67,7 +78,9 @@ use any of these:
 <long double>
 ```
 
-##choose your algorithm
+choose your algorithm
+---------------------
+
 ```cpp
 OptSimulatedAnnealing<double> opt1(optBoundaries,
                                    maxCalculations,
@@ -107,10 +120,14 @@ OptEvolutionary<double> opt4(optBoundaries,
                              mutation);
 ```
 
-##multithreading
+multithreading
+--------------
+
 you can spawn any number of objects with different algorithms, boundaries, configurations or goals
 
-##go!
+go!
+---
+
 ```cpp
 OptBase<double>::run_optimisations();
 //or
@@ -119,13 +136,17 @@ OptBase<double>::run_optimisations(NUMBER_OF_WORKER_THREADS);
 OptBase<double>::run_optimisations(NUMBER_OF_WORKER_THREADS, SPECIFIC_RANDOM_SEED);
 ```
 
-##aborting early
+aborting early
+--------------
+
 you can also define when to abort the optimisation, in case the value is good enough
 ```cpp
 OptBase<double>::enable_early_abort(13.37);
 ```
 
-##logging / outputting results
+logging / outputting results
+----------------------------
+
 you can enable thread-safe logging as simple as:
 ```cpp
 OptBase<double>::enable_logging("logfile.log", optBoundaries);
@@ -148,60 +169,80 @@ OptCalculation<double> best2 = opt2.get_best_calculation();
 OptCalculation<double> bestAll = OptBase<double>::get_best_calculation(optTarget, targetValue);
 ```
 
-##examples
-###optimising x*x [-5.0:+5.0] with simulated annealing
+examples
+--------
+
+### optimising x*x [-5.0:+5.0] with simulated annealing
 note that the optimiser doesn't "know" that the function actually is x*x
-####minimizing:
+#### minimizing:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/minimize.gif)  
-####maximizing:
+#### maximizing:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/maximize.gif)  
-####approaching 3.0:
+#### approaching 3.0:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/approach_3.gif)  
-####diverging from 3.0:
+#### diverging from 3.0:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/diverge_3.gif)  
 check out https://github.com/I3ck/cppOptImages for more images  
 or `examples/` for code examples
 
-###optimising the rastrigrin function with simulated annealing
+### optimising the rastrigrin function with simulated annealing
 http://en.wikipedia.org/wiki/Rastrigin_function
-####one-dimensional
+#### one-dimensional
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/rastrigrin/minimize_sa_1d.gif)  
-####two-dimensional
+#### two-dimensional
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/rastrigrin/minimize_sa_2d.gif)  
-#usage
+usage
+=====
 
-##configuration
+configuration
+-------------
+
 open up `inc/config.h` to enable/disable DEBUG output  
 ```cpp
 //#define DEBUG
 ```
 
-##building the examples / tests
+building the examples / tests
+-----------------------------
+
 `cmake .`  
 `make`
 
 
-##including
+including
+---------
+
 directly include `cppOpt.h` which includes all required headers or choose the header files you want to use  
 
-##testing
+testing
+-------
+
 after using `cmake` and `make` check `bin/` for the `test_xyz` executeables  
 since the tests check whether the algorithms reach the wanted values, it's possible that the tests might fail in some cases (due to the random nature of the algorithms). Just restart the test in such a case.  
 Only if the test fails often there's an actual bug
 
-#algorithms explained / referenced
+algorithms explained / referenced
+=================================
 
-##simulated annealing
+simulated annealing
+-------------------
+
 http://en.wikipedia.org/wiki/Simulated_annealing
 
-##threshold accepting
+threshold accepting
+-------------------
+
 http://comisef.wikidot.com/concept:thresholdaccepting
 
-##great deluge
+great deluge
+------------
+
 http://en.wikipedia.org/wiki/Great_Deluge_algorithm
 
-##evolutionary
+evolutionary
+------------
 https://en.wikipedia.org/wiki/Evolutionary_algorithm
 
-#contribute
+contribute
+==========
 feel free to open issues if you'd like to have new algorithms added, would like to have a new feature or found a bug
