@@ -117,7 +117,6 @@ public:
 
         std::lock_guard<std::mutex> lck(mutexPOptimisers);
         pOptimisers.insert(this);
-        mutexPOptimisers.unlock();
     }
 
 //------------------------------------------------------------------------------
