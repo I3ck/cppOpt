@@ -23,26 +23,20 @@
 
 using namespace cppOpt;
 
-template <typename T>
-class MySolver : public OptSolverBase<T>
-{
-public:
-    //define your own calculation
-    void calculate(OptCalculation<T> &optCalculation) const
-    {
-        //defining the two-dimensional rastrigrin function
-        T
-            A(10.0),
-            n(2.0),
-            pi(3.1415926535897932384),
-            x1 = optCalculation.get_parameter("x1"),
-            x2 = optCalculation.get_parameter("x2");
+//define your own calculation
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    //defining the two-dimensional rastrigrin function
+    double
+        A(10.0),
+        n(2.0),
+        pi(3.1415926535897932384),
+        x1 = optCalculation.get_parameter("x1"),
+        x2 = optCalculation.get_parameter("x2");
 
-        T sum = (x1*x1 - A * cos(2.0 * pi * x1))
-                  + (x2*x2 - A * cos(2.0 * pi * x2));
+    double sum = (x1*x1 - A * cos(2.0 * pi * x1))
+               + (x2*x2 - A * cos(2.0 * pi * x2));
 
-        optCalculation.result = A * n + sum;
-    }
+    optCalculation.result = A * n + sum;
 };
 
 using namespace std;
@@ -54,9 +48,6 @@ int main()
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.12, 5.12, "x1");
     optBoundaries.add_boundary(-5.12, 5.12, "x2");
-
-    //instansiate your calculator
-    MySolver<double> mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 3000;
@@ -75,7 +66,7 @@ int main()
     //using simulated annealing
     OptSimulatedAnnealing<double> opt(optBoundaries,
                                       maxCalculations,
-                                      &mySolver,
+                                      toOptimize,
                                       optTarget,
                                       0.0, //only required if approaching / diverging
                                       coolingFactor,

@@ -24,6 +24,5 @@
 #include "OptThresholdAccepting.h"
 #include "OptGreatDeluge.h"
 #include "OptEvolutionary.h"
-#include "OptSolverBase.h"
 
 #endif // CPPOPT_H

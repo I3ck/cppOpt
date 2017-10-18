@@ -23,16 +23,10 @@
 
 using namespace cppOpt;
 
-template <typename T>
-class MySolver : public OptSolverBase<T>
-{
-public:
-    //define your own calculation
-    void calculate(OptCalculation<T> &optCalculation) const
-    {
-        //defined x^2 as function to be optimised
-        optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-    }
+//define your own calculation
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    //defined x^2 as function to be optimised
+    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
 };
 
 using namespace std;
@@ -46,9 +40,6 @@ int main()
 
     //and split them into 4
     vector< OptBoundaries<double> > optBoundariesSplit = optBoundariesTotal.split("X", 4);
-
-    //instansiate your calculator
-    MySolver<double> mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 300;
@@ -68,7 +59,7 @@ int main()
     //now creating 4 to run all at once
     OptSimulatedAnnealing<double> opt1(optBoundariesSplit[0],
                                        maxCalculations / 4,
-                                       &mySolver,
+                                       toOptimize,
                                        optTarget,
                                        0.0, //only required if approaching / diverging
                                        coolingFactor,
@@ -76,7 +67,7 @@ int main()
 
     OptSimulatedAnnealing<double> opt2(optBoundariesSplit[1],
                                        maxCalculations / 4,
-                                       &mySolver,
+                                       toOptimize,
                                        optTarget,
                                        0.0, //only required if approaching / diverging
                                        coolingFactor,
@@ -84,7 +75,7 @@ int main()
 
     OptSimulatedAnnealing<double> opt3(optBoundariesSplit[2],
                                        maxCalculations / 4,
-                                       &mySolver,
+                                       toOptimize,
                                        optTarget,
                                        0.0, //only required if approaching / diverging
                                        coolingFactor,
@@ -92,7 +83,7 @@ int main()
 
     OptSimulatedAnnealing<double> opt4(optBoundariesSplit[3],
                                        maxCalculations / 4,
-                                       &mySolver,
+                                       toOptimize,
                                        optTarget,
                                        0.0, //only required if approaching / diverging
                                        coolingFactor,

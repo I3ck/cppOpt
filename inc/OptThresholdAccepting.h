@@ -41,13 +41,13 @@ private:
 public:
     OptThresholdAccepting(const OptBoundaries<T> &optBoundaries,
                           unsigned int maxCalculations,
-                          OptSolverBase<T>* pCalculator,
+                          calc_t<T> calcFunction,
                           OptTarget optTarget,
                           T targetValue,
                           T coolingFactor,
                           T threshold,
                           T thresholdFactor) :
-        super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
         coolingFactor(coolingFactor),
         thresholdFactor(thresholdFactor),
         temperature(1.0),

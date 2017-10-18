@@ -55,7 +55,7 @@ private:
 public:
     OptEvolutionary(const OptBoundaries<T> &optBoundaries,
                           unsigned int maxCalculations,
-                          OptSolverBase<T>* pCalculator,
+                          calc_t<T> calcFunction,
                           OptTarget optTarget,
                           T targetValue,
                           T coolingFactor,
@@ -63,7 +63,7 @@ public:
                           unsigned int nIndividualsSelection,
                           unsigned int nIndividualsOffspring,
                           T mutation) :
-        super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
         coolingFactor(coolingFactor),
         nIndividualsStart(nIndividualsStart),
         nIndividualsSelection(nIndividualsSelection),

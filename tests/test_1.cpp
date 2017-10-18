@@ -24,16 +24,9 @@ using namespace cppOpt;
 
 #define DELTA 0.01
 
-template <typename T>
-class MySolver : public OptSolverBase<T>
-{
-public:
-    void calculate(OptCalculation<T> &optCalculation) const
-    {
-        optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-    }
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
 };
-
 
 TEST_CASE("Boundary") {
 
@@ -111,7 +104,6 @@ TEST_CASE("Number of Calculations") {
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver<double> mySolver;
     double coolingFactor = 0.95;
     double startChance = 0.25;
 
@@ -122,7 +114,7 @@ TEST_CASE("Number of Calculations") {
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           0.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -138,7 +130,7 @@ TEST_CASE("Number of Calculations") {
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           0.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -156,7 +148,6 @@ TEST_CASE("Simulated Annealing") {
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
     double startChance = 0.25;
@@ -166,7 +157,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           0.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -182,7 +173,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           0.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -198,7 +189,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           3.3, //only required if approaching / diverging
                                           coolingFactor,
@@ -214,7 +205,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           -100.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -230,7 +221,7 @@ TEST_CASE("Simulated Annealing") {
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           100.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -247,7 +238,6 @@ TEST_CASE("Threshold Accepting") {
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
     double threshold = 5.0;
@@ -258,7 +248,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           0.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -275,7 +265,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           0.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -292,7 +282,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           3.3, //only required if approaching / diverging
                                           coolingFactor,
@@ -309,7 +299,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           -100.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -326,7 +316,7 @@ TEST_CASE("Threshold Accepting") {
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
-                                          &mySolver,
+                                          toOptimize,
                                           optTarget,
                                           100.0, //only required if approaching / diverging
                                           coolingFactor,
@@ -344,7 +334,6 @@ TEST_CASE("Great Deluge") {
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
     double rain = 0.2;
@@ -355,7 +344,7 @@ TEST_CASE("Great Deluge") {
 
         OptGreatDeluge<double> opt(optBoundaries,
                                    maxCalculations,
-                                   &mySolver,
+                                   toOptimize,
                                    optTarget,
                                    0.0, //only required if approaching / diverging
                                    coolingFactor,
@@ -373,7 +362,7 @@ TEST_CASE("Great Deluge") {
 
         OptGreatDeluge<double> opt(optBoundaries,
                                    maxCalculations,
-                                   &mySolver,
+                                   toOptimize,
                                    optTarget,
                                    0.0, //only required if approaching / diverging
                                    coolingFactor,
@@ -391,7 +380,7 @@ TEST_CASE("Great Deluge") {
 
         OptGreatDeluge<double> opt(optBoundaries,
                                    maxCalculations,
-                                   &mySolver,
+                                   toOptimize,
                                    optTarget,
                                    3.3, //only required if approaching / diverging
                                    coolingFactor,
@@ -409,7 +398,7 @@ TEST_CASE("Great Deluge") {
 
         OptGreatDeluge<double> opt(optBoundaries,
                                    maxCalculations,
-                                   &mySolver,
+                                   toOptimize,
                                    optTarget,
                                    -100.0, //only required if approaching / diverging
                                    coolingFactor,
@@ -427,7 +416,7 @@ TEST_CASE("Great Deluge") {
 
         OptGreatDeluge<double> opt(optBoundaries,
                                    maxCalculations,
-                                   &mySolver,
+                                   toOptimize,
                                    optTarget,
                                    100.0, //only required if approaching / diverging
                                    coolingFactor,
@@ -445,7 +434,6 @@ TEST_CASE("Evolutionary") {
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
 
-    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
 
@@ -461,7 +449,7 @@ TEST_CASE("Evolutionary") {
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
-                                    &mySolver,
+                                    toOptimize,
                                     optTarget,
                                     0.0, //only required if approaching / diverging
                                     coolingFactor,
@@ -480,7 +468,7 @@ TEST_CASE("Evolutionary") {
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
-                                    &mySolver,
+                                    toOptimize,
                                     optTarget,
                                     0.0, //only required if approaching / diverging
                                     coolingFactor,
@@ -499,7 +487,7 @@ TEST_CASE("Evolutionary") {
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
-                                    &mySolver,
+                                    toOptimize,
                                     optTarget,
                                     3.3,
                                     coolingFactor,
@@ -518,7 +506,7 @@ TEST_CASE("Evolutionary") {
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
-                                    &mySolver,
+                                    toOptimize,
                                     optTarget,
                                     -100.0,
                                     coolingFactor,
@@ -537,7 +525,7 @@ TEST_CASE("Evolutionary") {
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
-                                    &mySolver,
+                                    toOptimize,
                                     optTarget,
                                     100.0,
                                     coolingFactor,
@@ -565,7 +553,6 @@ TEST_CASE("Multithreading / Boundary Splitting") {
     optBoundaries3.add_boundary(-0.5, 0.5, "X");
     optBoundaries4.add_boundary(5.0, 50.0, "X");
 
-    MySolver<double> mySolver;
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
     double startChance = 0.25;
@@ -575,7 +562,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt1(optBoundaries1,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,
@@ -583,7 +570,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt2(optBoundaries2,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,
@@ -591,7 +578,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt3(optBoundaries3,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,
@@ -599,7 +586,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt4(optBoundaries4,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,
@@ -620,7 +607,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt1(optBoundaries1,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,
@@ -628,7 +615,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt2(optBoundaries2,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,
@@ -636,7 +623,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt3(optBoundaries3,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,
@@ -644,7 +631,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
 
         OptSimulatedAnnealing<double> opt4(optBoundaries4,
                                            maxCalculations,
-                                           &mySolver,
+                                           toOptimize,
                                            optTarget,
                                            0.0, //only required if approaching / diverging
                                            coolingFactor,

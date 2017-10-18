@@ -23,14 +23,8 @@ using namespace cppOpt;
 
 #define DELTA 0.01
 
-template <typename T>
-class MySolver : public OptSolverBase<T>
-{
-public:
-    void calculate(OptCalculation<T> &optCalculation) const
-    {
-        optCalculation.result = pow(optCalculation.get_parameter("X"),2) + pow(optCalculation.get_parameter("Y"),2) + 14.876;
-    }
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    optCalculation.result = pow(optCalculation.get_parameter("X"),2) + pow(optCalculation.get_parameter("Y"),2) + 14.876;
 };
 
 double time_sa_1()
@@ -41,7 +35,6 @@ double time_sa_1()
     optBoundaries.add_boundary(-5.0, 5.0, "X");
     optBoundaries.add_boundary(-14.0, 23.0, "Y");
 
-    MySolver<double> mySolver;
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
     double startChance = 0.25;
@@ -49,7 +42,7 @@ double time_sa_1()
 
     OptSimulatedAnnealing<double> opt(optBoundaries,
                       maxCalculations,
-                      &mySolver,
+                      toOptimize,
                       optTarget,
                       0.0,
                       coolingFactor,
@@ -69,7 +62,6 @@ double time_sa_2()
     optBoundaries.add_boundary(-5.0, 5.0, "X");
     optBoundaries.add_boundary(-14.0, 23.0, "Y");
 
-    MySolver<double> mySolver;
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
     double startChance = 0.25;
@@ -77,7 +69,7 @@ double time_sa_2()
 
     OptSimulatedAnnealing<double> opt1(optBoundaries,
                       maxCalculations,
-                      &mySolver,
+                      toOptimize,
                       optTarget,
                       0.0,
                       coolingFactor,
@@ -85,7 +77,7 @@ double time_sa_2()
 
     OptSimulatedAnnealing<double> opt2(optBoundaries,
                       maxCalculations,
-                      &mySolver,
+                      toOptimize,
                       optTarget,
                       0.0,
                       coolingFactor,
@@ -93,7 +85,7 @@ double time_sa_2()
 
     OptSimulatedAnnealing<double> opt3(optBoundaries,
                       maxCalculations,
-                      &mySolver,
+                      toOptimize,
                       optTarget,
                       0.0,
                       coolingFactor,

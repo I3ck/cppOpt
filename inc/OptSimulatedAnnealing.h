@@ -38,12 +38,12 @@ private:
 public:
     OptSimulatedAnnealing(const OptBoundaries<T> &optBoundaries,
                           unsigned int maxCalculations,
-                          OptSolverBase<T>* pCalculator,
+                          calc_t<T> calcFunction,
                           OptTarget optTarget,
                           T targetValue,
                           T coolingFactor,
                           T startChance) :
-        super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
         coolingFactor(coolingFactor),
         temperature(1.0),
         chance(startChance)

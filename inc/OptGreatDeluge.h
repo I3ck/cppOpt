@@ -46,13 +46,13 @@ public:
 
     OptGreatDeluge(const OptBoundaries<T> &optBoundaries,
                           unsigned int maxCalculations,
-                          OptSolverBase<T>* pCalculator,
+                          calc_t<T> calcFunction,
                           OptTarget optTarget,
                           T targetValue,
                           T coolingFactor,
                           T waterLevel,
                           T rain) :
-        super(optBoundaries, maxCalculations, pCalculator, optTarget, targetValue),
+        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
         coolingFactor(coolingFactor),
         rain(rain),
         temperature(1.0),

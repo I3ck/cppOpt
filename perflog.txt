@@ -7,4 +7,8 @@ All times were clocked with the same version as the checkin
 time_sa_1() :	 0.309387
 time_sa_2() :	 0.30746
 -------------------------
+time_sa_1() :	 0.316169
+time_sa_2() :	 0.315344
+-------------------------
+
 

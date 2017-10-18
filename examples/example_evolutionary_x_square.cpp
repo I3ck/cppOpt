@@ -23,16 +23,10 @@
 
 using namespace cppOpt;
 
-template <typename T>
-class MySolver : public OptSolverBase<T>
-{
-public:
-    //define your own calculation
-    void calculate(OptCalculation<T> &optCalculation) const
-    {
-        //defined x^2 as function to be optimised
-        optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-    }
+//define your own calculation
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    //defined x^2 as function to be optimised
+    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
 };
 
 using namespace std;
@@ -43,9 +37,6 @@ int main()
     //define your boundaries
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary(-5.0, 5.0, "X");
-
-    //instansiate your calculator
-    MySolver<double> mySolver;
 
     //number of calculations
     unsigned int maxCalculations = 300;
@@ -81,7 +72,7 @@ int main()
     //using the evolutionary algorithm
     OptEvolutionary<double> opt(optBoundaries,
                                 maxCalculations,
-                                &mySolver,
+                                toOptimize,
                                 optTarget,
                                 0.0, //only required if approaching / diverging
                                 coolingFactor,

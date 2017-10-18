@@ -24,10 +24,10 @@
 #include <cmath>
 #include <fstream>
 #include <functional>
+#include <memory>
 
 #include "config.h"
 #include "OptTarget.h"
-#include "OptSolverBase.h"
 #include "OptCalculation.h"
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
@@ -36,11 +36,16 @@
     #include <iostream>
 #endif
 
+
 namespace cppOpt
 {
 template <typename T>
+using calc_t = std::function<void(OptCalculation<T>&)>; ///@todo own file?
+
+template <typename T>
 class OptBase
 {
+public:
 
 // MEMBERS ---------------------------------------------------------------------
 
@@ -65,10 +70,10 @@ private:
     static bool
         loggingEnabled; //only set with one method and already locked when logging, no additional mutex required
 
-    static std::atomic<bool>
+    static bool
         abortEarly;
 
-    static std::atomic<T>
+    static T
         abortValue;
 
     static std::string
@@ -91,8 +96,8 @@ protected:
     const OptBoundaries<T>
         optBoundaries;
 
-    const OptSolverBase<T>*
-        pCalculator;
+    const calc_t<T>
+        calcFunction;
 
     const OptTarget
         optTarget;
@@ -105,12 +110,12 @@ protected:
 public:
     OptBase(const OptBoundaries<T> &optBoundaries,
             unsigned int maxCalculations,
-            OptSolverBase<T>* pCalculator,
+            calc_t<T> calcFunction,
             OptTarget optTarget,
             T targetValue) :
         maxCalculations(maxCalculations),
         optBoundaries(optBoundaries),
-        pCalculator(pCalculator),
+        calcFunction(move(calcFunction)),
         optTarget(optTarget),
         targetValue(targetValue)
     {
@@ -428,7 +433,7 @@ private:
             OptCalculation<T> optCalculation = todo.first;
             OptBase* pOptBase = todo.second;
 
-            pOptBase->pCalculator->calculate(optCalculation);
+            pOptBase->calcFunction(optCalculation);
 
             if(loggingEnabled)
                 log(optCalculation);
@@ -533,11 +538,11 @@ bool
     OptBase<T>::loggingEnabled(false);
 
 template <typename T>
-std::atomic<bool>
+bool
     OptBase<T>::abortEarly(false);
 
 template <typename T>
-std::atomic<T>
+T
     OptBase<T>::abortValue(0);
 
 template <typename T>
