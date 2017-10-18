@@ -32,19 +32,19 @@ private:
 
 public:
     T result{};
-    
+
 //------------------------------------------------------------------------------
 
-    std::map <std::string, T> get_parameters() const
+    std::map <std::string, T> const& get_parameters() const
     {
         return parameters;
     }
 
 //------------------------------------------------------------------------------
 
-    void set_parameters(const std::map <std::string, T> &value)
+    void set_parameters(const std::map <std::string, T> value)
     {
-        parameters = value;
+        parameters = move(value);
     }
 
 //------------------------------------------------------------------------------
