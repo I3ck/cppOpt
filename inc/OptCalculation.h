@@ -31,22 +31,8 @@ private:
     std::map <std::string, T> parameters;
 
 public:
-    T result;
-
-//------------------------------------------------------------------------------
-
-    OptCalculation()
-    {
-
-    }
-
-//------------------------------------------------------------------------------
-
-    ~OptCalculation()
-    {
-
-    }
-
+    T result{};
+    
 //------------------------------------------------------------------------------
 
     std::map <std::string, T> get_parameters() const
@@ -70,17 +56,8 @@ public:
 
 //------------------------------------------------------------------------------
 
-    bool has_parameter(const std::string &name) const
-    {
-        return (parameters.find(name) != parameters.end());
-    }    
-    
-//------------------------------------------------------------------------------
-
     T get_parameter(const std::string &name) const
     {
-        if(!has_parameter(name))
-            throw std::runtime_error("Trying to access a non-existing parameter");
         return parameters.at(name);
     }
 
