@@ -7,7 +7,7 @@ without knowing the "function" of the problem simply by smartly testing certain 
 - using heuristic algorithms http://en.wikipedia.org/wiki/Heuristic  
 - using Catch as testing framework https://github.com/philsquared/Catch
 
-version 0.2.15
+version 0.3.0
 --------------
 
 optimise anything!

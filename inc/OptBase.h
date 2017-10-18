@@ -23,6 +23,7 @@
 #include <chrono>
 #include <cmath>
 #include <fstream>
+#include <functional>
 
 #include "config.h"
 #include "OptTarget.h"

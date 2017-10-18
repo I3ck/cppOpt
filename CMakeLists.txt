@@ -63,3 +63,8 @@ add_executable(
         test_1
         tests/test_1.cpp
 )
+
+add_executable(
+        perftest
+        tests/perftest.cpp
+)
