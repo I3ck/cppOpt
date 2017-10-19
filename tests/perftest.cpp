@@ -40,7 +40,7 @@ double time_sa_1()
     double startChance = 0.25;
     OptTarget optTarget = MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt(
+    OptSimulatedAnnealing<double, false> opt(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -49,8 +49,8 @@ double time_sa_1()
         coolingFactor,
         startChance);
 
-    OptBase<double>::run_optimisations();
-    OptBase<double>::clear_results();
+    OptBase<double, false>::run_optimisations();
+    OptBase<double, false>::clear_results();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
@@ -68,7 +68,7 @@ double time_sa_2()
     double startChance = 0.25;
     OptTarget optTarget = MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt1(
+    OptSimulatedAnnealing<double, true> opt1(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -77,7 +77,7 @@ double time_sa_2()
         coolingFactor,
         startChance);
 
-    OptSimulatedAnnealing<double> opt2(
+    OptSimulatedAnnealing<double, true> opt2(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -86,7 +86,7 @@ double time_sa_2()
         coolingFactor,
         startChance);
 
-    OptSimulatedAnnealing<double> opt3(
+    OptSimulatedAnnealing<double, true> opt3(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -95,8 +95,8 @@ double time_sa_2()
         coolingFactor,
         startChance);
 
-    OptBase<double>::run_optimisations();
-    OptBase<double>::clear_results();
+    OptBase<double, true>::run_optimisations();
+    OptBase<double, true>::clear_results();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
