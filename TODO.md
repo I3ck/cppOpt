@@ -8,3 +8,5 @@
 - read/write locks and a mode where when selecting only one thread to run on, the locking is disabled
 - OptCalculation must be templated
 - only use one mutex?
+- OptBase could reset result etc. once last child disconnects
+- Set MultiThreaded in examples explicitly

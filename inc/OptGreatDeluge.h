@@ -19,12 +19,12 @@
 namespace cppOpt
 {
 
-template <typename T>
-class OptGreatDeluge : public OptBase<T>
+template <typename T, bool isMultiThreaded = true>
+class OptGreatDeluge : public OptBase<T, isMultiThreaded>
 {
 private:
 
-    typedef OptBase<T> super;
+    typedef OptBase<T, isMultiThreaded> super;
 
     OptCalculation<T>
         optCalculationReference,
