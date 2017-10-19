@@ -7,3 +7,4 @@
 - evolutionary mutations won't check for borders (only relevant if the algorithms should have to stay within their borders)  
 - read/write locks and a mode where when selecting only one thread to run on, the locking is disabled
 - OptCalculation must be templated
+- only use one mutex?

@@ -25,6 +25,7 @@
 #include <fstream>
 #include <functional>
 #include <memory>
+#include <optional>
 
 #include "config.h"
 #include "OptTarget.h"
@@ -39,18 +40,23 @@
 
 namespace cppOpt
 {
-template <typename T>
-using calc_t = std::function<void(OptCalculation<T>&)>; ///@todo own file?
+
+using namespace std;
 
 template <typename T>
+using calc_t = function<void(OptCalculation<T>&)>; ///@todo own file?
+
+using lock = lock_guard<mutex>;
+
+template <typename T, bool isMultiThreaded = true>
 class OptBase
 {
-public:
+    using self = OptBase<T, isMultiThreaded>;
 
 // MEMBERS ---------------------------------------------------------------------
 
 private:
-    static std::mutex
+    static mutex
         mutexQueueTodo,
         mutexAvailabilityCheckTodo,
         mutexQueueCalculated,
@@ -58,13 +64,13 @@ private:
         mutexPOptimisers,
         mutexLogFile;
 
-    static std::queue< std::pair<OptCalculation<T>, OptBase<T>*> >
+    static queue< pair<OptCalculation<T>, self*> >
         queueTodo;
 
-    static std::vector< std::pair<OptCalculation<T>, OptBase<T>*> >
+    static vector< pair<OptCalculation<T>, self*> >
         finishedCalculations;
 
-    static std::set <OptBase*>
+    static set <OptBase*>
         pOptimisers;
 
     static bool
@@ -76,15 +82,15 @@ private:
     static T
         abortValue;
 
-    static std::string
+    static string
         loggingDelimiter,
         loggingLineEnd;
 
-    static std::ofstream
+    static ofstream
         logFile;
 
 protected:
-    std::vector< OptCalculation<T> >
+    vector< OptCalculation<T> >
         previousCalculations;
 
     OptCalculation<T>
@@ -120,8 +126,7 @@ public:
         targetValue(targetValue)
     {
         previousCalculations.reserve(maxCalculations);
-
-        std::lock_guard<std::mutex> lck(mutexPOptimisers);
+        auto lck = lock_for(mutexPOptimisers);
         pOptimisers.insert(this);
     }
 
@@ -129,7 +134,7 @@ public:
 
     ~OptBase()
     {
-        std::lock_guard<std::mutex> lck(mutexPOptimisers);
+        auto lck = lock_for(mutexPOptimisers);
         pOptimisers.erase( pOptimisers.find(this) );
     }
 
@@ -147,7 +152,7 @@ public:
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
         {
-            std::lock_guard<std::mutex> lck(mutexPOptimisers);
+            auto lck = lock_for(mutexPOptimisers);
             for(const auto &pOptimiser : pOptimisers)
             {
                 if(pOptimiser->previousCalculations.size() == 0)
@@ -155,20 +160,23 @@ public:
             }
         }
 
-        std::vector <std::thread> threads;
+        if constexpr (isMultiThreaded) {
+            vector <thread> threads;
 
-        for(unsigned int i=0; i<maxThreads; ++i)
-            threads.emplace_back(  std::thread( std::bind(&OptBase::threaded_work) )  );
+            for(unsigned int i=0; i<maxThreads; ++i)
+                threads.emplace_back(  thread( bind(&OptBase::threaded_work) )  );
 
-        for(auto &thread :threads)
-            thread.join();
+            for(auto &thread :threads)
+                thread.join();
+        } else
+            threaded_work(); ///@todo rename function
     }
 
 //------------------------------------------------------------------------------
 
     static void clear_results()
     {
-        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+        auto lck = lock_for(mutexFinishedCalculations);
         finishedCalculations.clear();
     }
 
@@ -176,16 +184,16 @@ public:
 
     static unsigned int number_optimisers()
     {
-        std::lock_guard<std::mutex> lck(mutexPOptimisers);
+        auto lck = lock_for(mutexPOptimisers);
         return pOptimisers.size();
     }
 
 //------------------------------------------------------------------------------
 
-    static bool enable_logging(const std::string &pathLogFile,
+    static bool enable_logging(const string &pathLogFile,
                                const OptBoundaries<T> &optBoundaries,
-                               const std::string &delimiter = " ",
-                               const std::string &lineEnd = "\n")
+                               const string &delimiter = " ",
+                               const string &lineEnd = "\n")
     {
         logFile.open(pathLogFile);
         if(logFile.fail())
@@ -209,7 +217,7 @@ public:
 
     static unsigned int number_finished_calculations()
     {
-        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+        auto lck = lock_for(mutexFinishedCalculations);
         return finishedCalculations.size();
     }
 
@@ -218,7 +226,7 @@ public:
     //targetValue won't be used when maximizing or minimizing
     static OptCalculation<T> get_best_calculation(OptTarget optTarget, T targetValue)
     {
-        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+        auto lck = lock_for(mutexFinishedCalculations);
         OptCalculation<T> out;
 
         if(finishedCalculations.size() == 0)
@@ -284,7 +292,7 @@ protected:
         previousCalculations.push_back(optCalculation);
 
         {
-            std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+            auto lck = lock_for(mutexFinishedCalculations);
             finishedCalculations.push_back({optCalculation, this});
         }
 
@@ -299,22 +307,22 @@ protected:
         switch(optTarget)
         {
             case MINIMIZE:
-                return std::numeric_limits<T>::max();
+                return numeric_limits<T>::max();
 
             case MAXIMIZE:
-                return std::numeric_limits<T>::lowest();
+                return numeric_limits<T>::lowest();
 
             case APPROACH:
                 if(targetValue > 0.0)
-                    return std::numeric_limits<T>::lowest();
+                    return numeric_limits<T>::lowest();
                 else
-                    return std::numeric_limits<T>::max();
+                    return numeric_limits<T>::max();
 
             case DIVERGE:
                 return targetValue;
 
             default: //MINIMIZE
-                return std::numeric_limits<T>::max();
+                return numeric_limits<T>::max();
         }
     }
 
@@ -365,7 +373,7 @@ protected:
 
 //------------------------------------------------------------------------------
 
-    unsigned int index_closest_calculation(const std::vector< OptCalculation<T> > &optCalculations, unsigned int indexThis) const
+    unsigned int index_closest_calculation(const vector< OptCalculation<T> > &optCalculations, unsigned int indexThis) const
     {
         T closestDistance;
         unsigned int indexClosest(0);
@@ -414,14 +422,23 @@ protected:
 //------------------------------------------------------------------------------
 
 private:
+    static inline auto lock_for(mutex& m) {
+        if constexpr (isMultiThreaded) {
+            return make_optional<lock>(m);
+        } else
+            return nullopt;
+    }
+
+//------------------------------------------------------------------------------
+
     static void threaded_work()
     {
         while(true)
         {
             bool availableTodo(false);
-            std::pair <OptCalculation<T>, OptBase<T>*> todo;
+            pair <OptCalculation<T>, self*> todo;
             {
-                std::lock_guard<std::mutex> lck(mutexAvailabilityCheckTodo); //the check for availability and the pop have to be atomic
+                auto lck = lock_for(mutexAvailabilityCheckTodo);
                 availableTodo = available_todo();
                 if(availableTodo)
                     todo = pop_todo();
@@ -459,17 +476,17 @@ private:
 
 //------------------------------------------------------------------------------
 
-    static void push_todo(OptCalculation<T> optCalculation, OptBase<T> *pOptBase)
+    static void push_todo(OptCalculation<T> optCalculation, self *pOptBase)
     {
-        std::lock_guard<std::mutex> lck(mutexQueueTodo);
+        auto lck = lock_for(mutexQueueTodo);
         queueTodo.push({optCalculation, pOptBase});
     }
 
 //------------------------------------------------------------------------------
 
-    static void push_finished(OptCalculation<T> optCalculation, OptBase<T> *pOptBase)
+    static void push_finished(OptCalculation<T> optCalculation, self *pOptBase)
     {
-        std::lock_guard<std::mutex> lck(mutexFinishedCalculations);
+        auto lck = lock_for(mutexFinishedCalculations);
         finishedCalculations.push_back({optCalculation, pOptBase});
     }
 
@@ -477,15 +494,15 @@ private:
 
     static bool available_todo()
     {
-        std::lock_guard<std::mutex> lck(mutexQueueTodo);
+        auto lck = lock_for(mutexQueueTodo);
         return !queueTodo.empty();
     }
 
 //------------------------------------------------------------------------------
 
-    static std::pair<OptCalculation<T>, OptBase<T>*> pop_todo()
+    static pair<OptCalculation<T>, self*> pop_todo()
     {
-        std::lock_guard<std::mutex> lck(mutexQueueTodo);
+        auto lck = lock_for(mutexQueueTodo);
         auto out = queueTodo.front();
         queueTodo.pop();
         return out;
@@ -495,7 +512,7 @@ private:
 
     static void log(const OptCalculation<T> &optCalculation)
     {
-        std::lock_guard<std::mutex> lck(mutexLogFile);
+        auto lck = lock_for(mutexLogFile);
         logFile << optCalculation.to_string_values(loggingDelimiter) << loggingLineEnd;
     }
 
@@ -503,57 +520,57 @@ private:
 
 };
 
-template <typename T>
-std::mutex OptBase<T>::mutexQueueTodo;
+template <typename T, bool isMultiThreaded>
+mutex OptBase<T, isMultiThreaded>::mutexQueueTodo;
 
-template <typename T>
-std::mutex OptBase<T>::mutexAvailabilityCheckTodo;
+template <typename T, bool isMultiThreaded>
+mutex OptBase<T, isMultiThreaded>::mutexAvailabilityCheckTodo;
 
-template <typename T>
-std::mutex OptBase<T>::mutexQueueCalculated;
+template <typename T, bool isMultiThreaded>
+mutex OptBase<T, isMultiThreaded>::mutexQueueCalculated;
 
-template <typename T>
-std::mutex OptBase<T>::mutexFinishedCalculations;
+template <typename T, bool isMultiThreaded>
+mutex OptBase<T, isMultiThreaded>::mutexFinishedCalculations;
 
-template <typename T>
-std::mutex OptBase<T>::mutexPOptimisers;
+template <typename T, bool isMultiThreaded>
+mutex OptBase<T, isMultiThreaded>::mutexPOptimisers;
 
-template <typename T>
-std::mutex OptBase<T>::mutexLogFile;
+template <typename T, bool isMultiThreaded>
+mutex OptBase<T, isMultiThreaded>::mutexLogFile;
 
-template <typename T>
-std::queue< std::pair<OptCalculation<T>, OptBase<T>*> >
-    OptBase<T>::queueTodo;
+template <typename T, bool isMultiThreaded>
+queue< pair<OptCalculation<T>, OptBase<T, isMultiThreaded>*> >
+    OptBase<T, isMultiThreaded>::queueTodo;
 
-template <typename T>
-std::vector< std::pair<OptCalculation<T>, OptBase<T>*> >
-    OptBase<T>::finishedCalculations;
+template <typename T, bool isMultiThreaded>
+vector< pair<OptCalculation<T>, OptBase<T, isMultiThreaded>*> >
+    OptBase<T, isMultiThreaded>::finishedCalculations;
 
-template <typename T>
-std::set<OptBase<T>*>
-    OptBase<T>::pOptimisers;
+template <typename T, bool isMultiThreaded>
+set<OptBase<T, isMultiThreaded>*>
+    OptBase<T, isMultiThreaded>::pOptimisers;
 
-template <typename T>
+template <typename T, bool isMultiThreaded>
 bool
-    OptBase<T>::loggingEnabled(false);
+    OptBase<T, isMultiThreaded>::loggingEnabled(false);
 
-template <typename T>
+template <typename T, bool isMultiThreaded>
 bool
-    OptBase<T>::abortEarly(false);
+    OptBase<T, isMultiThreaded>::abortEarly(false);
 
-template <typename T>
+template <typename T, bool isMultiThreaded>
 T
-    OptBase<T>::abortValue(0);
+    OptBase<T, isMultiThreaded>::abortValue(0);
 
-template <typename T>
-std::string OptBase<T>::loggingDelimiter("");
+template <typename T, bool isMultiThreaded>
+string OptBase<T, isMultiThreaded>::loggingDelimiter("");
 
-template <typename T>
-std::string OptBase<T>::loggingLineEnd("");
+template <typename T, bool isMultiThreaded>
+string OptBase<T, isMultiThreaded>::loggingLineEnd("");
 
-template <typename T>
-std::ofstream
-    OptBase<T>::logFile;
+template <typename T, bool isMultiThreaded>
+ofstream
+    OptBase<T, isMultiThreaded>::logFile;
 
 } // namespace cppOpt
 
