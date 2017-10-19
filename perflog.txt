@@ -1,19 +1,17 @@
 Results of the perftest to optimize performance
 ===============================================
 
-All times were clocked with the same version as the checkin  
+All times were clocked with the same version as the checkin
 
 --------------------------
 time_sa_1() :	 0.309387
-time_sa_2() :	 0.30746
 --------------------------
 time_sa_1() :	 0.316169
-time_sa_2() :	 0.315344
 --------------------------
 time_sa_1() :	 0.0764775
-time_sa_2() :	 0.0789457
 --------------------------
 time_sa_1() :	 0.0570132
-time_sa_2() :	 0.0589256
 --------------------------
-
+time_sa_1() :	 0.0573296
+time_sa_2() :	 0.157042
+--------------------------

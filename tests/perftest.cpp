@@ -40,13 +40,14 @@ double time_sa_1()
     double startChance = 0.25;
     OptTarget optTarget = MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt(optBoundaries,
-                      maxCalculations,
-                      toOptimize,
-                      optTarget,
-                      0.0,
-                      coolingFactor,
-                      startChance);
+    OptSimulatedAnnealing<double> opt(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0.0,
+        coolingFactor,
+        startChance);
 
     OptBase<double>::run_optimisations();
     OptBase<double>::clear_results();
@@ -67,29 +68,32 @@ double time_sa_2()
     double startChance = 0.25;
     OptTarget optTarget = MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt1(optBoundaries,
-                      maxCalculations,
-                      toOptimize,
-                      optTarget,
-                      0.0,
-                      coolingFactor,
-                      startChance);
+    OptSimulatedAnnealing<double> opt1(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0.0,
+        coolingFactor,
+        startChance);
 
-    OptSimulatedAnnealing<double> opt2(optBoundaries,
-                      maxCalculations,
-                      toOptimize,
-                      optTarget,
-                      0.0,
-                      coolingFactor,
-                      startChance);
+    OptSimulatedAnnealing<double> opt2(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0.0,
+        coolingFactor,
+        startChance);
 
-    OptSimulatedAnnealing<double> opt3(optBoundaries,
-                      maxCalculations,
-                      toOptimize,
-                      optTarget,
-                      0.0,
-                      coolingFactor,
-                      startChance);
+    OptSimulatedAnnealing<double> opt3(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0.0,
+        coolingFactor,
+        startChance);
 
     OptBase<double>::run_optimisations();
     OptBase<double>::clear_results();
@@ -110,6 +114,6 @@ int main()
     constexpr int times = 10;
     cout << "All times in seconds" << endl;
     cout << "time_sa_1() :\t " << n_times(times, time_sa_1) << endl;
-    cout << "time_sa_2() :\t " << n_times(times, time_sa_1) << endl;
+    cout << "time_sa_2() :\t " << n_times(times, time_sa_2) << endl;
     return 0;
 }
