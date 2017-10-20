@@ -35,40 +35,28 @@ private:
         rain;
 
     T
-        temperature,
+        temperature{1.0},
         waterLevel;
-
-//------------------------------------------------------------------------------
 
 public:
 
 //------------------------------------------------------------------------------
 
-    OptGreatDeluge(const OptBoundaries<T> &optBoundaries,
-                          unsigned int maxCalculations,
-                          calc_t<T> calcFunction,
-                          OptTarget optTarget,
-                          T targetValue,
-                          T coolingFactor,
-                          T waterLevel,
-                          T rain) :
-        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
-        coolingFactor(coolingFactor),
-        rain(rain),
-        temperature(1.0),
-        waterLevel(waterLevel)
-    {
+    OptGreatDeluge(
+        OptBoundaries<T> optBoundaries,
+        unsigned int maxCalculations,
+        calc_t<T> calcFunction,
+        OptTarget optTarget,
+        T targetValue,
+        T coolingFactor,
+        T waterLevel,
+        T rain) :
 
-    }
-
-//------------------------------------------------------------------------------
-
-    ~OptGreatDeluge()
-    {
-
-    }
-
-//------------------------------------------------------------------------------
+        super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
+        coolingFactor(move(coolingFactor)),
+        rain(move(rain)),
+        waterLevel(move(waterLevel))
+    {}
 
 private:
 

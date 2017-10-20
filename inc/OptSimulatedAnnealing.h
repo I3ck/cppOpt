@@ -30,35 +30,25 @@ private:
         coolingFactor;
 
     T
-        temperature,
+        temperature{1.0},
         chance;
 
 //------------------------------------------------------------------------------
 
 public:
-    OptSimulatedAnnealing(const OptBoundaries<T> &optBoundaries,
-                          unsigned int maxCalculations,
-                          calc_t<T> calcFunction,
-                          OptTarget optTarget,
-                          T targetValue,
-                          T coolingFactor,
-                          T startChance) :
-        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
-        coolingFactor(coolingFactor),
-        temperature(1.0),
-        chance(startChance)
-    {
+    OptSimulatedAnnealing(
+        OptBoundaries<T> optBoundaries,
+        unsigned int maxCalculations,
+        calc_t<T> calcFunction,
+        OptTarget optTarget,
+        T targetValue,
+        T coolingFactor,
+        T startChance) :
 
-    }
-
-//------------------------------------------------------------------------------
-
-    ~OptSimulatedAnnealing()
-    {
-
-    }
-
-//------------------------------------------------------------------------------
+        super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
+        coolingFactor(move(coolingFactor)),
+        chance(move(startChance))
+    {}
 
 private:
 

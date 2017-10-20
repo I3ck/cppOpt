@@ -114,16 +114,18 @@ protected:
 // METHODS ---------------------------------------------------------------------
 
 public:
-    OptBase(const OptBoundaries<T> &optBoundaries,
-            unsigned int maxCalculations,
-            calc_t<T> calcFunction,
-            OptTarget optTarget,
-            T targetValue) :
+    OptBase(
+        OptBoundaries<T> optBoundaries,
+        unsigned int maxCalculations,
+        calc_t<T> calcFunction,
+        OptTarget optTarget,
+        T targetValue) :
+
         maxCalculations(maxCalculations),
-        optBoundaries(optBoundaries),
+        optBoundaries(move(optBoundaries)),
         calcFunction(move(calcFunction)),
-        optTarget(optTarget),
-        targetValue(targetValue)
+        optTarget(move(optTarget)),
+        targetValue(move(targetValue))
     {
         previousCalculations.reserve(maxCalculations);
         auto lck = lock_for(mutexPOptimisers);
@@ -132,7 +134,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    ~OptBase()
+    virtual ~OptBase()
     {
         auto lck = lock_for(mutexPOptimisers);
         pOptimisers.erase( pOptimisers.find(this) );

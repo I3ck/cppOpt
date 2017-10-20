@@ -10,3 +10,5 @@
 - only use one mutex?
 - OptBase could reset result etc. once last child disconnects
 - Set MultiThreaded in examples explicitly
+- Once OptBase is a controler object, consider writing a threadsafety wrapper (instead of locking within)
+- forward instead of move in constructors?

@@ -53,35 +53,25 @@ private:
 //------------------------------------------------------------------------------
 
 public:
-    OptEvolutionary(const OptBoundaries<T> &optBoundaries,
-                          unsigned int maxCalculations,
-                          calc_t<T> calcFunction,
-                          OptTarget optTarget,
-                          T targetValue,
-                          T coolingFactor,
-                          unsigned int nIndividualsStart,
-                          unsigned int nIndividualsSelection,
-                          unsigned int nIndividualsOffspring,
-                          T mutation) :
-        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
-        coolingFactor(coolingFactor),
+    OptEvolutionary(
+        OptBoundaries<T> optBoundaries,
+        unsigned int maxCalculations,
+        calc_t<T> calcFunction,
+        OptTarget optTarget,
+        T targetValue,
+        T coolingFactor,
+        unsigned int nIndividualsStart,
+        unsigned int nIndividualsSelection,
+        unsigned int nIndividualsOffspring,
+        T mutation) :
+        
+        super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
+        coolingFactor(move(coolingFactor)),
         nIndividualsStart(nIndividualsStart),
         nIndividualsSelection(nIndividualsSelection),
         nIndividualsOffspring(nIndividualsOffspring),
-        mutation(mutation)
-    {
-        individualsStart.reserve(nIndividualsStart);
-        individualsSelected.reserve(nIndividualsSelection);
-    }
-
-//------------------------------------------------------------------------------
-
-    ~OptEvolutionary()
-    {
-
-    }
-
-//------------------------------------------------------------------------------
+        mutation(move(mutation))
+    {}
 
 private:
 

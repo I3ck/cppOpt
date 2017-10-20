@@ -35,33 +35,25 @@ private:
         thresholdFactor;
 
     T
-        temperature,
+        temperature{1.0},
         threshold;
 
 public:
-    OptThresholdAccepting(const OptBoundaries<T> &optBoundaries,
-                          unsigned int maxCalculations,
-                          calc_t<T> calcFunction,
-                          OptTarget optTarget,
-                          T targetValue,
-                          T coolingFactor,
-                          T threshold,
-                          T thresholdFactor) :
-        super(optBoundaries, maxCalculations, move(calcFunction), optTarget, targetValue),
-        coolingFactor(coolingFactor),
-        thresholdFactor(thresholdFactor),
-        temperature(1.0),
-        threshold(threshold)
-    {
+    OptThresholdAccepting(
+        OptBoundaries<T> optBoundaries,
+        unsigned int maxCalculations,
+        calc_t<T> calcFunction,
+        OptTarget optTarget,
+        T targetValue,
+        T coolingFactor,
+        T threshold,
+        T thresholdFactor) :
 
-    }
-
-//------------------------------------------------------------------------------
-
-    ~OptThresholdAccepting()
-    {
-
-    }
+        super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
+        coolingFactor(move(coolingFactor)),
+        thresholdFactor(move(thresholdFactor)),
+        threshold(move(threshold))
+    {}
 
 //------------------------------------------------------------------------------
 
