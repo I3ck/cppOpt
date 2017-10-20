@@ -46,7 +46,7 @@ using namespace std;
 template <typename T>
 using calc_t = function<void(OptCalculation<T>&)>; ///@todo own file?
 
-using lock = lock_guard<mutex>;
+using lock = lock_guard<recursive_mutex>;
 
 template <typename T, bool isMultiThreaded = true>
 class OptBase
@@ -56,13 +56,8 @@ class OptBase
 // MEMBERS ---------------------------------------------------------------------
 
 private:
-    static mutex
-        mutexQueueTodo,
-        mutexAvailabilityCheckTodo,
-        mutexQueueCalculated,
-        mutexFinishedCalculations,
-        mutexPOptimisers,
-        mutexLogFile;
+    static recursive_mutex
+        m;
 
     static queue< pair<OptCalculation<T>, self*> >
         queueTodo;
@@ -128,7 +123,7 @@ public:
         targetValue(move(targetValue))
     {
         previousCalculations.reserve(maxCalculations);
-        auto lck = lock_for(mutexPOptimisers);
+        auto lck = lock_for();
         pOptimisers.insert(this);
     }
 
@@ -136,7 +131,7 @@ public:
 
     virtual ~OptBase()
     {
-        auto lck = lock_for(mutexPOptimisers);
+        auto lck = lock_for();
         pOptimisers.erase( pOptimisers.find(this) );
     }
 
@@ -154,7 +149,7 @@ public:
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
         {
-            auto lck = lock_for(mutexPOptimisers);
+            auto lck = lock_for();
             for(const auto &pOptimiser : pOptimisers)
             {
                 if(pOptimiser->previousCalculations.size() == 0)
@@ -166,7 +161,7 @@ public:
             vector <thread> threads;
 
             for(unsigned int i=0; i<maxThreads; ++i)
-                threads.emplace_back(  thread( bind(&OptBase::threaded_work) )  );
+                threads.emplace_back(threaded_work);
 
             for(auto &thread :threads)
                 thread.join();
@@ -178,7 +173,7 @@ public:
 
     static void clear_results()
     {
-        auto lck = lock_for(mutexFinishedCalculations);
+        auto lck = lock_for();
         finishedCalculations.clear();
     }
 
@@ -186,7 +181,7 @@ public:
 
     static unsigned int number_optimisers()
     {
-        auto lck = lock_for(mutexPOptimisers);
+        auto lck = lock_for();
         return pOptimisers.size();
     }
 
@@ -219,7 +214,7 @@ public:
 
     static unsigned int number_finished_calculations()
     {
-        auto lck = lock_for(mutexFinishedCalculations);
+        auto lck = lock_for();
         return finishedCalculations.size();
     }
 
@@ -228,7 +223,7 @@ public:
     //targetValue won't be used when maximizing or minimizing
     static OptCalculation<T> get_best_calculation(OptTarget optTarget, T targetValue)
     {
-        auto lck = lock_for(mutexFinishedCalculations);
+        auto lck = lock_for();
         OptCalculation<T> out;
 
         if(finishedCalculations.size() == 0)
@@ -294,7 +289,7 @@ protected:
         previousCalculations.push_back(optCalculation);
 
         {
-            auto lck = lock_for(mutexFinishedCalculations);
+            auto lck = lock_for();
             finishedCalculations.push_back({optCalculation, this});
         }
 
@@ -424,7 +419,7 @@ protected:
 //------------------------------------------------------------------------------
 
 private:
-    static inline auto lock_for(mutex& m) {
+    static inline auto lock_for() {
         if constexpr (isMultiThreaded) {
             return make_optional<lock>(m);
         } else
@@ -440,7 +435,7 @@ private:
             bool availableTodo(false);
             pair <OptCalculation<T>, self*> todo;
             {
-                auto lck = lock_for(mutexAvailabilityCheckTodo);
+                auto lck = lock_for();
                 availableTodo = available_todo();
                 if(availableTodo)
                     todo = pop_todo();
@@ -480,7 +475,7 @@ private:
 
     static void push_todo(OptCalculation<T> optCalculation, self *pOptBase)
     {
-        auto lck = lock_for(mutexQueueTodo);
+        auto lck = lock_for();
         queueTodo.push({optCalculation, pOptBase});
     }
 
@@ -488,7 +483,7 @@ private:
 
     static void push_finished(OptCalculation<T> optCalculation, self *pOptBase)
     {
-        auto lck = lock_for(mutexFinishedCalculations);
+        auto lck = lock_for();
         finishedCalculations.push_back({optCalculation, pOptBase});
     }
 
@@ -496,7 +491,7 @@ private:
 
     static bool available_todo()
     {
-        auto lck = lock_for(mutexQueueTodo);
+        auto lck = lock_for();
         return !queueTodo.empty();
     }
 
@@ -504,7 +499,7 @@ private:
 
     static pair<OptCalculation<T>, self*> pop_todo()
     {
-        auto lck = lock_for(mutexQueueTodo);
+        auto lck = lock_for();
         auto out = queueTodo.front();
         queueTodo.pop();
         return out;
@@ -514,7 +509,7 @@ private:
 
     static void log(const OptCalculation<T> &optCalculation)
     {
-        auto lck = lock_for(mutexLogFile);
+        auto lck = lock_for();
         logFile << optCalculation.to_string_values(loggingDelimiter) << loggingLineEnd;
     }
 
@@ -523,22 +518,7 @@ private:
 };
 
 template <typename T, bool isMultiThreaded>
-mutex OptBase<T, isMultiThreaded>::mutexQueueTodo;
-
-template <typename T, bool isMultiThreaded>
-mutex OptBase<T, isMultiThreaded>::mutexAvailabilityCheckTodo;
-
-template <typename T, bool isMultiThreaded>
-mutex OptBase<T, isMultiThreaded>::mutexQueueCalculated;
-
-template <typename T, bool isMultiThreaded>
-mutex OptBase<T, isMultiThreaded>::mutexFinishedCalculations;
-
-template <typename T, bool isMultiThreaded>
-mutex OptBase<T, isMultiThreaded>::mutexPOptimisers;
-
-template <typename T, bool isMultiThreaded>
-mutex OptBase<T, isMultiThreaded>::mutexLogFile;
+recursive_mutex OptBase<T, isMultiThreaded>::m;
 
 template <typename T, bool isMultiThreaded>
 queue< pair<OptCalculation<T>, OptBase<T, isMultiThreaded>*> >
