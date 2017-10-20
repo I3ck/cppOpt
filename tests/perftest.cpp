@@ -38,7 +38,7 @@ double time_sa_1()
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
     double startChance = 0.25;
-    OptTarget optTarget = MINIMIZE;
+    OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptSimulatedAnnealing<double, false> opt(
         optBoundaries,
@@ -66,7 +66,7 @@ double time_sa_2()
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
     double startChance = 0.25;
-    OptTarget optTarget = MINIMIZE;
+    OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptSimulatedAnnealing<double, true> opt1(
         optBoundaries,
@@ -112,7 +112,7 @@ double time_sa_3()
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
     double startChance = 0.25;
-    OptTarget optTarget = MINIMIZE;
+    OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptSimulatedAnnealing<double, false> opt1(
         optBoundaries,
@@ -158,7 +158,7 @@ double time_sa_4()
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
     double startChance = 0.25;
-    OptTarget optTarget = MINIMIZE;
+    OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptSimulatedAnnealing<double, true> opt1(
         optBoundaries,

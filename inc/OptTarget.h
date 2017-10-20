@@ -17,7 +17,7 @@
 namespace cppOpt
 {
 
-enum OptTarget
+enum class OptTarget
 {
     MINIMIZE,
     MAXIMIZE,

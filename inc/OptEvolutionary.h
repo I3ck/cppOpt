@@ -19,6 +19,8 @@
 namespace cppOpt
 {
 
+using namespace std;
+
 template <typename T, bool isMultiThreaded = true>
 class OptEvolutionary : public OptBase<T, isMultiThreaded>
 {
@@ -39,14 +41,14 @@ private:
         chance;
 
 
-    std::multimap< T, OptCalculation<T> > // <SORT_VALUE, CALCULATION>
+    multimap< T, OptCalculation<T> > // <SORT_VALUE, CALCULATION>
         previousCalculationsSorted;
 
-    std::vector< OptCalculation<T> >
+    vector< OptCalculation<T> >
         individualsStart,
         individualsSelected;
 
-    std::queue< OptCalculation<T> >
+    queue< OptCalculation<T> >
         individualsBred,
         individualsMutated;
 
@@ -64,7 +66,7 @@ public:
         unsigned int nIndividualsSelection,
         unsigned int nIndividualsOffspring,
         T mutation) :
-        
+
         super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
         coolingFactor(move(coolingFactor)),
         nIndividualsStart(nIndividualsStart),
@@ -156,8 +158,8 @@ private:
 
     void breed_individuals()
     {
-        std::set<unsigned int> usedIndexes;
-        std::vector< std::pair< OptCalculation<T> ,OptCalculation<T> > > parents;
+        set<unsigned int> usedIndexes;
+        vector< pair< OptCalculation<T> ,OptCalculation<T> > > parents;
 
         for(unsigned int i = 0; i < individualsSelected.size(); ++i)
         {
@@ -218,16 +220,16 @@ private:
     {
         switch(super::optTarget)
         {
-            case MINIMIZE:
+            case OptTarget::MINIMIZE:
                 return optCalculation.result;
 
-            case MAXIMIZE:
+            case OptTarget::MAXIMIZE:
                 return -optCalculation.result;
 
-            case APPROACH:
+            case OptTarget::APPROACH:
                 return fabs(super::targetValue - optCalculation.result);
 
-            case DIVERGE:
+            case OptTarget::DIVERGE:
                 return -fabs(super::targetValue - optCalculation.result);
 
             default: // MINIMIZE

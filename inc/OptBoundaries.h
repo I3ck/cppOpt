@@ -23,29 +23,19 @@
 namespace cppOpt
 {
 
+using namespace std;
+
 template <typename T>
 class OptBoundaries
 {
 private:
-    std::map<std::string, OptBoundary<T> >
+    map<string, OptBoundary<T> >
         optBoundaries;
 
+//------------------------------------------------------------------------------
+
 public:
-    OptBoundaries()
-    {
-
-    }
-
-//------------------------------------------------------------------------------
-
-    ~OptBoundaries()
-    {
-
-    }
-
-//------------------------------------------------------------------------------
-
-    void add_boundary(T min, T max, const std::string &name)
+    void add_boundary(T min, T max, const string &name)
     {
         OptBoundary<T> temp(min, max, name);
         add_boundary(temp);
@@ -60,9 +50,9 @@ public:
 
 //------------------------------------------------------------------------------
 
-    std::string to_string() const
+    string to_string() const
     {
-        std::string out("");
+        string out("");
 
         for(const auto &boundary : optBoundaries)
             out += boundary.first + " ";
@@ -79,9 +69,9 @@ public:
 
 //------------------------------------------------------------------------------
 
-    std::vector<OptBoundaries> split(const std::string &name, unsigned int times) const
+    vector<OptBoundaries> split(const string &name, unsigned int times) const
     {
-        std::vector<OptBoundaries> out;
+        vector<OptBoundaries> out;
 
         T
             range(0.0),
@@ -137,28 +127,28 @@ public:
 
 //------------------------------------------------------------------------------
 
-    typename std::map< std::string, OptBoundary<T> >::iterator begin()
+    typename map< string, OptBoundary<T> >::iterator begin()
     {
         return optBoundaries.begin();
     }
 
 //------------------------------------------------------------------------------
 
-    typename std::map< std::string, OptBoundary<T> >::iterator end()
+    typename map< string, OptBoundary<T> >::iterator end()
     {
         return optBoundaries.end();
     }
 
 //------------------------------------------------------------------------------
 
-    const typename std::map< std::string, OptBoundary<T> >::const_iterator cbegin() const
+    const typename map< string, OptBoundary<T> >::const_iterator cbegin() const
     {
         return optBoundaries.cbegin();
     }
 
 //------------------------------------------------------------------------------
 
-    const typename std::map< std::string, OptBoundary<T> >::const_iterator cend() const
+    const typename map< string, OptBoundary<T> >::const_iterator cend() const
     {
         return optBoundaries.cend();
     }

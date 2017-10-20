@@ -50,7 +50,7 @@ int main()
     unsigned int maxCalculations = 3000;
 
     //we want to find the minimum
-    OptTarget optTarget = MINIMIZE;
+    OptTarget optTarget = OptTarget::MINIMIZE;
 
     //how fast the simulated annealing algorithm slows down
     //http://en.wikipedia.org/wiki/Simulated_annealing

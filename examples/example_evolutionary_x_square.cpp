@@ -42,7 +42,7 @@ int main()
     unsigned int maxCalculations = 300;
 
     //we want to find the minimum
-    OptTarget optTarget = MINIMIZE;
+    OptTarget optTarget = OptTarget::MINIMIZE;
 
     //how fast the evolutionary algorithm slows down
     //https://en.wikipedia.org/wiki/Evolutionary_algorithm

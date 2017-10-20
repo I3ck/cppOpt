@@ -12,5 +12,7 @@
 - Set MultiThreaded in examples explicitly
 - Once OptBase is a controler object, consider writing a threadsafety wrapper (instead of locking within)
 - forward instead of move in constructors?
-- remove std:: by using namespace
 - try not to rely on recursive_mutex
+- range based for loops
+- const& where possible especially T values
+- move in constructors

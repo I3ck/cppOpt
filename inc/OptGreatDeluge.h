@@ -109,22 +109,22 @@ private:
     {
         switch(super::optTarget)
         {
-            case MINIMIZE:
+            case OptTarget::MINIMIZE:
                 waterLevel -= rain;
                 break;
 
-            case MAXIMIZE:
+            case OptTarget::MAXIMIZE:
                 waterLevel += rain;
                 break;
 
-            case APPROACH:
+            case OptTarget::APPROACH:
                 if(super::targetValue > waterLevel)
                     waterLevel += rain;
                 else
                     waterLevel -= rain;
                 break;
 
-            case DIVERGE:
+            case OptTarget::DIVERGE:
                 if(super::targetValue > waterLevel)
                     waterLevel -= rain;
                 else

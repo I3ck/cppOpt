@@ -53,8 +53,6 @@ class OptBase
 {
     using self = OptBase<T, isMultiThreaded>;
 
-// MEMBERS ---------------------------------------------------------------------
-
 private:
     static recursive_mutex
         m;
@@ -69,7 +67,7 @@ private:
         pOptimisers;
 
     static bool
-        loggingEnabled; //only set with one method and already locked when logging, no additional mutex required
+        loggingEnabled;
 
     static bool
         abortEarly;
@@ -106,7 +104,7 @@ protected:
     T
         targetValue;
 
-// METHODS ---------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 public:
     OptBase(
@@ -261,16 +259,16 @@ protected:
     {
         switch(optTarget)
         {
-            case MINIMIZE:
+            case OptTarget::MINIMIZE:
                 return result.result < other.result;
 
-            case MAXIMIZE:
+            case OptTarget::MAXIMIZE:
                 return result.result > other.result;
 
-            case APPROACH:
+            case OptTarget::APPROACH:
                 return fabs(targetValue - result.result) < fabs(targetValue - other.result);
 
-            case DIVERGE:
+            case OptTarget::DIVERGE:
                 return fabs(targetValue - result.result) > fabs(targetValue - other.result);
 
             default: //MINIMIZE
@@ -303,19 +301,19 @@ protected:
     {
         switch(optTarget)
         {
-            case MINIMIZE:
+            case OptTarget::MINIMIZE:
                 return numeric_limits<T>::max();
 
-            case MAXIMIZE:
+            case OptTarget::MAXIMIZE:
                 return numeric_limits<T>::lowest();
 
-            case APPROACH:
+            case OptTarget::APPROACH:
                 if(targetValue > 0.0)
                     return numeric_limits<T>::lowest();
                 else
                     return numeric_limits<T>::max();
 
-            case DIVERGE:
+            case OptTarget::DIVERGE:
                 return targetValue;
 
             default: //MINIMIZE

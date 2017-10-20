@@ -140,22 +140,22 @@ private:
         OptCalculation<T> out;
         switch(super::optTarget)
         {
-            case MINIMIZE:
+            case OptTarget::MINIMIZE:
                 out.result = optCalculationConfigurationC.result + threshold;
                 break;
 
-            case MAXIMIZE:
+            case OptTarget::MAXIMIZE:
                 out.result = optCalculationConfigurationC.result - threshold;
                 break;
 
-            case APPROACH:
+            case OptTarget::APPROACH:
                 if(super::targetValue > optCalculationConfigurationC.result)
                     out.result = optCalculationConfigurationC.result - threshold;
                 else
                     out.result = optCalculationConfigurationC.result + threshold;
                 break;
 
-            case DIVERGE:
+            case OptTarget::DIVERGE:
                 if(super::targetValue > optCalculationConfigurationC.result)
                     out.result = optCalculationConfigurationC.result + threshold;
                 else

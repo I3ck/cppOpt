@@ -24,39 +24,41 @@
 namespace cppOpt
 {
 
+using namespace std;
+
 template <typename T>
 class OptCalculation
 {
 private:
-    std::map <std::string, T> parameters;
+    map <string, T> parameters;
 
 public:
     T result{};
 
 //------------------------------------------------------------------------------
 
-    std::map <std::string, T> const& get_parameters() const
+    map <string, T> const& get_parameters() const
     {
         return parameters;
     }
 
 //------------------------------------------------------------------------------
 
-    void set_parameters(const std::map <std::string, T> value)
+    void set_parameters(const map <string, T> value)
     {
         parameters = move(value);
     }
 
 //------------------------------------------------------------------------------
 
-    void add_parameter(const std::string &name, T value)
+    void add_parameter(const string &name, T value)
     {
         parameters[name] = value;
     }
 
 //------------------------------------------------------------------------------
 
-    T get_parameter(const std::string &name) const
+    T get_parameter(const string &name) const
     {
         return parameters.at(name);
     }
@@ -66,7 +68,7 @@ public:
     T distance_to(const OptCalculation &other) const
     {
         if(!using_same_parameters(other))
-            throw std::runtime_error("Can't calculate the distance between two OptCalculation if they're not using the same parameters");
+            throw runtime_error("Can't calculate the distance between two OptCalculation if they're not using the same parameters");
 
         T squareSum(0.0);
         for(const auto &parameter : parameters)
@@ -80,7 +82,7 @@ public:
     OptCalculation calculation_between(const OptCalculation &other) const
     {
         if(!using_same_parameters(other))
-            throw std::runtime_error("Can't calculate the center of two OptCalculation not having them same parameters");
+            throw runtime_error("Can't calculate the center of two OptCalculation not having them same parameters");
 
         OptCalculation out;
 
@@ -113,23 +115,23 @@ public:
 
 //------------------------------------------------------------------------------
 
-    std::string to_string_values(const std::string &delimiter = " ") const
+    string to_string_values(const string &delimiter = " ") const
     {
-        std::string out("");
+        string out("");
 
         for(const auto &parameter : parameters)
-            out += std::to_string(parameter.second) + delimiter;
+            out += to_string(parameter.second) + delimiter;
 
-        out += std::to_string(result);
+        out += to_string(result);
 
         return out;
     }
 
 //------------------------------------------------------------------------------
 
-    std::string to_string_header(const std::string &delimiter = " ") const
+    string to_string_header(const string &delimiter = " ") const
     {
-        std::string out("");
+        string out("");
 
         for(const auto &parameter : parameters)
             out += parameter.first + delimiter;

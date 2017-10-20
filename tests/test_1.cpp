@@ -107,7 +107,7 @@ TEST_CASE("Number of Calculations") {
     double coolingFactor = 0.95;
     double startChance = 0.25;
 
-    OptTarget optTarget = MINIMIZE;
+    OptTarget optTarget = OptTarget::MINIMIZE;
 
     SECTION("Single Calculation") {
         unsigned int maxCalculations = 1;
@@ -153,7 +153,7 @@ TEST_CASE("Simulated Annealing") {
     double startChance = 0.25;
 
     SECTION("Minimizing") {
-        OptTarget optTarget = MINIMIZE;
+        OptTarget optTarget = OptTarget::MINIMIZE;
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
@@ -169,7 +169,7 @@ TEST_CASE("Simulated Annealing") {
     }
 
     SECTION("Maximizing") {
-        OptTarget optTarget = MAXIMIZE;
+        OptTarget optTarget = OptTarget::MAXIMIZE;
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
@@ -185,7 +185,7 @@ TEST_CASE("Simulated Annealing") {
     }
 
     SECTION("Approaching") {
-        OptTarget optTarget = APPROACH;
+        OptTarget optTarget = OptTarget::APPROACH;
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
@@ -201,7 +201,7 @@ TEST_CASE("Simulated Annealing") {
     }
 
     SECTION("Diverging1") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
@@ -217,7 +217,7 @@ TEST_CASE("Simulated Annealing") {
     }
 
     SECTION("Diverging2") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
 
         OptSimulatedAnnealing<double> opt(optBoundaries,
                                           maxCalculations,
@@ -244,7 +244,7 @@ TEST_CASE("Threshold Accepting") {
     double thresholdFactor = 0.95;
 
     SECTION("Minimizing") {
-        OptTarget optTarget = MINIMIZE;
+        OptTarget optTarget = OptTarget::MINIMIZE;
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
@@ -261,7 +261,7 @@ TEST_CASE("Threshold Accepting") {
     }
 
     SECTION("Maximizing") {
-        OptTarget optTarget = MAXIMIZE;
+        OptTarget optTarget = OptTarget::MAXIMIZE;
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
@@ -278,7 +278,7 @@ TEST_CASE("Threshold Accepting") {
     }
 
     SECTION("Approaching") {
-        OptTarget optTarget = APPROACH;
+        OptTarget optTarget = OptTarget::APPROACH;
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
@@ -295,7 +295,7 @@ TEST_CASE("Threshold Accepting") {
     }
 
     SECTION("Diverging1") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
@@ -312,7 +312,7 @@ TEST_CASE("Threshold Accepting") {
     }
 
     SECTION("Diverging2") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
 
         OptThresholdAccepting<double> opt(optBoundaries,
                                           maxCalculations,
@@ -339,7 +339,7 @@ TEST_CASE("Great Deluge") {
     double rain = 0.2;
 
     SECTION("Minimizing") {
-        OptTarget optTarget = MINIMIZE;
+        OptTarget optTarget = OptTarget::MINIMIZE;
         double waterLevel = 15.0;
 
         OptGreatDeluge<double> opt(optBoundaries,
@@ -357,7 +357,7 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Maximizing") {
-        OptTarget optTarget = MAXIMIZE;
+        OptTarget optTarget = OptTarget::MAXIMIZE;
         double waterLevel = 10.0;
 
         OptGreatDeluge<double> opt(optBoundaries,
@@ -375,7 +375,7 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Approaching") {
-        OptTarget optTarget = APPROACH;
+        OptTarget optTarget = OptTarget::APPROACH;
         double waterLevel = 18.0;
 
         OptGreatDeluge<double> opt(optBoundaries,
@@ -393,7 +393,7 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Diverging1") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
         double waterLevel = 10.0;
 
         OptGreatDeluge<double> opt(optBoundaries,
@@ -411,7 +411,7 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Diverging2") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
         double waterLevel = 10.0;
 
         OptGreatDeluge<double> opt(optBoundaries,
@@ -445,7 +445,7 @@ TEST_CASE("Evolutionary") {
     double mutation(0.3);
 
     SECTION("Minimizing") {
-        OptTarget optTarget = MINIMIZE;
+        OptTarget optTarget = OptTarget::MINIMIZE;
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
@@ -464,7 +464,7 @@ TEST_CASE("Evolutionary") {
     }
 
     SECTION("Maximizing") {
-        OptTarget optTarget = MAXIMIZE;
+        OptTarget optTarget = OptTarget::MAXIMIZE;
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
@@ -483,7 +483,7 @@ TEST_CASE("Evolutionary") {
     }
 
     SECTION("Approaching") {
-        OptTarget optTarget = APPROACH;
+        OptTarget optTarget = OptTarget::APPROACH;
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
@@ -502,7 +502,7 @@ TEST_CASE("Evolutionary") {
     }
 
     SECTION("Diverging1") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
@@ -521,7 +521,7 @@ TEST_CASE("Evolutionary") {
     }
 
     SECTION("Diverging2") {
-        OptTarget optTarget = DIVERGE;
+        OptTarget optTarget = OptTarget::DIVERGE;
 
         OptEvolutionary<double> opt(optBoundaries,
                                     maxCalculations,
@@ -541,7 +541,7 @@ TEST_CASE("Evolutionary") {
 }
 
 TEST_CASE("Multithreading / Boundary Splitting") {
-    
+
     OptBoundaries<double>
             optBoundaries1,
             optBoundaries2,
@@ -558,7 +558,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
     double startChance = 0.25;
 
     SECTION("Minimizing") {
-        OptTarget optTarget = MINIMIZE;
+        OptTarget optTarget = OptTarget::MINIMIZE;
 
         OptSimulatedAnnealing<double> opt1(optBoundaries1,
                                            maxCalculations,
@@ -603,7 +603,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
     }
 
     SECTION("Maximizing") {
-        OptTarget optTarget = MAXIMIZE;
+        OptTarget optTarget = OptTarget::MAXIMIZE;
 
         OptSimulatedAnnealing<double> opt1(optBoundaries1,
                                            maxCalculations,
