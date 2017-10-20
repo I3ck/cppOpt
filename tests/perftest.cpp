@@ -147,6 +147,52 @@ double time_sa_3()
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
 
+double time_sa_4()
+{
+    auto start = clock();
+
+    OptBoundaries<double> optBoundaries;
+    optBoundaries.add_boundary(-5.0, 5.0, "X");
+    optBoundaries.add_boundary(-14.0, 23.0, "Y");
+
+    unsigned int maxCalculations = 30000;
+    double coolingFactor = 0.95;
+    double startChance = 0.25;
+    OptTarget optTarget = MINIMIZE;
+
+    OptSimulatedAnnealing<double, true> opt1(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0.0,
+        coolingFactor,
+        startChance);
+
+    OptSimulatedAnnealing<double, true> opt2(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0.0,
+        coolingFactor,
+        startChance);
+
+    OptSimulatedAnnealing<double, true> opt3(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0.0,
+        coolingFactor,
+        startChance);
+
+    OptBase<double, true>::run_optimisations(3);
+    OptBase<double, true>::clear_results();
+
+    return ( clock() - start ) / (double) CLOCKS_PER_SEC;
+}
+
 double n_times(int times, std::function<double(void)> const& f)
 {
     double sum{0};
@@ -162,5 +208,6 @@ int main()
     cout << "time_sa_1() :\t " << n_times(times, time_sa_1) << endl;
     cout << "time_sa_2() :\t " << n_times(times, time_sa_2) << endl;
     cout << "time_sa_3() :\t " << n_times(times, time_sa_3) << endl;
+    cout << "time_sa_4() :\t " << n_times(times, time_sa_4) << endl; //currently causes crash, but only if test 2 ran before
     return 0;
 }
