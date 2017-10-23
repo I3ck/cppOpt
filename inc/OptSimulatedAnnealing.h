@@ -19,12 +19,10 @@
 namespace cppOpt
 {
 
-template <typename T, bool isMultiThreaded = true>
-class OptSimulatedAnnealing : public OptBase<T, isMultiThreaded>
+template <typename T>
+class OptSimulatedAnnealing final : public OptAlgorithmBase<T>
 {
-private:
-
-    typedef OptBase<T, isMultiThreaded> super;
+    using super = OptAlgorithmBase<T>;
 
     const T
         coolingFactor;
@@ -37,46 +35,39 @@ private:
 
 public:
     OptSimulatedAnnealing(
-        OptBoundaries<T> optBoundaries,
-        unsigned int maxCalculations,
-        calc_t<T> calcFunction,
-        OptTarget optTarget,
-        T targetValue,
         T coolingFactor,
         T startChance) :
 
-        super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
         coolingFactor(move(coolingFactor)),
         chance(move(startChance))
     {}
 
-private:
-
-//------------------------------------------------------------------------------
-
-    OptCalculation<T> get_next_calculation()
+    OptCalculation<T> get_next_calculation(
+        vector<OptCalculation<T>> const& previous,
+        OptCalculation<T>         const& best,
+        OptBoundaries<T>          const& boundaries) final
     {
-        if(super::previousCalculations.empty())
-            return super::random_start_value();
+
+        if(previous.empty())
+            return super::random_calculation(boundaries);
 
         OptCalculation<T> referenceValue, newValue;
 
-        if(super::random_factor() < chance)
-            referenceValue = super::previousCalculations.back();
-
+        if(super::random_factor() < chance) ///@todo should be done in caller? (or in base algorithm)
+            referenceValue = previous.back();
         else
-            referenceValue = super::bestCalculation;
+            referenceValue = best;
 
         while(true)
         {
             newValue = OptCalculation<T>();
-            for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
+            for(auto const& boundary : boundaries)
             {
-                T change = super::calculate_random_change(boundary->second, temperature);
+                T change = super::calculate_random_change(boundary.second, temperature);
 
-                newValue.add_parameter(boundary->first, referenceValue.get_parameter(boundary->first) + change);
+                newValue.add_parameter(boundary.first, referenceValue.get_parameter(boundary.first) + change);
             }
-            if(super::valid(newValue))
+            if(super::valid(newValue, boundaries))
                 break;
         }
 

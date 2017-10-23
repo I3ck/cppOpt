@@ -141,14 +141,14 @@ public:
 
 //------------------------------------------------------------------------------
 
-    const typename map< string, OptBoundary<T> >::const_iterator cbegin() const
+    const typename map< string, OptBoundary<T> >::const_iterator begin() const
     {
         return optBoundaries.cbegin();
     }
 
 //------------------------------------------------------------------------------
 
-    const typename map< string, OptBoundary<T> >::const_iterator cend() const
+    const typename map< string, OptBoundary<T> >::const_iterator end() const
     {
         return optBoundaries.cend();
     }
