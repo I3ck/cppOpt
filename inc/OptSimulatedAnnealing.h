@@ -14,7 +14,7 @@
 #ifndef OPTSIMULATEDANNEALING_H
 #define OPTSIMULATEDANNEALING_H
 
-#include "OptBase.h"
+#include "OptAlgorithmBase.h"
 
 namespace cppOpt
 {

@@ -32,6 +32,7 @@
 #include "OptCalculation.h"
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
+#include "IOptAlgorithm.h"
 
 #ifdef DEBUG
     #include <iostream>
@@ -40,74 +41,6 @@
 
 namespace cppOpt
 {
-
-template <typename T>
-class IOptAlgorithm ///@todo own file
-{
-public:
-    virtual OptCalculation<T> get_next_calculation(
-        vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const* best,
-        OptBoundaries<T>          const& boundaries) = 0; ///@todo rename?
-
-    virtual ~IOptAlgorithm() = 0;
-};
-
-template <typename T>
-class OptAlgorithmBase : public IOptAlgorithm<T> ///@todo own file
-{
-public:
-    virtual OptCalculation<T> get_next_calculation(
-        vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const* best,
-        OptBoundaries<T>          const& boundaries) = 0; ///@todo rename?
-protected:
-    static T random_factor()
-    {
-        return rand()/(T)(RAND_MAX);
-    }
-
-//------------------------------------------------------------------------------
-
-    static OptCalculation<T> random_calculation(OptBoundaries<T> const& boundaries)
-    {
-        OptCalculation<T> optCalculation;
-        for(auto const& boundary : boundaries)
-        {
-            T newValue = boundary.second.min + random_factor() * boundary.second.range();
-            optCalculation.add_parameter(boundary.second.name, newValue);
-        }
-        return optCalculation;
-    }
-
-//------------------------------------------------------------------------------
-
-    static T calculate_random_change(const OptBoundary<T> &boundary, T temperature)
-    {
-        T change, maxChange;
-
-        maxChange = (T)0.5 * boundary.range() * temperature;
-        change = random_factor() * maxChange;
-
-        if(rand() % 2)
-            change *= -1.0;
-
-        return change;
-    }
-
-//------------------------------------------------------------------------------
-
-    static bool valid(const OptCalculation<T> &optCalculation, OptBoundaries<T> const& boundaries)
-    {
-        for(auto const& boundary : boundaries)
-        {
-            if(   optCalculation.get_parameter(boundary.first) < boundary.second.min
-               || optCalculation.get_parameter(boundary.first) > boundary.second.max)
-               return false;
-        }
-        return true;
-    }
-};
 
 using namespace std;
 
