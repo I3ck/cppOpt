@@ -20,7 +20,7 @@ namespace cppOpt
 {
 
 template <typename T>
-class OptSimulatedAnnealing final : public OptAlgorithmBase<T>
+class OptSimulatedAnnealing final : public OptAlgorithmBase<T> ///@todo rename to algorithm
 {
     using super = OptAlgorithmBase<T>;
 

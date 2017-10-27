@@ -18,6 +18,7 @@ aux_source_directory(
         SRC_LIST
 )
 
+#[[
 
 add_executable(
         example_simulated_annealing_x_square
@@ -63,7 +64,7 @@ add_executable(
         test_1
         tests/test_1.cpp
 )
-
+]]
 add_executable(
         perftest
         tests/perftest.cpp

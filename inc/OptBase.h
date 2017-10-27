@@ -131,17 +131,14 @@ private:
     vector< pair<OptCalculation<T>, self*> >
         finishedCalculations;
 
-    set<OptBase*> ///@todo rename algorithms, make unique_ptrs
-        pOptimisers;
+    vector<unique_ptr<IOptAlgorithm<T>>>
+        children;
 
     bool
-        loggingEnabled;
-
-    bool
-        abortEarly;
+        abortEarly{false};
 
     T
-        abortValue;
+        abortValue{0};
 
     ///@todo logging can be done by simply passing a wrapping lambda (write helper for this?)
     const calc_t<T>
@@ -189,6 +186,13 @@ public:
 
 //------------------------------------------------------------------------------
 
+    void add_child(unique_ptr<IOptAlgorithm<T>> child)
+    {
+        children.push_back(move(child));
+    }
+
+//------------------------------------------------------------------------------
+
     void run_optimisations(unsigned int maxThreads = 1) ///@otod drop the s?
     {
         run_optimisations(maxThreads, time(NULL));
@@ -202,10 +206,10 @@ public:
         //and push it onto the todo queue
         {
             auto lck = lock_for();
-            for(const auto &pOptimiser : pOptimisers)
+            for(const auto &child : children)
             {
-                if(pOptimiser->previousCalculations.size() == 0)
-                    push_todo(pOptimiser->get_next_calculation(), pOptimiser);
+                //if(child->previousCalculations.size() == 0)
+                //    push_todo(pOptimiser->get_next_calculation(), pOptimiser);
             }
         }
 
@@ -231,15 +235,15 @@ public:
 
 //------------------------------------------------------------------------------
 
-    unsigned int number_optimisers()
+    unsigned int number_optimisers() ///@todo rename
     {
         auto lck = lock_for();
-        return pOptimisers.size(); ///@todo unlikely this has to be locked (only access via the optimisers should be locked)
+        return children.size(); ///@todo unlikely this has to be locked (only access via the optimisers should be locked)
     }
 
 //------------------------------------------------------------------------------
 
-    static void enable_early_abort(const T abortVal)
+    void enable_early_abort(const T abortVal)
     {
         abortEarly = true;
         abortValue = abortVal;
@@ -372,7 +376,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    static void threaded_work() ///@todo rename
+    void threaded_work() ///@todo rename
     {
         while(true)
         {
@@ -388,30 +392,27 @@ private:
             if(!availableTodo)
                 break;
 
-            OptCalculation<T> optCalculation = todo.first;
-            OptBase* pOptBase = todo.second;
+            //OptCalculation<T> optCalculation = todo.first;
+            //OptBase* pOptBase = todo.second;
 
-            pOptBase->calcFunction(optCalculation);
+            //pOptBase->calcFunction(optCalculation);
 
-            if(loggingEnabled)
-                log(optCalculation);
+            //pOptBase->add_finished_calculation(optCalculation);
 
-            pOptBase->add_finished_calculation(optCalculation);
-
-            if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
-                break;
+            //if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
+            //    break;
 
             if(abortEarly)
             {
                 OptCalculation<T> calcEarly;
                 calcEarly.result = abortValue;
 
-                if(result_better(optCalculation, calcEarly, pOptBase->optTarget , pOptBase->targetValue))
-                    break;
+                //if(result_better(optCalculation, calcEarly, pOptBase->optTarget , pOptBase->targetValue))
+                //    break;
             }
 
             //only add the next one if there still are more
-            push_todo(pOptBase->get_next_calculation(), pOptBase);
+            //push_todo(pOptBase->get_next_calculation(), pOptBase);
         }
     }
 
@@ -455,46 +456,9 @@ private:
 
 ///@todo these can all be removed / initialized within the class since not static anymore
 
-template <typename T, bool isMultiThreaded>
-recursive_mutex OptBase<T, isMultiThreaded>::m;
-
-template <typename T, bool isMultiThreaded>
-queue< pair<OptCalculation<T>, OptBase<T, isMultiThreaded>*> >
-    OptBase<T, isMultiThreaded>::queueTodo;
-
-template <typename T, bool isMultiThreaded>
-vector< pair<OptCalculation<T>, OptBase<T, isMultiThreaded>*> >
-    OptBase<T, isMultiThreaded>::finishedCalculations;
-
-template <typename T, bool isMultiThreaded>
-set<OptBase<T, isMultiThreaded>*>
-    OptBase<T, isMultiThreaded>::pOptimisers;
-
-template <typename T, bool isMultiThreaded>
-bool
-    OptBase<T, isMultiThreaded>::loggingEnabled(false);
-
-template <typename T, bool isMultiThreaded>
-bool
-    OptBase<T, isMultiThreaded>::abortEarly(false);
-
-template <typename T, bool isMultiThreaded>
-T
-    OptBase<T, isMultiThreaded>::abortValue(0);
-
-template <typename T, bool isMultiThreaded>
-string OptBase<T, isMultiThreaded>::loggingDelimiter("");
-
-template <typename T, bool isMultiThreaded>
-string OptBase<T, isMultiThreaded>::loggingLineEnd("");
-
-template <typename T, bool isMultiThreaded>
-ofstream
-    OptBase<T, isMultiThreaded>::logFile;
 
 } // namespace cppOpt
 
-#endif // OPTBASE_H
 
 
 
@@ -502,8 +466,7 @@ ofstream
 
 
 
-
-
+/*
 using namespace std;
 
 template <typename T>
@@ -1016,5 +979,5 @@ ofstream
     OptBase<T, isMultiThreaded>::logFile;
 
 } // namespace cppOpt
-
+*/
 #endif // OPTBASE_H
