@@ -106,11 +106,11 @@ public:
         OptTarget optTarget,
         T targetValue) :
 
-        maxCalculations(maxCalculations),
-        optBoundaries(move(optBoundaries)),
         calcFunction(move(calcFunction)),
         optTarget(move(optTarget)),
-        targetValue(move(targetValue))
+        targetValue(move(targetValue)),
+        maxCalculations(maxCalculations),
+        optBoundaries(move(optBoundaries))
     {
         previousCalculations.reserve(maxCalculations);
     }

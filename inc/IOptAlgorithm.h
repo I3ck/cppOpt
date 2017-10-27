@@ -28,7 +28,7 @@ public:
         OptCalculation<T>         const* best,
         OptBoundaries<T>          const& boundaries) = 0;
 
-    virtual ~IOptAlgorithm() = 0;
+    virtual ~IOptAlgorithm() {};
 };
 
 } // namespace cppOpt
