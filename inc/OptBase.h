@@ -47,7 +47,7 @@ class IOptAlgorithm ///@todo own file
 public:
     virtual OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const& best,
+        OptCalculation<T>         const* best,
         OptBoundaries<T>          const& boundaries) = 0; ///@todo rename?
 
     virtual ~IOptAlgorithm() = 0;
@@ -59,7 +59,7 @@ class OptAlgorithmBase : public IOptAlgorithm<T> ///@todo own file
 public:
     virtual OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const& best,
+        OptCalculation<T>         const* best,
         OptBoundaries<T>          const& boundaries) = 0; ///@todo rename?
 protected:
     static T random_factor()
@@ -125,7 +125,7 @@ private:
     recursive_mutex
         m;
 
-    queue< pair<OptCalculation<T>, self*> > ///@todo consider vector
+    queue< pair<OptCalculation<T>, IOptAlgorithm<T>*> > ///@todo consider vector
         queueTodo;
 
     vector< pair<OptCalculation<T>, self*> >
@@ -200,6 +200,7 @@ public:
 
     void run_optimisations(unsigned int maxThreads, unsigned int randomSeed)
     {
+        ///@todo call reset?
         srand(randomSeed);
 
         //get the first to-calculate value of every optimiser
@@ -207,17 +208,14 @@ public:
         {
             auto lck = lock_for();
             for(const auto &child : children)
-            {
-                //if(child->previousCalculations.size() == 0)
-                //    push_todo(pOptimiser->get_next_calculation(), pOptimiser);
-            }
+                push_todo(child->get_next_calculation(std::vector<OptCalculation<T>>(), nullptr, optBoundaries), child.get()); ///@todo later pass previous?
         }
 
         if constexpr (isMultiThreaded) {
             vector <thread> threads;
 
             for(unsigned int i=0; i<maxThreads; ++i)
-                threads.emplace_back(threaded_work);
+                threads.emplace_back([this](){return threaded_work();});
 
             for(auto &thread :threads)
                 thread.join();
@@ -381,7 +379,7 @@ private:
         while(true)
         {
             bool availableTodo(false);
-            pair <OptCalculation<T>, self*> todo;
+            pair <OptCalculation<T>, IOptAlgorithm<T>*> todo;
             {
                 auto lck = lock_for();
                 availableTodo = available_todo();
@@ -418,10 +416,10 @@ private:
 
 //------------------------------------------------------------------------------
 
-    void push_todo(OptCalculation<T> optCalculation, self *pOptBase) ///@todo all the locking in the functions below could become unnecessary since only the thread callbacks have to use the guards (just lock once there)
+    void push_todo(OptCalculation<T> optCalculation, IOptAlgorithm<T>* algo) ///@todo all the locking in the functions below could become unnecessary since only the thread callbacks have to use the guards (just lock once there)
     {
         auto lck = lock_for();
-        queueTodo.push({optCalculation, pOptBase});
+        queueTodo.push({optCalculation, algo});
     }
 
 //------------------------------------------------------------------------------
@@ -442,7 +440,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    pair<OptCalculation<T>, self*> pop_todo()
+    pair<OptCalculation<T>, IOptAlgorithm<T>*> pop_todo()
     {
         auto lck = lock_for();
         auto out = queueTodo.front();

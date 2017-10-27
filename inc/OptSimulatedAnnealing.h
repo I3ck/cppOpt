@@ -44,11 +44,11 @@ public:
 
     OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const& best,
+        OptCalculation<T>         const* best,
         OptBoundaries<T>          const& boundaries) final
     {
 
-        if(previous.empty())
+        if(previous.empty() || !best)
             return super::random_calculation(boundaries);
 
         OptCalculation<T> referenceValue, newValue;
@@ -56,7 +56,7 @@ public:
         if(super::random_factor() < chance) ///@todo should be done in caller? (or in base algorithm)
             referenceValue = previous.back();
         else
-            referenceValue = best;
+            referenceValue = *best;
 
         while(true)
         {

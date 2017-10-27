@@ -15,6 +15,7 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
+#include <memory>
 
 #include "cppOpt.h"
 
@@ -40,9 +41,18 @@ double time_sa_1()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt(
+    OptCoordinator<double> coordinator(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
+
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
         coolingFactor,
-        startChance);
+        startChance));
+
+    coordinator.run_optimisations();
 
     //OptBase<double, false>::run_optimisations();
     //OptBase<double, false>::clear_results();
@@ -63,17 +73,26 @@ double time_sa_2()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt1(
-        coolingFactor,
-        startChance);
+    OptCoordinator<double> coordinator(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    OptSimulatedAnnealing<double> opt2(
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
         coolingFactor,
-        startChance);
+        startChance));
 
-    OptSimulatedAnnealing<double> opt3(
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
         coolingFactor,
-        startChance);
+        startChance));
+
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        coolingFactor,
+        startChance));
+
+    coordinator.run_optimisations();
 
     //OptBase<double, true>::run_optimisations();
     //OptBase<double, true>::clear_results();
@@ -94,17 +113,26 @@ double time_sa_3()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt1(
-        coolingFactor,
-        startChance);
+    OptCoordinator<double> coordinator(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    OptSimulatedAnnealing<double> opt2(
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
         coolingFactor,
-        startChance);
+        startChance));
 
-    OptSimulatedAnnealing<double> opt3(
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
         coolingFactor,
-        startChance);
+        startChance));
+
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        coolingFactor,
+        startChance));
+
+    coordinator.run_optimisations();
 
     //OptBase<double, false>::run_optimisations();
     //OptBase<double, false>::clear_results();
@@ -125,17 +153,26 @@ double time_sa_4()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptSimulatedAnnealing<double> opt1(
-        coolingFactor,
-        startChance);
+    OptCoordinator<double> coordinator(
+        optBoundaries,
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    OptSimulatedAnnealing<double> opt2(
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
         coolingFactor,
-        startChance);
+        startChance));
 
-    OptSimulatedAnnealing<double> opt3(
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
         coolingFactor,
-        startChance);
+        startChance));
+
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        coolingFactor,
+        startChance));
+
+    coordinator.run_optimisations();
 
     //OptBase<double, true>::run_optimisations(3);
     //OptBase<double, true>::clear_results();
