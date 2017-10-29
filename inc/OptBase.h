@@ -84,11 +84,13 @@ private:
         targetValue;
 
 protected: ///@todo these must be stored per-algorithm
-    vector< OptCalculation<T> >
+    map<IOptAlgorithm<T>*, std::vector<OptCalculation<T>>>
         previousCalculations;
 
-    OptCalculation<T>
-        bestCalculation;
+
+
+    map<IOptAlgorithm<T>*, OptCalculation<T>>
+        bestCalculations;
 
     const unsigned int
         maxCalculations; ///@todo can be dropped here / stored globally?
@@ -111,9 +113,7 @@ public:
         targetValue(move(targetValue)),
         maxCalculations(maxCalculations),
         optBoundaries(move(optBoundaries))
-    {
-        previousCalculations.reserve(maxCalculations);
-    }
+    {}
 
     ///@todo needs method to add child (unique_ptr &&)
 
@@ -141,7 +141,7 @@ public:
         {
             auto lck = lock_for();
             for(const auto &child : children)
-                push_todo(child->get_next_calculation(std::vector<OptCalculation<T>>(), nullptr, optBoundaries), child.get()); ///@todo later pass previous?
+                push_todo(child->get_next_calculation(previousCalculations[child.get()], nullptr, optBoundaries), child.get()); ///@todo later pass previous?
         }
 
         if constexpr (isMultiThreaded) {
@@ -210,13 +210,6 @@ public:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation<T> get_best_calculation() const
-    {
-       return bestCalculation;
-    }
-
-//------------------------------------------------------------------------------
-
     unsigned int number_previous_calculations() const
     {
         return previousCalculations.size();
@@ -249,17 +242,17 @@ protected:
     }
 //------------------------------------------------------------------------------
 
-    void add_finished_calculation(OptCalculation<T> optCalculation) ///@todo does too much?
+    void add_finished_calculation(IOptAlgorithm<T>* algo, OptCalculation<T> optCalculation) ///@todo does too much?
     {
-        previousCalculations.push_back(optCalculation);
+        previousCalculations[algo].push_back(optCalculation);
 
         {
             auto lck = lock_for();
             finishedCalculations.push_back({optCalculation, this});
         }
 
-        if(result_better(optCalculation, bestCalculation, optTarget, targetValue))
-            bestCalculation = optCalculation;
+        if(result_better(optCalculation, bestCalculations[algo], optTarget, targetValue))
+            bestCalculations[algo] = optCalculation;
     }
 
 //------------------------------------------------------------------------------
@@ -323,12 +316,12 @@ private:
             if(!availableTodo)
                 break;
 
-            //OptCalculation<T> optCalculation = todo.first;
-            //OptBase* pOptBase = todo.second;
+            OptCalculation<T> optCalculation = todo.first;
+            auto algo = todo.second;
 
-            //pOptBase->calcFunction(optCalculation);
+            calcFunction(optCalculation);
 
-            //pOptBase->add_finished_calculation(optCalculation);
+            add_finished_calculation(algo, optCalculation);
 
             //if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
             //    break;
@@ -343,7 +336,7 @@ private:
             }
 
             //only add the next one if there still are more
-            //push_todo(pOptBase->get_next_calculation(), pOptBase);
+            push_todo(algo->get_next_calculation(std::vector<OptCalculation<T>>(), nullptr, optBoundaries), algo);
         }
     }
 
