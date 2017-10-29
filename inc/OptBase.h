@@ -126,7 +126,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void run_optimisations(unsigned int maxThreads = 1) ///@otod drop the s?
+    void run_optimisations(unsigned int maxThreads = 1) ///@todo drop the s?
     {
         run_optimisations(maxThreads, time(NULL));
     }
@@ -141,7 +141,10 @@ public:
         {
             auto lck = lock_for();
             for(const auto &child : children)
-                push_todo(child->get_next_calculation(previousCalculations[child.get()], nullptr, optBoundaries), child.get()); ///@todo later pass previous?
+            {
+                bestCalculations[child.get()] = random_calculation();
+                push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()], optBoundaries), child.get()); ///@todo later pass previous?
+            }
         }
 
         if constexpr (isMultiThreaded) {
@@ -323,8 +326,8 @@ private:
 
             add_finished_calculation(algo, optCalculation);
 
-            //if(pOptBase->previousCalculations.size() >= pOptBase->maxCalculations)
-            //    break;
+            if(previousCalculations[algo].size() >= maxCalculations)
+                break;
 
             if(abortEarly)
             {
@@ -372,6 +375,47 @@ private:
         auto out = queueTodo.front();
         queueTodo.pop();
         return out;
+    }
+
+    T bad_value() const
+    {
+        switch(optTarget)
+        {
+            case OptTarget::MINIMIZE:
+                return numeric_limits<T>::max();
+
+            case OptTarget::MAXIMIZE:
+                return numeric_limits<T>::lowest();
+
+            case OptTarget::APPROACH:
+                if(targetValue > 0.0)
+                    return numeric_limits<T>::lowest();
+                else
+                    return numeric_limits<T>::max();
+
+            case OptTarget::DIVERGE:
+                return targetValue;
+
+            default: //MINIMIZE
+                return numeric_limits<T>::max();
+        }
+    }
+
+    OptCalculation<T> random_calculation() const
+    {
+        OptCalculation<T> optCalculation;
+        optCalculation.result = bad_value();
+        for(auto const& boundary : optBoundaries)
+        {
+            T newValue = boundary.second.min + random_factor() * boundary.second.range();
+            optCalculation.add_parameter(boundary.second.name, newValue);
+        }
+        return optCalculation;
+    }
+
+    static T random_factor() ///@todo all related functions now defined twice, move to helper
+    {
+        return rand()/(T)(RAND_MAX);
     }
 
 //------------------------------------------------------------------------------
