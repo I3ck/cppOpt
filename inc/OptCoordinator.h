@@ -35,14 +35,14 @@ namespace cppOpt
 
 using namespace std;
 
-using lock = lock_guard<recursive_mutex>;
+using lock = lock_guard<mutex>;
 
 template <typename T, bool isMultiThreaded = true>
 class OptCoordinator final
 {
     using self = OptCoordinator<T, isMultiThreaded>;
 
-    recursive_mutex
+    mutex
         m;
 
     queue< pair<OptCalculation<T>, IOptAlgorithm<T>*> > ///@todo consider vector
@@ -119,16 +119,16 @@ public:
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
         {
-            auto lck = lock_for();
             for(const auto &child : children)
             {
                 bestCalculations[child.get()] = random_calculation();
-                push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()], optBoundaries), child.get()); ///@todo later pass previous?
+                push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()], optBoundaries), child.get());
             }
         }
 
         if constexpr (isMultiThreaded) {
             vector <thread> threads;
+            threads.reserve(maxThreads);
 
             for(unsigned int i=0; i<maxThreads; ++i)
                 threads.emplace_back([this](){return threaded_work();});
@@ -141,9 +141,8 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void clear_results() ///@todo still offer this?
+    void clear_results()
     {
-        auto lck = lock_for(); ///@todo might not be required in later flow (see comment below)
         finishedCalculations.clear();
     }
 
@@ -151,8 +150,7 @@ public:
 
     unsigned int number_optimisers() ///@todo rename
     {
-        auto lck = lock_for();
-        return children.size(); ///@todo unlikely this has to be locked (only access via the optimisers should be locked)
+        return children.size();
     }
 
 //------------------------------------------------------------------------------
@@ -167,17 +165,14 @@ public:
 
     unsigned int number_finished_calculations()
     {
-        auto lck = lock_for();
         return finishedCalculations.size();
     }
 
 //------------------------------------------------------------------------------
 
-    //targetValue won't be used when maximizing or minimizing
     OptCalculation<T> get_best_calculation(OptTarget const& optTarget, T const& targetValue) ///@todo rename to of all, drop params
     {
-        auto lck = lock_for();
-        OptCalculation<T> out;
+        OptCalculation<T> out; ///@todo bad value instead (or fail?)
 
         if(finishedCalculations.size() == 0)
             return out;
@@ -195,6 +190,7 @@ public:
 
 private:
     //targetValue won't be used when maximizing or minimizing
+    ///@todo move static methods
     static bool result_better(OptCalculation<T> const& result, OptCalculation<T> const& other, OptTarget const& optTarget, T const& targetValue) ///@todo consider implementing this in OptCalculation
     {
         switch(optTarget)
@@ -214,20 +210,6 @@ private:
             default: //MINIMIZE
                 return result.result < other.result;
         }
-    }
-//------------------------------------------------------------------------------
-
-    void add_finished_calculation(IOptAlgorithm<T>* algo, OptCalculation<T> const& optCalculation) ///@todo does too much?
-    {
-        previousCalculations[algo].push_back(optCalculation);
-
-        {
-            auto lck = lock_for();
-            finishedCalculations.push_back({optCalculation, this});
-        }
-
-        if(result_better(optCalculation, bestCalculations[algo], optTarget, targetValue))
-            bestCalculations[algo] = optCalculation;
     }
 
 //------------------------------------------------------------------------------
@@ -276,10 +258,12 @@ private:
 
     void threaded_work() ///@todo rename
     {
+        bool availableTodo{false};
+        pair <OptCalculation<T>, IOptAlgorithm<T>*> todo;
+
         while(true)
         {
-            bool availableTodo(false);
-            pair <OptCalculation<T>, IOptAlgorithm<T>*> todo;
+
             {
                 auto lck = lock_for();
                 availableTodo = available_todo();
@@ -290,12 +274,19 @@ private:
             if(!availableTodo)
                 break;
 
-            OptCalculation<T> optCalculation = todo.first;
-            auto algo = todo.second;
+            auto [optCalculation, algo] = todo;
 
             calcFunction(optCalculation);
 
-            add_finished_calculation(algo, optCalculation);
+            {
+                auto lck = lock_for();
+                finishedCalculations.push_back({optCalculation, this});
+            }
+
+            previousCalculations[algo].push_back(optCalculation);
+
+            if(result_better(optCalculation, bestCalculations[algo], optTarget, targetValue))
+                bestCalculations[algo] = optCalculation;
 
             if(previousCalculations[algo].size() >= maxCalculations)
                 break;
@@ -309,16 +300,17 @@ private:
                 //    break;
             }
 
-            //only add the next one if there still are more
-            push_todo(algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries), algo);
+            {
+                auto lck = lock_for();
+                push_todo(algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries), algo);
+            }
         }
     }
 
 //------------------------------------------------------------------------------
 
-    void push_todo(OptCalculation<T> optCalculation, IOptAlgorithm<T>* algo) ///@todo all the locking in the functions below could become unnecessary since only the thread callbacks have to use the guards (just lock once there)
+    void push_todo(OptCalculation<T> optCalculation, IOptAlgorithm<T>* algo)
     {
-        auto lck = lock_for();
         queueTodo.push({optCalculation, algo});
     }
 
@@ -326,7 +318,6 @@ private:
 
     void push_finished(OptCalculation<T> optCalculation, self *pOptBase)
     {
-        auto lck = lock_for();
         finishedCalculations.push_back({optCalculation, pOptBase});
     }
 
@@ -334,7 +325,6 @@ private:
 
     bool available_todo()
     {
-        auto lck = lock_for();
         return !queueTodo.empty();
     }
 
@@ -342,7 +332,6 @@ private:
 
     pair<OptCalculation<T>, IOptAlgorithm<T>*> pop_todo()
     {
-        auto lck = lock_for();
         auto out = queueTodo.front();
         queueTodo.pop();
         return out;
