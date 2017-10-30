@@ -45,7 +45,7 @@ class OptCoordinator final
     mutex
         m;
 
-    queue< pair<OptCalculation<T>, IOptAlgorithm<T>*> > ///@todo consider vector
+    queue< pair<OptCalculation<T>, IOptAlgorithm<T>*> >
         queueTodo;
 
     vector< pair<OptCalculation<T>, self*> >
@@ -189,31 +189,6 @@ public:
 //------------------------------------------------------------------------------
 
 private:
-    //targetValue won't be used when maximizing or minimizing
-    ///@todo move static methods
-    static bool result_better(OptCalculation<T> const& result, OptCalculation<T> const& other, OptTarget const& optTarget, T const& targetValue) ///@todo consider implementing this in OptCalculation
-    {
-        switch(optTarget)
-        {
-            case OptTarget::MINIMIZE:
-                return result.result < other.result;
-
-            case OptTarget::MAXIMIZE:
-                return result.result > other.result;
-
-            case OptTarget::APPROACH:
-                return fabs(targetValue - result.result) < fabs(targetValue - other.result);
-
-            case OptTarget::DIVERGE:
-                return fabs(targetValue - result.result) > fabs(targetValue - other.result);
-
-            default: //MINIMIZE
-                return result.result < other.result;
-        }
-    }
-
-//------------------------------------------------------------------------------
-
     unsigned int index_closest_calculation(vector<OptCalculation<T>> const& optCalculations, unsigned int indexThis) const ///@todo could be moved to some helper, also should be easy to simplify heavily
     {
         T closestDistance;
@@ -309,16 +284,9 @@ private:
 
 //------------------------------------------------------------------------------
 
-    void push_todo(OptCalculation<T> optCalculation, IOptAlgorithm<T>* algo)
+    void push_todo(OptCalculation<T> const& optCalculation, IOptAlgorithm<T>* algo)
     {
-        queueTodo.push({optCalculation, algo});
-    }
-
-//------------------------------------------------------------------------------
-
-    void push_finished(OptCalculation<T> optCalculation, self *pOptBase)
-    {
-        finishedCalculations.push_back({optCalculation, pOptBase});
+        queueTodo.emplace(make_pair(optCalculation, algo));
     }
 
 //------------------------------------------------------------------------------
@@ -336,6 +304,8 @@ private:
         queueTodo.pop();
         return out;
     }
+
+//------------------------------------------------------------------------------
 
     T bad_value() const
     {
@@ -371,6 +341,30 @@ private:
             optCalculation.add_parameter(boundary.second.name, newValue);
         }
         return optCalculation;
+    }
+
+//------------------------------------------------------------------------------
+
+    //targetValue won't be used when maximizing or minimizing
+    static bool result_better(OptCalculation<T> const& result, OptCalculation<T> const& other, OptTarget const& optTarget, T const& targetValue) ///@todo consider implementing this in OptCalculation
+    {
+        switch(optTarget)
+        {
+            case OptTarget::MINIMIZE:
+                return result.result < other.result;
+
+            case OptTarget::MAXIMIZE:
+                return result.result > other.result;
+
+            case OptTarget::APPROACH:
+                return fabs(targetValue - result.result) < fabs(targetValue - other.result);
+
+            case OptTarget::DIVERGE:
+                return fabs(targetValue - result.result) > fabs(targetValue - other.result);
+
+            default: //MINIMIZE
+                return result.result < other.result;
+        }
     }
 
     static T random_factor() ///@todo all related functions now defined twice, move to helper
