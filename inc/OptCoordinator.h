@@ -275,9 +275,11 @@ private:
                 //    break;
             }
 
+            auto nextTodo = algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries);
+
             {
                 auto lck = lock_for();
-                push_todo(algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries), algo);
+                push_todo(nextTodo, algo);
             }
         }
     }
