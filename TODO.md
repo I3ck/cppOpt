@@ -16,3 +16,4 @@
 - range based for loops
 - const& where possible especially T values
 - move in constructors
+- std::function wrapper helpers which add logging etc.

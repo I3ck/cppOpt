@@ -52,7 +52,7 @@ double time_sa_1()
         coolingFactor,
         startChance));
 
-    coordinator.run_optimisations();
+    coordinator.run_optimisation();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
@@ -89,7 +89,7 @@ double time_sa_2()
         coolingFactor,
         startChance));
 
-    coordinator.run_optimisations();
+    coordinator.run_optimisation();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
@@ -126,7 +126,7 @@ double time_sa_3()
         coolingFactor,
         startChance));
 
-    coordinator.run_optimisations();
+    coordinator.run_optimisation();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
@@ -163,7 +163,7 @@ double time_sa_4()
         coolingFactor,
         startChance));
 
-    coordinator.run_optimisations();
+    coordinator.run_optimisation();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }

@@ -20,10 +20,6 @@
 #include <queue>
 #include <limits>
 #include <thread>
-#include <chrono>
-#include <cmath>
-#include <fstream>
-#include <functional>
 #include <memory>
 #include <optional>
 
@@ -34,27 +30,18 @@
 #include "OptBoundaries.h"
 #include "IOptAlgorithm.h"
 
-#ifdef DEBUG
-    #include <iostream>
-#endif
-
-
 namespace cppOpt
 {
 
 using namespace std;
 
-template <typename T>
-using calc_t = function<void(OptCalculation<T>&)>; ///@todo own file?
-
 using lock = lock_guard<recursive_mutex>;
 
 template <typename T, bool isMultiThreaded = true>
-class OptCoordinator
+class OptCoordinator final
 {
     using self = OptCoordinator<T, isMultiThreaded>;
 
-private:
     recursive_mutex
         m;
 
@@ -73,21 +60,17 @@ private:
     T
         abortValue{0};
 
-    ///@todo logging can be done by simply passing a wrapping lambda (write helper for this?)
     const calc_t<T>
         calcFunction;
 
     const OptTarget
         optTarget;
 
-    T
+    const T
         targetValue;
 
-protected: ///@todo these must be stored per-algorithm
     map<IOptAlgorithm<T>*, std::vector<OptCalculation<T>>>
         previousCalculations;
-
-
 
     map<IOptAlgorithm<T>*, OptCalculation<T>>
         bestCalculations;
@@ -115,8 +98,6 @@ public:
         optBoundaries(move(optBoundaries))
     {}
 
-    ///@todo needs method to add child (unique_ptr &&)
-
 //------------------------------------------------------------------------------
 
     void add_child(unique_ptr<IOptAlgorithm<T>> child)
@@ -126,14 +107,13 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void run_optimisations(unsigned int maxThreads = 1) ///@todo drop the s?
+    void run_optimisation(unsigned int maxThreads = 1)
     {
-        run_optimisations(maxThreads, time(NULL));
+        run_optimisation(maxThreads, time(NULL));
     }
 
-    void run_optimisations(unsigned int maxThreads, unsigned int randomSeed)
+    void run_optimisation(unsigned int maxThreads, unsigned int randomSeed)
     {
-        ///@todo call reset?
         srand(randomSeed);
 
         //get the first to-calculate value of every optimiser
@@ -177,7 +157,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void enable_early_abort(const T abortVal)
+    void enable_early_abort(T const& abortVal)
     {
         abortEarly = true;
         abortValue = abortVal;
@@ -194,7 +174,7 @@ public:
 //------------------------------------------------------------------------------
 
     //targetValue won't be used when maximizing or minimizing
-    OptCalculation<T> get_best_calculation(OptTarget optTarget, T targetValue) ///@todo rename to of all, drop params
+    OptCalculation<T> get_best_calculation(OptTarget const& optTarget, T const& targetValue) ///@todo rename to of all, drop params
     {
         auto lck = lock_for();
         OptCalculation<T> out;
@@ -213,17 +193,9 @@ public:
 
 //------------------------------------------------------------------------------
 
-    unsigned int number_previous_calculations() const
-    {
-        return previousCalculations.size();
-    }
-
-//------------------------------------------------------------------------------
-
-
-protected:
+private:
     //targetValue won't be used when maximizing or minimizing
-    static bool result_better(const OptCalculation<T> &result, const OptCalculation<T> &other, OptTarget optTarget, T targetValue) ///@todo consider implementing this in OptCalculation
+    static bool result_better(OptCalculation<T> const& result, OptCalculation<T> const& other, OptTarget const& optTarget, T const& targetValue) ///@todo consider implementing this in OptCalculation
     {
         switch(optTarget)
         {
@@ -245,7 +217,7 @@ protected:
     }
 //------------------------------------------------------------------------------
 
-    void add_finished_calculation(IOptAlgorithm<T>* algo, OptCalculation<T> optCalculation) ///@todo does too much?
+    void add_finished_calculation(IOptAlgorithm<T>* algo, OptCalculation<T> const& optCalculation) ///@todo does too much?
     {
         previousCalculations[algo].push_back(optCalculation);
 
@@ -260,7 +232,7 @@ protected:
 
 //------------------------------------------------------------------------------
 
-    unsigned int index_closest_calculation(const vector< OptCalculation<T> > &optCalculations, unsigned int indexThis) const ///@todo could be moved to some helper, also should be easy to simplify heavily
+    unsigned int index_closest_calculation(vector<OptCalculation<T>> const& optCalculations, unsigned int indexThis) const ///@todo could be moved to some helper, also should be easy to simplify heavily
     {
         T closestDistance;
         unsigned int indexClosest(0);
@@ -293,8 +265,7 @@ protected:
 
 //------------------------------------------------------------------------------
 
-private:
-    inline auto lock_for() {
+    inline optional<lock> lock_for() {
         if constexpr (isMultiThreaded) {
             return make_optional<lock>(m);
         } else

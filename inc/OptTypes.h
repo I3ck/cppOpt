@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015 Martin Buck
+    Copyright (c) 2017 Martin Buck
     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
     to deal in the Software without restriction, including without limitation the rights to
     use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
@@ -11,19 +11,19 @@
     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CPPOPT_H
-#define CPPOPT_H
+#ifndef OPTTYPES_H
+#define OPTTYPES_H
 
-#include "config.h"
-#include "OptTypes.h"
-#include "OptTarget.h"
-#include "OptCoordinator.h"
-#include "OptBoundary.h"
-#include "OptBoundaries.h"
+#include <functional>
+
 #include "OptCalculation.h"
-#include "OptSimulatedAnnealing.h"
-//#include "OptThresholdAccepting.h"
-//#include "OptGreatDeluge.h"
-//#include "OptEvolutionary.h"
 
-#endif // CPPOPT_H
+namespace cppOpt
+{
+    using namespace std;
+
+    template <typename T>
+    using calc_t = function<void(OptCalculation<T>&)>;
+}
+
+#endif // OPTTYPES_H
