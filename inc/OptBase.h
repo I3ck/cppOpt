@@ -339,7 +339,7 @@ private:
             }
 
             //only add the next one if there still are more
-            push_todo(algo->get_next_calculation(std::vector<OptCalculation<T>>(), nullptr, optBoundaries), algo);
+            push_todo(algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries), algo);
         }
     }
 

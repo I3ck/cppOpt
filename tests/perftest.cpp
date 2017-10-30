@@ -25,8 +25,7 @@ using namespace cppOpt;
 #define DELTA 0.01
 
 auto toOptimize = [](OptCalculation<double>& optCalculation) {
-    optCalculation.result = pow(optCalculation.get_parameter("X"),2);// + pow(optCalculation.get_parameter("Y"),2) + 14.876;
-    cout << "result: " << optCalculation.result << "\n";
+    optCalculation.result = pow(optCalculation.get_parameter("X"),2) + pow(optCalculation.get_parameter("Y"),2) + 14.876;
 };
 
 double time_sa_1()
