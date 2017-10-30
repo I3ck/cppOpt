@@ -41,7 +41,7 @@ double time_sa_1()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptCoordinator<double> coordinator(
+    OptCoordinator<double, false> coordinator(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -73,7 +73,7 @@ double time_sa_2()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptCoordinator<double> coordinator(
+    OptCoordinator<double, true> coordinator(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -113,7 +113,7 @@ double time_sa_3()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptCoordinator<double> coordinator(
+    OptCoordinator<double, false> coordinator(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -153,7 +153,7 @@ double time_sa_4()
     double startChance = 0.25;
     OptTarget optTarget = OptTarget::MINIMIZE;
 
-    OptCoordinator<double> coordinator(
+    OptCoordinator<double, true> coordinator(
         optBoundaries,
         maxCalculations,
         toOptimize,
@@ -195,6 +195,6 @@ int main()
     cout << "time_sa_1() :\t " << n_times(times, time_sa_1) << endl;
     cout << "time_sa_2() :\t " << n_times(times, time_sa_2) << endl;
     cout << "time_sa_3() :\t " << n_times(times, time_sa_3) << endl;
-    cout << "time_sa_4() :\t " << n_times(times, time_sa_4) << endl; //currently causes crash, but only if test 2 ran before
+    cout << "time_sa_4() :\t " << n_times(times, time_sa_4) << endl;
     return 0;
 }
