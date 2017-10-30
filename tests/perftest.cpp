@@ -54,9 +54,6 @@ double time_sa_1()
 
     coordinator.run_optimisations();
 
-    //OptBase<double, false>::run_optimisations();
-    //OptBase<double, false>::clear_results();
-
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
 
@@ -93,9 +90,6 @@ double time_sa_2()
         startChance));
 
     coordinator.run_optimisations();
-
-    //OptBase<double, true>::run_optimisations();
-    //OptBase<double, true>::clear_results();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
@@ -134,9 +128,6 @@ double time_sa_3()
 
     coordinator.run_optimisations();
 
-    //OptBase<double, false>::run_optimisations();
-    //OptBase<double, false>::clear_results();
-
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
 
@@ -173,9 +164,6 @@ double time_sa_4()
         startChance));
 
     coordinator.run_optimisations();
-
-    //OptBase<double, true>::run_optimisations(3);
-    //OptBase<double, true>::clear_results();
 
     return ( clock() - start ) / (double) CLOCKS_PER_SEC;
 }
