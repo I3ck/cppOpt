@@ -107,7 +107,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void run_optimisation(unsigned int maxThreads = 1)
+    void run_optimisation(unsigned int maxThreads)
     {
         run_optimisation(maxThreads, time(NULL));
     }

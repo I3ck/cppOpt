@@ -53,7 +53,7 @@ public:
 
         OptCalculation<T> referenceValue, newValue;
 
-        if(super::random_factor() < chance) ///@todo should be done in caller? (or in base algorithm)
+        if(super::random_factor() < chance)
             referenceValue = previous.back();
         else
             referenceValue = *best;
