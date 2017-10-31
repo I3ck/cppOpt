@@ -149,7 +149,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation<T> get_best_calculation(OptTarget const& optTarget, T const& targetValue)
+    OptCalculation<T> get_best_calculation()
     {
         OptCalculation<T> out; ///@todo bad value instead (or fail?)
 
@@ -159,7 +159,7 @@ public:
         out = finishedCalculations[0].first;
 
         for(const auto &finishedCalculation : finishedCalculations)
-            if(result_better(finishedCalculation.first, out, optTarget, targetValue))
+            if(OptHelper<T>::result_better(finishedCalculation.first, out, optTarget, targetValue))
                 out = finishedCalculation.first;
 
         return out;
