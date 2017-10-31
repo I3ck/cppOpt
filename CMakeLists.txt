@@ -18,12 +18,12 @@ aux_source_directory(
         SRC_LIST
 )
 
-#[[
 
 add_executable(
         example_simulated_annealing_x_square
         examples/example_simulated_annealing_x_square.cpp
 )
+#[[
 
 add_executable(
         example_simulated_annealing_x_square_threaded

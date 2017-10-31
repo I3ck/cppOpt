@@ -17,3 +17,4 @@
 - const& where possible especially T values
 - move in constructors
 - std::function wrapper helpers which add logging etc.
+- optBoundaries now per controller instead of per algorithm?
