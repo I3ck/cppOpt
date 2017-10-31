@@ -14,16 +14,14 @@
 #ifndef OPTSIMULATEDANNEALING_H
 #define OPTSIMULATEDANNEALING_H
 
-#include "OptAlgorithmBase.h"
+#include "IOptAlgorithm.h"
 
 namespace cppOpt
 {
 
 template <typename T>
-class OptSimulatedAnnealing final : public OptAlgorithmBase<T> ///@todo rename to algorithm
+class OptSimulatedAnnealing final : public IOptAlgorithm<T>
 {
-    using super = OptAlgorithmBase<T>;
-
     const T
         coolingFactor;
 
@@ -47,9 +45,8 @@ public:
         OptCalculation<T>         const* best,
         OptBoundaries<T>          const& boundaries) final
     {
-
         if(previous.empty() || !best)
-            return super::random_calculation(boundaries);
+            return OptHelper<T>::random_calculation(boundaries);
 
         OptCalculation<T> referenceValue, newValue;
 
@@ -63,11 +60,11 @@ public:
             newValue = OptCalculation<T>();
             for(auto const& boundary : boundaries)
             {
-                T change = super::calculate_random_change(boundary.second, temperature);
+                T change = OptHelper<T>::calculate_random_change(boundary.second, temperature);
 
                 newValue.add_parameter(boundary.first, referenceValue.get_parameter(boundary.first) + change);
             }
-            if(super::valid(newValue, boundaries))
+            if(OptHelper<T>::valid(newValue, boundaries))
                 break;
         }
 
