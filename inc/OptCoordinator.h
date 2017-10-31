@@ -43,7 +43,8 @@ class OptCoordinator final
     using self = OptCoordinator<T, isMultiThreaded>;
 
     mutex
-        m;
+        mTodo,
+        mFinished;
 
     queue< pair<OptCalculation<T>, IOptAlgorithm<T>*> >
         queueTodo;
@@ -70,10 +71,10 @@ class OptCoordinator final
         targetValue;
 
     map<IOptAlgorithm<T>*, std::vector<OptCalculation<T>>>
-        previousCalculations;
+        previousCalculations; ///@todo use vector with child indices?
 
     map<IOptAlgorithm<T>*, OptCalculation<T>>
-        bestCalculations;
+        bestCalculations; ///@todo use vector with child indices?
 
     const unsigned int
         maxCalculations; ///@todo can be dropped here / stored globally?
@@ -118,12 +119,10 @@ public:
 
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
+        for(const auto &child : children)
         {
-            for(const auto &child : children)
-            {
-                bestCalculations[child.get()] = random_calculation();
-                push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()], optBoundaries), child.get());
-            }
+            bestCalculations[child.get()] = random_calculation();
+            push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()], optBoundaries), child.get());
         }
 
         if constexpr (isMultiThreaded) {
@@ -222,7 +221,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    inline optional<lock> lock_for() {
+    inline optional<lock> lock_for(mutex& m) {
         if constexpr (isMultiThreaded) {
             return make_optional<lock>(m);
         } else
@@ -240,7 +239,7 @@ private:
         {
 
             {
-                auto lck = lock_for();
+                auto lck = lock_for(mTodo);
                 availableTodo = available_todo();
                 if(availableTodo)
                     todo = pop_todo();
@@ -254,7 +253,7 @@ private:
             calcFunction(optCalculation);
 
             {
-                auto lck = lock_for();
+                auto lck = lock_for(mFinished);
                 finishedCalculations.push_back({optCalculation, this});
             }
 
@@ -271,14 +270,14 @@ private:
                 OptCalculation<T> calcEarly;
                 calcEarly.result = abortValue;
 
-                //if(result_better(optCalculation, calcEarly, pOptBase->optTarget , pOptBase->targetValue))
-                //    break;
+                if(result_better(optCalculation, calcEarly, optTarget, targetValue))
+                    break;
             }
 
             auto nextTodo = algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries);
 
             {
-                auto lck = lock_for();
+                auto lck = lock_for(mTodo);
                 push_todo(nextTodo, algo);
             }
         }
