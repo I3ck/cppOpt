@@ -22,6 +22,9 @@ namespace cppOpt
 template <typename T>
 class OptSimulatedAnnealing final : public IOptAlgorithm<T>
 {
+    OptBoundaries<T>
+        boundaries;
+        
     const T
         coolingFactor;
 
@@ -33,17 +36,18 @@ class OptSimulatedAnnealing final : public IOptAlgorithm<T>
 
 public:
     OptSimulatedAnnealing(
+        OptBoundaries<T> boundaries,
         T coolingFactor,
         T startChance) :
 
+        boundaries(move(boundaries)),
         coolingFactor(move(coolingFactor)),
         chance(move(startChance))
     {}
 
     OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const* best,
-        OptBoundaries<T>          const& boundaries) final
+        OptCalculation<T>         const* best) final
     {
         if(previous.empty() || !best)
             return OptHelper<T>::random_calculation(boundaries);
@@ -72,6 +76,13 @@ public:
         update_chance();
 
         return newValue;
+    }
+
+//------------------------------------------------------------------------------
+
+    OptBoundaries<T> const& get_boundaries() final
+    {
+        return boundaries;
     }
 
 //------------------------------------------------------------------------------

@@ -80,14 +80,10 @@ class OptCoordinator final
     const unsigned int
         maxCalculations; ///@todo can be dropped here / stored globally?
 
-    const OptBoundaries<T>
-        optBoundaries;
-
 //------------------------------------------------------------------------------
 
 public:
     OptCoordinator(
-        OptBoundaries<T> optBoundaries,
         unsigned int maxCalculations,
         calc_t<T> calcFunction,
         OptTarget optTarget,
@@ -96,8 +92,7 @@ public:
         calcFunction(move(calcFunction)),
         optTarget(move(optTarget)),
         targetValue(move(targetValue)),
-        maxCalculations(maxCalculations),
-        optBoundaries(move(optBoundaries))
+        maxCalculations(maxCalculations)
     {}
 
 //------------------------------------------------------------------------------
@@ -122,8 +117,8 @@ public:
         //and push it onto the todo queue
         for(const auto &child : children)
         {
-            bestCalculations[child.get()] = random_calculation();
-            push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()], optBoundaries), child.get());
+            bestCalculations[child.get()] = random_calculation(child->get_boundaries());
+            push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()]), child.get());
         }
 
         if constexpr (isMultiThreaded) {
@@ -254,7 +249,7 @@ private:
             }
 
             todo = make_pair(
-                algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries),
+                algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo])),
                 algo);
         }
     }
@@ -308,7 +303,7 @@ private:
         }
     }
 
-    OptCalculation<T> random_calculation() const
+    OptCalculation<T> random_calculation(OptBoundaries<T> const& optBoundaries) const
     {
         OptCalculation<T> optCalculation;
         optCalculation.result = bad_value();

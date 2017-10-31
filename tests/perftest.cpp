@@ -42,13 +42,13 @@ double time_sa_1()
     OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptCoordinator<double, false> coordinator(
-        optBoundaries,
         maxCalculations,
         toOptimize,
         optTarget,
         0);
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
@@ -71,21 +71,23 @@ double time_sa_2()
     OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptCoordinator<double, true> coordinator(
-        optBoundaries,
         maxCalculations,
         toOptimize,
         optTarget,
         0);
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
@@ -108,21 +110,23 @@ double time_sa_3()
     OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptCoordinator<double, false> coordinator(
-        optBoundaries,
         maxCalculations,
         toOptimize,
         optTarget,
         0);
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
@@ -145,21 +149,23 @@ double time_sa_4()
     OptTarget optTarget = OptTarget::MINIMIZE;
 
     OptCoordinator<double, true> coordinator(
-        optBoundaries,
         maxCalculations,
         toOptimize,
         optTarget,
         0);
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 

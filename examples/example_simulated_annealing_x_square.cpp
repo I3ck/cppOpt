@@ -53,7 +53,6 @@ int main()
 
     //define your coordinator
     OptCoordinator<double, false> coordinator(
-        optBoundaries,
         maxCalculations,
         toOptimize,
         optTarget,
@@ -61,6 +60,7 @@ int main()
 
     //add simulated annealing as child
     coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
         coolingFactor,
         startChance));
 
