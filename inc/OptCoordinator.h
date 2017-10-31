@@ -232,23 +232,22 @@ private:
 
     void threaded_work() ///@todo rename
     {
-        bool availableTodo{false};
-        pair <OptCalculation<T>, IOptAlgorithm<T>*> todo;
+        optional<pair <OptCalculation<T>, IOptAlgorithm<T>*>> todo{nullopt};
 
         while(true)
         {
 
+            if (!todo)
             {
                 auto lck = lock_for(mTodo);
-                availableTodo = available_todo();
-                if(availableTodo)
+                if(available_todo())
                     todo = pop_todo();
             }
 
-            if(!availableTodo)
+            if(!todo)
                 break;
 
-            auto [optCalculation, algo] = todo;
+            auto [optCalculation, algo] = todo.value();
 
             calcFunction(optCalculation);
 
@@ -274,12 +273,9 @@ private:
                     break;
             }
 
-            auto nextTodo = algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries);
-
-            {
-                auto lck = lock_for(mTodo);
-                push_todo(nextTodo, algo);
-            }
+            todo = make_pair(
+                algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo]), optBoundaries),
+                algo);
         }
     }
 
