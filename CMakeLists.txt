@@ -23,13 +23,13 @@ add_executable(
         example_simulated_annealing_x_square
         examples/example_simulated_annealing_x_square.cpp
 )
-#[[
 
 add_executable(
         example_simulated_annealing_x_square_threaded
         examples/example_simulated_annealing_x_square_threaded.cpp
 )
 
+#[[
 add_executable(
         example_simulated_annealing_rastrigrin_one_dimension
         examples/example_simulated_annealing_rastrigrin_one_dimension.cpp
