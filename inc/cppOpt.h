@@ -16,6 +16,7 @@
 
 #include "config.h"
 #include "OptTypes.h"
+#include "OptHelper.h"
 #include "OptTarget.h"
 #include "OptCoordinator.h"
 #include "OptBoundary.h"

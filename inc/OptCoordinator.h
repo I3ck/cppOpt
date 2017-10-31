@@ -25,6 +25,7 @@
 
 #include "config.h"
 #include "OptTarget.h"
+#include "OptHelper.h"
 #include "OptCalculation.h"
 #include "OptBoundary.h"
 #include "OptBoundaries.h"
@@ -237,7 +238,7 @@ private:
 
             previousCalculations[algo].push_back(optCalculation);
 
-            if(result_better(optCalculation, bestCalculations[algo], optTarget, targetValue))
+            if(OptHelper<T>::result_better(optCalculation, bestCalculations[algo], optTarget, targetValue))
                 bestCalculations[algo] = optCalculation;
 
             if(previousCalculations[algo].size() >= maxCalculations)
@@ -248,7 +249,7 @@ private:
                 OptCalculation<T> calcEarly;
                 calcEarly.result = abortValue;
 
-                if(result_better(optCalculation, calcEarly, optTarget, targetValue))
+                if(OptHelper<T>::result_better(optCalculation, calcEarly, optTarget, targetValue))
                     break;
             }
 
@@ -313,39 +314,10 @@ private:
         optCalculation.result = bad_value();
         for(auto const& boundary : optBoundaries)
         {
-            T newValue = boundary.second.min + random_factor() * boundary.second.range();
+            T newValue = boundary.second.min + OptHelper<T>::random_factor() * boundary.second.range();
             optCalculation.add_parameter(boundary.second.name, newValue);
         }
         return optCalculation;
-    }
-
-//------------------------------------------------------------------------------
-
-    //targetValue won't be used when maximizing or minimizing
-    static bool result_better(OptCalculation<T> const& result, OptCalculation<T> const& other, OptTarget const& optTarget, T const& targetValue) ///@todo consider implementing this in OptCalculation
-    {
-        switch(optTarget)
-        {
-            case OptTarget::MINIMIZE:
-                return result.result < other.result;
-
-            case OptTarget::MAXIMIZE:
-                return result.result > other.result;
-
-            case OptTarget::APPROACH:
-                return fabs(targetValue - result.result) < fabs(targetValue - other.result);
-
-            case OptTarget::DIVERGE:
-                return fabs(targetValue - result.result) > fabs(targetValue - other.result);
-
-            default: //MINIMIZE
-                return result.result < other.result;
-        }
-    }
-
-    static T random_factor() ///@todo all related functions now defined twice, move to helper
-    {
-        return rand()/(T)(RAND_MAX);
     }
 
 //------------------------------------------------------------------------------

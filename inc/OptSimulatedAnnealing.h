@@ -53,7 +53,7 @@ public:
 
         OptCalculation<T> referenceValue, newValue;
 
-        if(super::random_factor() < chance)
+        if(OptHelper<T>::random_factor() < chance)
             referenceValue = previous.back();
         else
             referenceValue = *best;

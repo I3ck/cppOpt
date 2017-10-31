@@ -15,6 +15,7 @@
 #define OPTALGORITHMBASE_H
 
 #include "IOptAlgorithm.h"
+#include "OptHelper.h"
 
 namespace cppOpt
 {
@@ -30,10 +31,6 @@ public:
         OptCalculation<T>         const* best,
         OptBoundaries<T>          const& boundaries) = 0; ///@todo rename?
 protected:
-    static T random_factor()
-    {
-        return rand()/(T)(RAND_MAX);
-    }
 
 //------------------------------------------------------------------------------
 
@@ -42,7 +39,7 @@ protected:
         OptCalculation<T> optCalculation;
         for(auto const& boundary : boundaries)
         {
-            T newValue = boundary.second.min + random_factor() * boundary.second.range();
+            T newValue = boundary.second.min + OptHelper<T>::random_factor() * boundary.second.range();
             optCalculation.add_parameter(boundary.second.name, newValue);
         }
         return optCalculation;
@@ -55,7 +52,7 @@ protected:
         T change, maxChange;
 
         maxChange = (T)0.5 * boundary.range() * temperature;
-        change = random_factor() * maxChange;
+        change = OptHelper<T>::random_factor() * maxChange;
 
         if(rand() % 2)
             change *= -1.0;
