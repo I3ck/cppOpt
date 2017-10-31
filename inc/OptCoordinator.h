@@ -50,7 +50,7 @@ class OptCoordinator final
     queue< pair<OptCalculation<T>, IOptAlgorithm<T>*> >
         queueTodo;
 
-    vector< pair<OptCalculation<T>, self*> >
+    vector<OptCalculation<T>>
         finishedCalculations;
 
     vector<unique_ptr<IOptAlgorithm<T>>>
@@ -151,11 +151,11 @@ public:
         if(finishedCalculations.size() == 0)
             return out;
 
-        out = finishedCalculations[0].first;
+        out = finishedCalculations[0];
 
         for(const auto &finishedCalculation : finishedCalculations)
-            if(OptHelper<T>::result_better(finishedCalculation.first, out, optTarget, targetValue))
-                out = finishedCalculation.first;
+            if(OptHelper<T>::result_better(finishedCalculation, out, optTarget, targetValue))
+                out = finishedCalculation;
 
         return out;
     }
@@ -228,7 +228,7 @@ private:
 
             {
                 auto lck = lock_for(mFinished);
-                finishedCalculations.push_back({optCalculation, this});
+                finishedCalculations.push_back(optCalculation);
             }
 
             previousCalculations[algo].push_back(optCalculation);
