@@ -62,25 +62,24 @@ int main()
     //the chance in the beginning to follow bad solutions
     double startChance = 0.25;
 
-    //create your optimiser
-    //using simulated annealing
-    OptSimulatedAnnealing<double> opt(optBoundaries,
-                                      maxCalculations,
-                                      toOptimize,
-                                      optTarget,
-                                      0.0, //only required if approaching / diverging
-                                      coolingFactor,
-                                      startChance);
+    //define your coordinator
+    OptCoordinator<double, false> coordinator(
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    //enable logging
-    //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example_simulated_annealing_rastrigrin_two_dimensions.log", optBoundaries);
+    //add simulated annealing as child
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundaries,
+        coolingFactor,
+        startChance));
 
     //let's go
-    OptBase<double>::run_optimisations();
+    coordinator.run_optimisation(1);
 
     //print result
-    OptCalculation<double> best = opt.get_best_calculation();
+    OptCalculation<double> best = coordinator.get_best_calculation();
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 
