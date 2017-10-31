@@ -130,26 +130,12 @@ public:
             threads.reserve(maxThreads);
 
             for(unsigned int i=0; i<maxThreads; ++i)
-                threads.emplace_back([this](){return threaded_work();});
+                threads.emplace_back([this](){return do_work();});
 
             for(auto &thread :threads)
                 thread.join();
         } else
-            threaded_work(); ///@todo rename function
-    }
-
-//------------------------------------------------------------------------------
-
-    void clear_results()
-    {
-        finishedCalculations.clear();
-    }
-
-//------------------------------------------------------------------------------
-
-    unsigned int number_optimisers() ///@todo rename
-    {
-        return children.size();
+            do_work(); ///@todo rename function
     }
 
 //------------------------------------------------------------------------------
@@ -162,14 +148,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    unsigned int number_finished_calculations()
-    {
-        return finishedCalculations.size();
-    }
-
-//------------------------------------------------------------------------------
-
-    OptCalculation<T> get_best_calculation(OptTarget const& optTarget, T const& targetValue) ///@todo rename to of all, drop params
+    OptCalculation<T> get_best_calculation(OptTarget const& optTarget, T const& targetValue)
     {
         OptCalculation<T> out; ///@todo bad value instead (or fail?)
 
@@ -230,7 +209,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    void threaded_work() ///@todo rename
+    void do_work()
     {
         optional<pair <OptCalculation<T>, IOptAlgorithm<T>*>> todo{nullopt};
 
