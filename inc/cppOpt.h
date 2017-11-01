@@ -23,7 +23,7 @@
 #include "OptBoundaries.h"
 #include "OptCalculation.h"
 #include "OptSimulatedAnnealing.h"
-//#include "OptThresholdAccepting.h"
+#include "OptThresholdAccepting.h"
 #include "OptGreatDeluge.h"
 #include "OptEvolutionary.h"
 

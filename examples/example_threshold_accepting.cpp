@@ -59,27 +59,27 @@ int main()
     //http://comisef.wikidot.com/concept:thresholdaccepting
     double thresholdFactor = 0.92;
 
+    //define your coordinator
+    OptCoordinator<double, false> coordinator(
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    //create your optimiser
-    //using threshold acceptance
-    OptThresholdAccepting<double> opt(optBoundaries,
-                                      maxCalculations,
-                                      toOptimize,
-                                      optTarget,
-                                      0.0, //only required if approaching / diverging
-                                      coolingFactor,
-                                      threshold,
-                                      thresholdFactor);
-
-    //enable logging
-    //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example_threshold_accepting.log", optBoundaries);
+    //add threshold accepting as child
+    coordinator.add_child(make_unique<OptThresholdAccepting<double>>(
+        optBoundaries,
+        optTarget,
+        0,
+        coolingFactor,
+        threshold,
+        thresholdFactor));
 
     //let's go
-    OptBase<double>::run_optimisations();
+    coordinator.run_optimisation(1);
 
     //print result
-    OptCalculation<double> best = opt.get_best_calculation();
+    OptCalculation<double> best = coordinator.get_best_calculation();
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 

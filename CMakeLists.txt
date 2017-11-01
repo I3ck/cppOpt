@@ -49,12 +49,12 @@ add_executable(
         examples/example_evolutionary_x_square.cpp
 )
 
-#[[
-
 add_executable(
         example_threshold_accepting
         examples/example_threshold_accepting.cpp
 )
+
+#[[
 
 add_executable(
         example_boundary_split
