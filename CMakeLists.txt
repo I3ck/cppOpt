@@ -54,13 +54,13 @@ add_executable(
         examples/example_threshold_accepting.cpp
 )
 
-#[[
 
 add_executable(
         example_boundary_split
         examples/example_boundary_split.cpp
 )
 
+#[[
 add_executable(
         test_1
         tests/test_1.cpp

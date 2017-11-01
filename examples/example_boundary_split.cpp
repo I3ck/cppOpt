@@ -54,50 +54,39 @@ int main()
     //the chance in the beginning to follow bad solutions
     double startChance = 0.25;
 
-    //create your optimiser
-    //using simulated annealing
-    //now creating 4 to run all at once
-    OptSimulatedAnnealing<double> opt1(optBoundariesSplit[0],
-                                       maxCalculations / 4,
-                                       toOptimize,
-                                       optTarget,
-                                       0.0, //only required if approaching / diverging
-                                       coolingFactor,
-                                       startChance);
+    //define your coordinator
+    OptCoordinator<double, true> coordinator(
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    OptSimulatedAnnealing<double> opt2(optBoundariesSplit[1],
-                                       maxCalculations / 4,
-                                       toOptimize,
-                                       optTarget,
-                                       0.0, //only required if approaching / diverging
-                                       coolingFactor,
-                                       startChance);
+    //add 4 different simulated annealing children
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundariesSplit[0],
+        coolingFactor,
+        startChance));
 
-    OptSimulatedAnnealing<double> opt3(optBoundariesSplit[2],
-                                       maxCalculations / 4,
-                                       toOptimize,
-                                       optTarget,
-                                       0.0, //only required if approaching / diverging
-                                       coolingFactor,
-                                       startChance);
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundariesSplit[1],
+        coolingFactor,
+        startChance));
 
-    OptSimulatedAnnealing<double> opt4(optBoundariesSplit[3],
-                                       maxCalculations / 4,
-                                       toOptimize,
-                                       optTarget,
-                                       0.0, //only required if approaching / diverging
-                                       coolingFactor,
-                                       startChance);
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundariesSplit[2],
+        coolingFactor,
+        startChance));
 
-    //enable logging
-    //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example_boundary_split.log", optBoundariesSplit[0]);
+    coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(
+        optBoundariesSplit[3],
+        coolingFactor,
+        startChance));
 
     //let's go
-    OptBase<double>::run_optimisations();
+    coordinator.run_optimisation(4);
 
     //print result
-    OptCalculation<double> best = OptBase<double>::get_best_calculation(optTarget, 0.0);
+    OptCalculation<double> best = coordinator.get_best_calculation();
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 
