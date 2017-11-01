@@ -66,7 +66,7 @@ int main()
         optTarget,
         0);
 
-    //add grat deluge as child
+    //add great deluge as child
     coordinator.add_child(make_unique<OptGreatDeluge<double>>(
         optBoundaries,
         optTarget,
