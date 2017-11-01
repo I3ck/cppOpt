@@ -51,7 +51,7 @@ int main()
     //how many individuals should be spawned in the beginning
     //use an even, positiv number
     //https://en.wikipedia.org/wiki/Evolutionary_algorithm
-    unsigned int nIndividiualsStart = 50;
+    unsigned int nIndividualsStart = 50;
 
     //how many individuals shall be selected each generation
     //this should also be an even number
@@ -81,7 +81,7 @@ int main()
         optTarget,
         0,
         coolingFactor,
-        nIndividiualsStart,
+        nIndividualsStart,
         nIndividualsSelection,
         nIndividualsOffspring,
         mutation));

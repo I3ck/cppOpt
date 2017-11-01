@@ -20,5 +20,4 @@
 - check for unnecessary includes (especially examples)
 - check public/private correct
 - enable overload for coordinator without multithreading which simply requires run_optimisation without number threads
-- individiuals typo
 - fix test
