@@ -20,7 +20,7 @@ namespace cppOpt
 using namespace std;
 
 template <typename T>
-class IOptAlgorithm ///@todo own file
+class IOptAlgorithm
 {
 public:
     virtual OptCalculation<T> get_next_calculation(

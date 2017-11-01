@@ -31,7 +31,7 @@ auto toOptimize = [](OptCalculation<double>& optCalculation) {
 TEST_CASE("Boundary") {
 
     SECTION("Constructor") {
-        OptBoundary<double> optBoundary(0.0, 1.0, "test");
+        OptBoundary<double> optBoundary{0.0, 1.0, "test"};
 
         REQUIRE(optBoundary.min == 0.0);
         REQUIRE(optBoundary.max == 1.0);
@@ -39,11 +39,11 @@ TEST_CASE("Boundary") {
     }
 
     SECTION("Range") {
-        OptBoundary<double> optBoundary(0.0, 1.0, "test");
+        OptBoundary<double> optBoundary{0.0, 1.0, "test"};
 
         REQUIRE(optBoundary.range() == 1.0);
 
-        OptBoundary<double> optBoundary2(1.0, 10.0, "test");
+        OptBoundary<double> optBoundary2{1.0, 10.0, "test"};
         REQUIRE(optBoundary2.range() == 9.0);
     }
 }
@@ -62,7 +62,7 @@ TEST_CASE("Boundaries") {
         optBoundaries.add_boundary(1.0, 3.0, "test");
         REQUIRE(optBoundaries.size() == 1);
 
-        optBoundaries.add_boundary(OptBoundary<double>(1.0, 3.0, "test2"));
+        optBoundaries.add_boundary(OptBoundary<double>{1.0, 3.0, "test2"});
         REQUIRE(optBoundaries.size() == 2);
     }
 
@@ -632,7 +632,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
             optBoundaries4,
             coolingFactor,
             startChance));
-            
+
         coordinator.run_optimisation(1);
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);

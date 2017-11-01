@@ -36,7 +36,7 @@ private:
 public:
     void add_boundary(T min, T max, const string &name)
     {
-        OptBoundary<T> temp(min, max, name);
+        OptBoundary<T> temp{min, max, name};
         add_boundary(temp);
     }
 
@@ -110,7 +110,7 @@ public:
                     newMin = boundary.second.min + i * newRange;
                     newMax = boundary.second.min + (i+1) * newRange;
 
-                    OptBoundary<T> newBoundary(newMin, newMax, name);
+                    OptBoundary<T> newBoundary{newMin, newMax, name};
 
                     newBoundaries.add_boundary(newBoundary);
                 }
@@ -121,7 +121,6 @@ public:
         }
 
         return out;
-
     }
 
 //------------------------------------------------------------------------------
