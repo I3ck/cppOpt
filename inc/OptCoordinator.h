@@ -177,18 +177,20 @@ private:
     {
         optional<pair <OptCalculation<T>, IOptAlgorithm<T>*>> todo{nullopt};
 
+        const auto nChildren = children.size();
+        size_t calculationsChild{0};
+
         while(true)
         {
-
-            if (!todo)
+            if (!todo || calculationsChild > maxCalculations / nChildren)
             {
+                calculationsChild = 0;
                 auto lck = lock_for(mTodo);
                 if(available_todo())
                     todo = pop_todo();
+                else
+                    break;
             }
-
-            if(!todo)
-                break;
 
             auto [optCalculation, algo] = todo.value();
 
@@ -219,6 +221,8 @@ private:
             todo = make_pair(
                 algo->get_next_calculation(previousCalculations[algo], &(bestCalculations[algo])),
                 algo);
+
+            ++calculationsChild;
         }
     }
 

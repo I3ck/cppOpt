@@ -600,7 +600,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
     optBoundaries3.add_boundary(-0.5, 0.5, "X");
     optBoundaries4.add_boundary(5.0, 50.0, "X");
 
-    unsigned int maxCalculations = 300;
+    unsigned int maxCalculations = 3000;
     double coolingFactor = 0.95;
     double startChance = 0.25;
 
@@ -632,7 +632,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
             optBoundaries4,
             coolingFactor,
             startChance));
-
+            
         coordinator.run_optimisation(1);
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
