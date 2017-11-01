@@ -60,6 +60,11 @@ add_executable(
 )
 
 add_executable(
+        example_simulated_annealing_x_square_logging
+        examples/example_simulated_annealing_x_square_logging.cpp
+)
+
+add_executable(
         test_1
         tests/test_1.cpp
 )
