@@ -68,28 +68,29 @@ int main()
     //https://en.wikipedia.org/wiki/Evolutionary_algorithm
     double mutation = 0.1;
 
-    //create your optimiser
-    //using the evolutionary algorithm
-    OptEvolutionary<double> opt(optBoundaries,
-                                maxCalculations,
-                                toOptimize,
-                                optTarget,
-                                0.0, //only required if approaching / diverging
-                                coolingFactor,
-                                nIndividiualsStart,
-                                nIndividualsSelection,
-                                nIndividualsOffspring,
-                                mutation);
+    //define your coordinator
+    OptCoordinator<double, false> coordinator(
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    //enable logging
-    //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example_evolutionary_x_square.log", optBoundaries);
+    //add evolutionary as child
+    coordinator.add_child(make_unique<OptEvolutionary<double>>(
+        optBoundaries,
+        optTarget,
+        0,
+        coolingFactor,
+        nIndividiualsStart,
+        nIndividualsSelection,
+        nIndividualsOffspring,
+        mutation));
 
     //let's go
-    OptBase<double>::run_optimisations();
+    coordinator.run_optimisation(1);
 
     //print result
-    OptCalculation<double> best = opt.get_best_calculation();
+    OptCalculation<double> best = coordinator.get_best_calculation();
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 

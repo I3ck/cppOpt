@@ -44,11 +44,12 @@ add_executable(
         examples/example_great_deluge_x_square.cpp
 )
 
-#[[
 add_executable(
         example_evolutionary_x_square
         examples/example_evolutionary_x_square.cpp
 )
+
+#[[
 
 add_executable(
         example_threshold_accepting

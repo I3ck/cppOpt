@@ -163,38 +163,6 @@ public:
 //------------------------------------------------------------------------------
 
 private:
-    unsigned int index_closest_calculation(vector<OptCalculation<T>> const& optCalculations, unsigned int indexThis) const ///@todo could be moved to some helper, also should be easy to simplify heavily
-    {
-        T closestDistance;
-        unsigned int indexClosest(0);
-        bool initialised(false);
-
-        for(unsigned int i = 0; i < optCalculations.size(); ++i)
-        {
-            if(i == indexThis)
-                continue;
-
-            if(!initialised)
-            {
-                closestDistance = optCalculations[i].distance_to(optCalculations[indexThis]);
-                indexClosest = i;
-                initialised = true;
-            }
-            else
-            {
-                T distance = optCalculations[i].distance_to(optCalculations[indexThis]);
-
-                if(distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    indexClosest = i;
-                }
-            }
-        }
-        return indexClosest;
-    }
-
-//------------------------------------------------------------------------------
 
     inline optional<lock> lock_for(mutex& m) {
         if constexpr (isMultiThreaded) {

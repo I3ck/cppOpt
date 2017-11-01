@@ -14,19 +14,22 @@
 #ifndef OPTEVOLUTIONARY_H
 #define OPTEVOLUTIONARY_H
 
-#include "OptBase.h"
+#include "IOptAlgorithm.h"
 
 namespace cppOpt
 {
 
-using namespace std;
-
-template <typename T, bool isMultiThreaded = true>
-class OptEvolutionary : public OptBase<T, isMultiThreaded>
+template <typename T>
+class OptEvolutionary final : public IOptAlgorithm<T>
 {
-private:
+    OptBoundaries<T>
+        boundaries;
 
-    typedef OptBase<T, isMultiThreaded> super;
+    const OptTarget
+        optTarget;
+
+    const T
+        targetValue;
 
     const T
         coolingFactor;
@@ -56,9 +59,7 @@ private:
 
 public:
     OptEvolutionary(
-        OptBoundaries<T> optBoundaries,
-        unsigned int maxCalculations,
-        calc_t<T> calcFunction,
+        OptBoundaries<T> boundaries,
         OptTarget optTarget,
         T targetValue,
         T coolingFactor,
@@ -67,7 +68,9 @@ public:
         unsigned int nIndividualsOffspring,
         T mutation) :
 
-        super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
+        boundaries(move(boundaries)),
+        optTarget(move(optTarget)),
+        targetValue(move(targetValue)),
         coolingFactor(move(coolingFactor)),
         nIndividualsStart(nIndividualsStart),
         nIndividualsSelection(nIndividualsSelection),
@@ -75,18 +78,18 @@ public:
         mutation(move(mutation))
     {}
 
-private:
-
 //------------------------------------------------------------------------------
 
-    OptCalculation<T> get_next_calculation()
+    OptCalculation<T> get_next_calculation(
+        vector<OptCalculation<T>> const& previous,
+        OptCalculation<T>         const* best) final
     {
-        OptCalculation<T> out;
-
-        if(super::previousCalculations.empty())
+        if(previous.empty() || !best)
             create_start_individuals();
         else
-            add_previous_to_sorted();
+            add_previous_to_sorted(previous);
+
+        OptCalculation<T> out;
 
         if(individualsStart.size() != 0)
         {
@@ -115,12 +118,21 @@ private:
 
 //------------------------------------------------------------------------------
 
-    void add_previous_to_sorted()
+    OptBoundaries<T> const& get_boundaries() final
     {
-        if(super::previousCalculations.size() > 0)
+        return boundaries;
+    }
+
+//------------------------------------------------------------------------------
+
+private:
+
+    void add_previous_to_sorted(vector<OptCalculation<T>> const& previous)
+    {
+        if(previous.size() > 0)
         {
-            T sortValue = calculate_sort_value(super::previousCalculations.back());
-            previousCalculationsSorted.emplace(sortValue, super::previousCalculations.back());
+            T sortValue = calculate_sort_value(previous.back());
+            previousCalculationsSorted.emplace(sortValue, previous.back());
         }
     }
 
@@ -128,11 +140,11 @@ private:
 
     void create_start_individuals()
     {
-        individualsStart.push_back(super::random_start_value());
+        individualsStart.push_back(OptHelper<T>::random_calculation(boundaries));
 
         for(unsigned int i = 1; i < nIndividualsStart; ++i)
         {
-            OptCalculation<T> optCalculation = super::random_calculation();
+            OptCalculation<T> optCalculation = OptHelper<T>::random_calculation(boundaries);
             individualsStart.push_back(optCalculation);
         }
     }
@@ -163,7 +175,7 @@ private:
 
         for(unsigned int i = 0; i < individualsSelected.size(); ++i)
         {
-            unsigned int indexClosest = super::index_closest_calculation(individualsSelected, i);
+            unsigned int indexClosest = index_closest_calculation(individualsSelected, i);
 
             if(usedIndexes.find(indexClosest) == usedIndexes.end())
             {
@@ -190,17 +202,17 @@ private:
             individualsBred.pop();
 
             OptCalculation<T> mutatedIndividual;
-            for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
+            for(auto const& boundary : boundaries)
             {
                 T change, maxChange;
 
-                maxChange = 0.5 * boundary->second.range() * mutation;
-                change = super::random_factor() * maxChange;
+                maxChange = 0.5 * boundary.second.range() * mutation;
+                change = OptHelper<T>::random_factor() * maxChange;
 
                 if(rand() % 2)
                     change *= -1.0;
 
-                mutatedIndividual.add_parameter(boundary->second.name, individual.get_parameter(boundary->second.name) + change);
+                mutatedIndividual.add_parameter(boundary.second.name, individual.get_parameter(boundary.second.name) + change);
 
             }
             individualsMutated.push(mutatedIndividual);
@@ -218,7 +230,7 @@ private:
 
     T calculate_sort_value(const OptCalculation<T> &optCalculation) const
     {
-        switch(super::optTarget)
+        switch(optTarget)
         {
             case OptTarget::MINIMIZE:
                 return optCalculation.result;
@@ -227,14 +239,47 @@ private:
                 return -optCalculation.result;
 
             case OptTarget::APPROACH:
-                return fabs(super::targetValue - optCalculation.result);
+                return fabs(targetValue - optCalculation.result);
 
             case OptTarget::DIVERGE:
-                return -fabs(super::targetValue - optCalculation.result);
+                return -fabs(targetValue - optCalculation.result);
 
             default: // MINIMIZE
                 return optCalculation.result;
         }
+    }
+
+//------------------------------------------------------------------------------
+
+    unsigned int index_closest_calculation(vector<OptCalculation<T>> const& optCalculations, unsigned int indexThis) const ///@todo could be moved to some helper, also should be easy to simplify heavily
+    {
+        T closestDistance;
+        unsigned int indexClosest(0);
+        bool initialised(false);
+
+        for(unsigned int i = 0; i < optCalculations.size(); ++i)
+        {
+            if(i == indexThis)
+                continue;
+
+            if(!initialised)
+            {
+                closestDistance = optCalculations[i].distance_to(optCalculations[indexThis]);
+                indexClosest = i;
+                initialised = true;
+            }
+            else
+            {
+                T distance = optCalculations[i].distance_to(optCalculations[indexThis]);
+
+                if(distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    indexClosest = i;
+                }
+            }
+        }
+        return indexClosest;
     }
 
 //------------------------------------------------------------------------------
