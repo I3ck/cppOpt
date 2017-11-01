@@ -24,7 +24,7 @@
 #include "OptCalculation.h"
 #include "OptSimulatedAnnealing.h"
 //#include "OptThresholdAccepting.h"
-//#include "OptGreatDeluge.h"
+#include "OptGreatDeluge.h"
 //#include "OptEvolutionary.h"
 
 #endif // CPPOPT_H

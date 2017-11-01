@@ -59,26 +59,27 @@ int main()
     //http://en.wikipedia.org/wiki/Great_Deluge_algorithm
     double rain = 0.15;
 
-    //create your optimiser
-    //using great deluge
-    OptGreatDeluge<double> opt(optBoundaries,
-                               maxCalculations,
-                               toOptimize,
-                               optTarget,
-                               0.0, //only required if approaching / diverging
-                               coolingFactor,
-                               waterLevel,
-                               rain);
+    //define your coordinator
+    OptCoordinator<double, false> coordinator(
+        maxCalculations,
+        toOptimize,
+        optTarget,
+        0);
 
-    //enable logging
-    //boundaries object required to know the parameters names for the header
-    OptBase<double>::enable_logging("example_great_deluge_x_square.log", optBoundaries);
+    //add grat deluge as child
+    coordinator.add_child(make_unique<OptGreatDeluge<double>>(
+        optBoundaries,
+        optTarget,
+        0,
+        coolingFactor,
+        waterLevel,
+        rain));
 
     //let's go
-    OptBase<double>::run_optimisations();
+    coordinator.run_optimisation(1);
 
     //print result
-    OptCalculation<double> best = opt.get_best_calculation();
+    OptCalculation<double> best = coordinator.get_best_calculation();
     cout << best.to_string_header() << endl;
     cout << best.to_string_values() << endl;
 

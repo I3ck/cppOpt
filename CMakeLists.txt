@@ -39,12 +39,12 @@ add_executable(
         examples/example_simulated_annealing_rastrigrin_two_dimensions.cpp
 )
 
-#[[
 add_executable(
         example_great_deluge_x_square
         examples/example_great_deluge_x_square.cpp
 )
 
+#[[
 add_executable(
         example_evolutionary_x_square
         examples/example_evolutionary_x_square.cpp

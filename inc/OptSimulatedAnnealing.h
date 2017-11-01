@@ -24,7 +24,7 @@ class OptSimulatedAnnealing final : public IOptAlgorithm<T>
 {
     OptBoundaries<T>
         boundaries;
-        
+
     const T
         coolingFactor;
 
@@ -44,6 +44,8 @@ public:
         coolingFactor(move(coolingFactor)),
         chance(move(startChance))
     {}
+        
+//------------------------------------------------------------------------------
 
     OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,

@@ -14,17 +14,22 @@
 #ifndef OPTGREATDELUGE_H
 #define OPTGREATDELUGE_H
 
-#include "OptBase.h"
+#include "IOptAlgorithm.h"
 
 namespace cppOpt
 {
 
-template <typename T, bool isMultiThreaded = true>
-class OptGreatDeluge : public OptBase<T, isMultiThreaded>
+template <typename T>
+class OptGreatDeluge final : public IOptAlgorithm<T>
 {
-private:
+    OptBoundaries<T>
+        boundaries;
 
-    typedef OptBase<T, isMultiThreaded> super;
+    const OptTarget
+        optTarget;
+
+    const T
+        targetValue;
 
     OptCalculation<T>
         optCalculationReference,
@@ -43,51 +48,51 @@ public:
 //------------------------------------------------------------------------------
 
     OptGreatDeluge(
-        OptBoundaries<T> optBoundaries,
-        unsigned int maxCalculations,
-        calc_t<T> calcFunction,
+        OptBoundaries<T> boundaries,
         OptTarget optTarget,
         T targetValue,
         T coolingFactor,
         T waterLevel,
         T rain) :
 
-        super(move(optBoundaries), maxCalculations, move(calcFunction), move(optTarget), move(targetValue)),
+        boundaries(move(boundaries)),
+        optTarget(move(optTarget)),
+        targetValue(move(targetValue)),
         coolingFactor(move(coolingFactor)),
         rain(move(rain)),
         waterLevel(move(waterLevel))
     {}
 
-private:
-
 //------------------------------------------------------------------------------
 
-    OptCalculation<T> get_next_calculation()
+    OptCalculation<T> get_next_calculation(
+        vector<OptCalculation<T>> const& previous,
+        OptCalculation<T>         const* best) final
     {
-        if(super::previousCalculations.empty())
-            return super::random_start_value();
+        if(previous.empty() || !best)
+            return OptHelper<T>::random_calculation(boundaries);
 
         OptCalculation<T>
             newValue,
             referenceValue,
             compareValue = compare_value();
 
-        if(super::result_better(super::previousCalculations.back(), compareValue, super::optTarget, super::targetValue))
-            referenceValue = super::previousCalculations.back();
+        if(OptHelper<T>::result_better(previous.back(), compareValue, optTarget, targetValue))
+            referenceValue = previous.back();
 
         else
-            referenceValue = super::bestCalculation;
+            referenceValue = *best;
 
         while(true)
         {
             newValue = OptCalculation<T>();
-            for(auto boundary = super::optBoundaries.cbegin(); boundary != super::optBoundaries.cend(); ++boundary)
+            for(auto const& boundary : boundaries)
             {
-                T change = super::calculate_random_change(boundary->second, temperature);
+                T change = OptHelper<T>::calculate_random_change(boundary.second, temperature);
 
-                newValue.add_parameter(boundary->first, referenceValue.get_parameter(boundary->first) + change);
+                newValue.add_parameter(boundary.first, referenceValue.get_parameter(boundary.first) + change);
             }
-            if(super::valid(newValue))
+            if(OptHelper<T>::valid(newValue, boundaries))
                 break;
         }
 
@@ -98,6 +103,15 @@ private:
 
 //------------------------------------------------------------------------------
 
+    OptBoundaries<T> const& get_boundaries() final
+    {
+        return boundaries;
+    }
+
+//------------------------------------------------------------------------------
+
+private:
+
     void update_temperature()
     {
         temperature *= coolingFactor;
@@ -107,7 +121,7 @@ private:
 
     void update_water_level()
     {
-        switch(super::optTarget)
+        switch(optTarget)
         {
             case OptTarget::MINIMIZE:
                 waterLevel -= rain;
@@ -118,14 +132,14 @@ private:
                 break;
 
             case OptTarget::APPROACH:
-                if(super::targetValue > waterLevel)
+                if(targetValue > waterLevel)
                     waterLevel += rain;
                 else
                     waterLevel -= rain;
                 break;
 
             case OptTarget::DIVERGE:
-                if(super::targetValue > waterLevel)
+                if(targetValue > waterLevel)
                     waterLevel -= rain;
                 else
                     waterLevel += rain;
