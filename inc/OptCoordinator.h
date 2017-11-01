@@ -15,7 +15,6 @@
 #define OPTCOORDINATOR_H
 
 #include <vector>
-#include <set>
 #include <mutex>
 #include <queue>
 #include <limits>

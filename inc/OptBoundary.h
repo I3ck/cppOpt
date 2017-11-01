@@ -16,7 +16,7 @@
 
 #include <string>
 
-#include "config.h"
+using namespace std;
 
 namespace cppOpt
 {
@@ -34,13 +34,11 @@ public:
 
 //------------------------------------------------------------------------------
 
-    OptBoundary(T min, T max, const std::string &name) :
+    OptBoundary(T min, T max, const string &name) :
         min(min),
         max(max),
         name(name)
-    {
-
-    }
+    {}
 
 //------------------------------------------------------------------------------
 

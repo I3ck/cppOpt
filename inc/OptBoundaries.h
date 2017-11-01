@@ -17,7 +17,6 @@
 #include <string>
 #include <map>
 
-#include "config.h"
 #include "OptBoundary.h"
 
 namespace cppOpt

@@ -16,6 +16,8 @@
 
 #include "IOptAlgorithm.h"
 
+#include <set>
+
 namespace cppOpt
 {
 
