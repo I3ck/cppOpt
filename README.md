@@ -9,37 +9,30 @@ without knowing the "function" of the problem simply by smartly testing certain 
 
 version 0.3.0
 --------------
+Bascially the entire structure of the library has been changed. The performance has been optimised as well, so a switch to the new version might be worth it.  
+Otherwise simply stick to earlier versions of `cppOpt`.
 
 optimise anything!
 ------------------
 
-optimise any given problem by defining your very own Solver class:
+optimise any given problem by providing an `std::function`
 ```cpp
-template <typename T>
-class MySolver : public OptSolverBase<T>
-{
-public:
-    void calculate(OptCalculation<T> &optCalculation) const
-    {
-        optCalculation.result = YOUR_CODE_COMES_HERE;
-    }
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    optCalculation.result = YOUR CODE COMES HERE
 };
 ```
 for optimising x^2 you could write:
 
 ```cpp
-void calculate(OptCalculation<T> &optCalculation) const
-{
-    //defined x^2 as function to be optimised
-    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
-}
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    optCalculation.result = pow(optCalculation.get_parameter("X"), 2);
+};
 ```
 
 you can even run other programs:
 
 ```cpp
-void calculate(OptCalculation<T> &optCalculation) const
-{
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
     std::string parameter1 = optCalculation.get_parameter("X").to_string();
     std::string parameter2 = optCalculation.get_parameter("Y").to_string();
 
@@ -53,19 +46,21 @@ define your parameters and boundaries
 
 ```cpp
 OptBoundaries<T> optBoundaries;
-optBoundaries.add_boundary(-5.0, 5.0, "X");
-optBoundaries.add_boundary(-50.0, 55.0, "Y");
-optBoundaries.add_boundary(33.0, 3.0, "potatoe");
+optBoundaries.add_boundary({-5.0, 5.0, "X"});
+optBoundaries.add_boundary({-50.0, 55.0, "Y"});
+optBoundaries.add_boundary({33.0, 3.0, "potatoe"});
 ```
 
 minimize, maximize, approach or diverge
 ---------------------------------------
 
 ```cpp
-OptTarget optTarget = MINIMIZE;
-OptTarget optTarget = MAXIMIZE;
-OptTarget optTarget = APPROACH;
-OptTarget optTarget = DIVERGE;
+enum class OptTarget {
+    MINIMIZE,
+    MAXIMIZE,
+    APPROACH,
+    DIVERGE
+};
 ```
 
 templated
@@ -78,62 +73,42 @@ use any of these:
 <long double>
 ```
 
-choose your algorithm
----------------------
+create your coordinator
+-----------------------
+```cpp
+// the bool flag decides whether multithreading is active
+OptCoordinator<double, false> coordinator(
+    maxCalculations,
+    toOptimize,
+    optTarget,
+    targetValue);
+```
+
+
+add algorithms to your coordinator
+----------------------------------
 
 ```cpp
-OptSimulatedAnnealing<double> opt1(optBoundaries,
-                                   maxCalculations,
-                                   &mySolver,
-                                   optTarget,
-                                   targetValue,
-                                   coolingFactor,
-                                   startChance);
+coordinator.add_child(make_unique<OptSimulatedAnnealing<double>>(...))
 
-OptThresholdAccepting<double> opt2(optBoundaries,
-                                   maxCalculations,
-                                   &mySolver,
-                                   optTarget,
-                                   targetValue,
-                                   coolingFactor,
-                                   threshold,
-                                   thresholdFactor);
+coordinator.add_child(make_unique<OptThresholdAccepting<double>(...))
 
-OptGreatDeluge<double> opt3(optBoundaries,
-                            maxCalculations,
-                            &mySolver,
-                            optTarget,
-                            targetValue,
-                            coolingFactor,
-                            waterLevel,
-                            rain);
+coordinator.add_child(make_unique<OptGreatDeluge<double>(...))
 
-OptEvolutionary<double> opt4(optBoundaries,
-                             maxCalculations,
-                             &mySolver,
-                             optTarget,
-                             targetValue,
-                             coolingFactor,
-                             nIndividualsStart,
-                             nIndividualsSelection,
-                             nIndividualsOffspring,
-                             mutation);
+coordinator.add_child(make_unique<OptEvolutionary<double>(...))
 ```
 
 multithreading
 --------------
 
-you can spawn any number of objects with different algorithms, boundaries, configurations or goals
+you can add any number of child algorithms and run these in parallel. Just make sure your calculation callback is thread-safe.
 
 go!
 ---
 
 ```cpp
-OptBase<double>::run_optimisations();
-//or
-OptBase<double>::run_optimisations(NUMBER_OF_WORKER_THREADS);
-//or
-OptBase<double>::run_optimisations(NUMBER_OF_WORKER_THREADS, SPECIFIC_RANDOM_SEED);
+coordinator.run_optimisation(); // if single threaded
+coordinator.run_optimisation(NUMBER_OF_THREADS); // if multi threaded
 ```
 
 aborting early
@@ -141,36 +116,45 @@ aborting early
 
 you can also define when to abort the optimisation, in case the value is good enough
 ```cpp
-OptBase<double>::enable_early_abort(13.37);
+coordinator.enable_early_abort(13.37);
 ```
 
 logging / outputting results
 ----------------------------
 
-you can enable thread-safe logging as simple as:
+add logging by via your calculate function
 ```cpp
-OptBase<double>::enable_logging("logfile.log", optBoundaries);
+auto toOptimize = [](OptCalculation<double>& optCalculation) {
+    optCalculation.result = YOUR CODE COMES HERE
+
+    //also log the result
+    cout << optCalculation.to_string_values() << " =>\t" << optCalculation.result << endl;
+};
 ```
 ```
-X RESULT
-1.083865 1.174763
-3.901791 15.223976
-3.862659 14.920135
-...
+2.162039 4.674414 =>	4.67441
+-0.185813 0.034526 =>	0.0345263
+-1.505135 2.265430 =>	2.26543
+-4.193620 17.586445 =>	17.5864
+-2.887129 8.335513 =>	8.33551
+-0.469162 0.220113 =>	0.220113
+-3.301420 10.899376 =>	10.8994
+-2.083137 4.339458 =>	4.33946
+2.035803 4.144495 =>	4.1445
+2.998251 8.989506 =>	8.98951
+0.830960 0.690495 =>	0.690495
 ```
-you can also define custom delimiters and line endings (e.g. for csv):
+you can retrieve the best value once the optimisation is done
 ```cpp
-OptBase::enable_logging("logfile.log", optBoundaries, ";", "\n");
-```
-you can retrieve both the best values of all your optimisers or specific ones:
-```cpp
-OptCalculation<double> best1 = opt1.get_best_calculation();
-OptCalculation<double> best2 = opt2.get_best_calculation();
-OptCalculation<double> bestAll = OptBase<double>::get_best_calculation(optTarget, targetValue);
+OptCalculation<double> best = coordinator.get_best_calculation();
+cout << best.to_string_header() << endl;
+cout << best.to_string_values() << endl;
 ```
 
 examples
 --------
+
+Please refer to the `examples/` folder for well documented and currently compiling usage examples.
 
 ### optimising x*x [-5.0:+5.0] with simulated annealing
 note that the optimiser doesn't "know" that the function actually is x*x
@@ -182,8 +166,7 @@ note that the optimiser doesn't "know" that the function actually is x*x
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/approach_3.gif)  
 #### diverging from 3.0:
 ![alt tag](https://raw.githubusercontent.com/I3ck/cppOptImages/master/images/animations/xSquare/diverge_3.gif)  
-check out https://github.com/I3ck/cppOptImages for more images  
-or `examples/` for code examples
+check out https://github.com/I3ck/cppOptImages for more images
 
 ### optimising the rastrigrin function with simulated annealing
 http://en.wikipedia.org/wiki/Rastrigin_function
