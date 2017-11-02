@@ -16,8 +16,8 @@
   *        to find the minimum of x^2
   */
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 #include "cppOpt.h"
 
@@ -26,20 +26,19 @@ using namespace cppOpt;
 //define your own calculation
 auto toOptimize = [](OptCalculation<double>& optCalculation) {
     //defined x^2 as function to be optimised
-    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
+    optCalculation.result = pow(optCalculation.get_parameter("X"), 2);
 };
 
 using namespace std;
 
-int main()
-{
+int main() {
     //setup the optimisation
     //define your total boundaries
     OptBoundaries<double> optBoundariesTotal;
     optBoundariesTotal.add_boundary({-5.0, 5.0, "X"});
 
     //and split them into 4
-    vector< OptBoundaries<double> > optBoundariesSplit = optBoundariesTotal.split("X", 4);
+    vector<OptBoundaries<double>> optBoundariesSplit = optBoundariesTotal.split("X", 4);
 
     //number of calculations
     unsigned int maxCalculations = 300;

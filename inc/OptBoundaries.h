@@ -14,54 +14,49 @@
 #ifndef OPTBOUNDARIES_H
 #define OPTBOUNDARIES_H
 
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
 #include "OptBoundary.h"
 
-namespace cppOpt
-{
+namespace cppOpt {
 
 using namespace std;
 
-template <typename T>
-class OptBoundaries
-{
-private:
+template<typename T>
+class OptBoundaries {
+   private:
     map<string, OptBoundary<T> >
         optBoundaries;
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-public:
-    void add_boundary(const OptBoundary<T> &optBoundary)
-    {
+   public:
+    void add_boundary(const OptBoundary<T>& optBoundary) {
         optBoundaries.insert(make_pair(optBoundary.name, optBoundary));
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    string to_string() const
-    {
+    string to_string() const {
         string out("");
 
-        for(auto const& boundary : optBoundaries)
+        for (auto const& boundary : optBoundaries)
             out += boundary.first + " ";
 
         return out;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    size_t size() const
-    {
+    size_t size() const {
         return optBoundaries.size();
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    vector<OptBoundaries> split(string const& name, unsigned int times) const
-    {
+    vector<OptBoundaries> split(string const& name, unsigned int times) const {
         vector<OptBoundaries> out;
 
         T
@@ -70,43 +65,37 @@ public:
 
         bool found(false);
 
-        if(times < 1)
-            return out; //error case
+        if (times < 1)
+            return out;  //error case
 
-        for(auto const& boundary : optBoundaries)
-        {
-            if(boundary.first == name)
-            {
+        for (auto const& boundary : optBoundaries) {
+            if (boundary.first == name) {
                 range = boundary.second.range();
                 found = true;
             }
         }
 
-        if(!found)
-            return out; //error case if name doesn't exist
+        if (!found)
+            return out;  //error case if name doesn't exist
 
         newRange = range / (T)times;
 
         //split
-        for(unsigned int i = 0; i < times; ++i)
-        {
+        for (unsigned int i = 0; i < times; ++i) {
             OptBoundaries newBoundaries;
-            for(auto const& boundary : optBoundaries)
-            {
-                if(boundary.first == name)
-                {
+            for (auto const& boundary : optBoundaries) {
+                if (boundary.first == name) {
                     T
                         newMin,
                         newMax;
 
                     newMin = boundary.second.min + i * newRange;
-                    newMax = boundary.second.min + (i+1) * newRange;
+                    newMax = boundary.second.min + (i + 1) * newRange;
 
                     OptBoundary<T> newBoundary{newMin, newMax, name};
 
                     newBoundaries.add_boundary(newBoundary);
-                }
-                else
+                } else
                     newBoundaries.add_boundary(boundary.second);
             }
             out.push_back(newBoundaries);
@@ -115,38 +104,33 @@ public:
         return out;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    typename map< string, OptBoundary<T> >::iterator begin()
-    {
+    typename map<string, OptBoundary<T> >::iterator begin() {
         return optBoundaries.begin();
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    typename map< string, OptBoundary<T> >::iterator end()
-    {
+    typename map<string, OptBoundary<T> >::iterator end() {
         return optBoundaries.end();
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    const typename map< string, OptBoundary<T> >::const_iterator begin() const
-    {
+    const typename map<string, OptBoundary<T> >::const_iterator begin() const {
         return optBoundaries.cbegin();
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    const typename map< string, OptBoundary<T> >::const_iterator end() const
-    {
+    const typename map<string, OptBoundary<T> >::const_iterator end() const {
         return optBoundaries.cend();
     }
 
-//------------------------------------------------------------------------------
-
+    //------------------------------------------------------------------------------
 };
 
-} // namespace cppOpt
+}  // namespace cppOpt
 
-#endif // OPTBOUNDARIES_H
+#endif  // OPTBOUNDARIES_H

@@ -18,12 +18,10 @@
 
 using namespace std;
 
-namespace cppOpt
-{
+namespace cppOpt {
 
-template <typename T>
-struct OptBoundary
-{
+template<typename T>
+struct OptBoundary {
     const T
         min,
         max;
@@ -31,14 +29,13 @@ struct OptBoundary
     const std::string
         name;
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    T range() const
-    {
+    T range() const {
         return max - min;
     }
 };
 
-} // namespace cppOpt
+}  // namespace cppOpt
 
-#endif // OPTBOUNDARY_H
+#endif  // OPTBOUNDARY_H

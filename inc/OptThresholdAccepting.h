@@ -16,12 +16,10 @@
 
 #include "IOptAlgorithm.h"
 
-namespace cppOpt
-{
+namespace cppOpt {
 
-template <typename T>
-class OptThresholdAccepting final : public IOptAlgorithm<T>
-{
+template<typename T>
+class OptThresholdAccepting final : public IOptAlgorithm<T> {
     OptBoundaries<T>
         boundaries;
 
@@ -43,49 +41,44 @@ class OptThresholdAccepting final : public IOptAlgorithm<T>
         temperature{1.0},
         threshold;
 
-public:
+   public:
     OptThresholdAccepting(
         OptBoundaries<T> boundaries,
-        OptTarget optTarget,
-        T targetValue,
-        T coolingFactor,
-        T threshold,
-        T thresholdFactor) :
+        OptTarget        optTarget,
+        T                targetValue,
+        T                coolingFactor,
+        T                threshold,
+        T                thresholdFactor) :
 
-        boundaries(move(boundaries)),
-        optTarget(move(optTarget)),
-        targetValue(move(targetValue)),
-        coolingFactor(move(coolingFactor)),
-        thresholdFactor(move(thresholdFactor)),
-        threshold(move(threshold))
-    {}
+                             boundaries(move(boundaries)),
+                             optTarget(move(optTarget)),
+                             targetValue(move(targetValue)),
+                             coolingFactor(move(coolingFactor)),
+                             thresholdFactor(move(thresholdFactor)),
+                             threshold(move(threshold)) {}
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const* best) final
-    {
-        if(previous.empty() || !best)
+        OptCalculation<T> const*         best) final {
+        if (previous.empty() || !best)
             return OptHelper<T>::random_calculation(boundaries);
 
         OptCalculation<T> newValue;
 
-        if(previous.size() == 1)
-        {
-            optCalculationReference = previous[0];
+        if (previous.size() == 1) {
+            optCalculationReference      = previous[0];
             optCalculationConfigurationC = previous[0];
 
-            while(true)
-            {
+            while (true) {
                 newValue = OptCalculation<T>();
-                for(auto const& boundary : boundaries)
-                {
+                for (auto const& boundary : boundaries) {
                     T change = OptHelper<T>::calculate_random_change(boundary.second, temperature);
 
                     newValue.add_parameter(boundary.first, previous[0].get_parameter(boundary.first) + change);
                 }
-                if(OptHelper<T>::valid(newValue, boundaries))
+                if (OptHelper<T>::valid(newValue, boundaries))
                     break;
             }
 
@@ -97,26 +90,24 @@ public:
 
         OptCalculation<T> referenceValue;
 
-        if(OptHelper<T>::result_better(previous.back(), optCalculationReference, optTarget, targetValue))
+        if (OptHelper<T>::result_better(previous.back(), optCalculationReference, optTarget, targetValue))
             optCalculationReference = previous.back();
 
         OptCalculation<T> compareValue = compare_value();
 
-        if(OptHelper<T>::result_better(previous.back(), compareValue, optTarget, targetValue))
+        if (OptHelper<T>::result_better(previous.back(), compareValue, optTarget, targetValue))
             optCalculationConfigurationC = previous.back();
 
         referenceValue = optCalculationConfigurationC;
 
-        while(true)
-        {
+        while (true) {
             newValue = OptCalculation<T>();
-            for(auto const& boundary : boundaries)
-            {
+            for (auto const& boundary : boundaries) {
                 T change = OptHelper<T>::calculate_random_change(boundary.second, temperature);
 
                 newValue.add_parameter(boundary.first, referenceValue.get_parameter(boundary.first) + change);
             }
-            if(OptHelper<T>::valid(newValue, boundaries))
+            if (OptHelper<T>::valid(newValue, boundaries))
                 break;
         }
 
@@ -125,35 +116,30 @@ public:
         return newValue;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    OptBoundaries<T> const& get_boundaries() final
-    {
+    OptBoundaries<T> const& get_boundaries() final {
         return boundaries;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-private:
-    void update_temperature()
-    {
+   private:
+    void update_temperature() {
         temperature *= coolingFactor;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void update_threshold()
-    {
+    void update_threshold() {
         threshold *= thresholdFactor;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    OptCalculation<T> compare_value() const
-    {
+    OptCalculation<T> compare_value() const {
         OptCalculation<T> out;
-        switch(optTarget)
-        {
+        switch (optTarget) {
             case OptTarget::MINIMIZE:
                 out.result = optCalculationConfigurationC.result + threshold;
                 break;
@@ -163,29 +149,28 @@ private:
                 break;
 
             case OptTarget::APPROACH:
-                if(targetValue > optCalculationConfigurationC.result)
+                if (targetValue > optCalculationConfigurationC.result)
                     out.result = optCalculationConfigurationC.result - threshold;
                 else
                     out.result = optCalculationConfigurationC.result + threshold;
                 break;
 
             case OptTarget::DIVERGE:
-                if(targetValue > optCalculationConfigurationC.result)
+                if (targetValue > optCalculationConfigurationC.result)
                     out.result = optCalculationConfigurationC.result + threshold;
                 else
                     out.result = optCalculationConfigurationC.result - threshold;
                 break;
 
-            default: // MINIMIZE
+            default:  // MINIMIZE
                 out.result = optCalculationConfigurationC.result + threshold;
         }
         return out;
     }
 
-//------------------------------------------------------------------------------
-
+    //------------------------------------------------------------------------------
 };
 
-#endif // OPTTHRESHOLDACCEPTING_H
+#endif  // OPTTHRESHOLDACCEPTING_H
 
-} // namespace cppOpt
+}  // namespace cppOpt

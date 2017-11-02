@@ -14,40 +14,39 @@
 #ifndef OPTCOORDINATOR_H
 #define OPTCOORDINATOR_H
 
-#include <vector>
-#include <mutex>
-#include <queue>
 #include <limits>
-#include <thread>
 #include <memory>
+#include <mutex>
 #include <optional>
+#include <queue>
+#include <thread>
 #include <type_traits>
+#include <vector>
 
-#include "config.h"
-#include "OptTarget.h"
-#include "OptHelper.h"
-#include "OptCalculation.h"
-#include "OptBoundary.h"
-#include "OptBoundaries.h"
 #include "IOptAlgorithm.h"
+#include "OptBoundaries.h"
+#include "OptBoundary.h"
+#include "OptCalculation.h"
+#include "OptHelper.h"
+#include "OptTarget.h"
+#include "OptTypes.h"
+#include "config.h"
 
-namespace cppOpt
-{
+namespace cppOpt {
 
 using namespace std;
 
 using lock = lock_guard<mutex>;
 
-template <typename T, bool isMultiThreaded = true>
-class OptCoordinator final
-{
+template<typename T, bool isMultiThreaded = true>
+class OptCoordinator final {
     using self = OptCoordinator<T, isMultiThreaded>;
 
     mutex
         mTodo,
         mFinished;
 
-    queue< pair<OptCalculation<T>, IOptAlgorithm<T>*> >
+    queue<pair<OptCalculation<T>, IOptAlgorithm<T>*>>
         queueTodo;
 
     vector<OptCalculation<T>>
@@ -63,7 +62,7 @@ class OptCoordinator final
         abortValue{0};
 
     unsigned int
-        randomSeed{(unsigned int) time(NULL)};
+        randomSeed{(unsigned int)time(NULL)};
 
     const calc_t<T>
         calcFunction;
@@ -75,90 +74,82 @@ class OptCoordinator final
         targetValue;
 
     map<IOptAlgorithm<T>*, std::vector<OptCalculation<T>>>
-        previousCalculations; ///@todo use vector with child indices?
+        previousCalculations;  ///@todo use vector with child indices?
 
     map<IOptAlgorithm<T>*, OptCalculation<T>>
-        bestCalculations; ///@todo use vector with child indices?
+        bestCalculations;  ///@todo use vector with child indices?
 
     const unsigned int
-        maxCalculations; ///@todo can be dropped here / stored globally?
+        maxCalculations;  ///@todo can be dropped here / stored globally?
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-public:
+   public:
     OptCoordinator(
         unsigned int maxCalculations,
-        calc_t<T> calcFunction,
-        OptTarget optTarget,
-        T targetValue) :
+        calc_t<T>    calcFunction,
+        OptTarget    optTarget,
+        T            targetValue) :
 
-        calcFunction(move(calcFunction)),
-        optTarget(move(optTarget)),
-        targetValue(move(targetValue)),
-        maxCalculations(maxCalculations)
-    {}
+                         calcFunction(move(calcFunction)),
+                         optTarget(move(optTarget)),
+                         targetValue(move(targetValue)),
+                         maxCalculations(maxCalculations) {}
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void add_child(unique_ptr<IOptAlgorithm<T>> child)
-    {
+    void add_child(unique_ptr<IOptAlgorithm<T>> child) {
         children.push_back(move(child));
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void set_seed(unsigned int seed)
-    {
+    void set_seed(unsigned int seed) {
         randomSeed = seed;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     template<bool b = !isMultiThreaded>
     typename std::enable_if_t<b>
-    run_optimisation()
-    {
+    run_optimisation() {
         do_run_optimisation(1);
     }
 
     template<bool b = isMultiThreaded>
     typename std::enable_if_t<b>
-    run_optimisation(unsigned int maxThreads)
-    {
+    run_optimisation(unsigned int maxThreads) {
         do_run_optimisation(maxThreads);
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void enable_early_abort(T const& abortVal)
-    {
+    void enable_early_abort(T const& abortVal) {
         abortEarly = true;
         abortValue = abortVal;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    OptCalculation<T> get_best_calculation()
-    {
-        OptCalculation<T> out; ///@todo bad value instead (or fail?)
+    OptCalculation<T> get_best_calculation() {
+        OptCalculation<T> out;  ///@todo bad value instead (or fail?)
 
-        if(finishedCalculations.size() == 0)
+        if (finishedCalculations.size() == 0)
             return out;
 
         out = finishedCalculations[0];
 
-        for(auto const& finishedCalculation : finishedCalculations)
-            if(OptHelper<T>::result_better(finishedCalculation, out, optTarget, targetValue))
+        for (auto const& finishedCalculation : finishedCalculations)
+            if (OptHelper<T>::result_better(finishedCalculation, out, optTarget, targetValue))
                 out = finishedCalculation;
 
         return out;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-private:
-    void do_run_optimisation(unsigned int maxThreads)
-    {
+   private:
+    void do_run_optimisation(unsigned int maxThreads) {
         if (children.empty())
             return;
 
@@ -166,56 +157,56 @@ private:
 
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
-        for(auto const& child : children)
-        {
+        for (auto const& child : children) {
             bestCalculations[child.get()] = random_calculation(child->get_boundaries());
             push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()]), child.get());
         }
 
-        if constexpr (isMultiThreaded) {
-            vector <thread> threads;
-            threads.reserve(maxThreads);
+        if
+            constexpr(isMultiThreaded) {
+                vector<thread> threads;
+                threads.reserve(maxThreads);
 
-            for(unsigned int i=0; i<maxThreads; ++i)
-                threads.emplace_back([this](){return do_work();});
+                for (unsigned int i = 0; i < maxThreads; ++i)
+                    threads.emplace_back([this]() { return do_work(); });
 
-            for(auto &thread :threads)
-                thread.join();
-        } else
-            do_work(); ///@todo rename function
+                for (auto& thread : threads)
+                    thread.join();
+            }
+        else
+            do_work();  ///@todo rename function
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     inline optional<lock> lock_for(mutex& m) {
-        if constexpr (isMultiThreaded) {
-            return make_optional<lock>(m);
-        } else
+        if
+            constexpr(isMultiThreaded) {
+                return make_optional<lock>(m);
+            }
+        else
             return nullopt;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void do_work()
-    {
-        optional<pair <OptCalculation<T>, IOptAlgorithm<T>*>> todo{nullopt};
+    void do_work() {
+        optional<pair<OptCalculation<T>, IOptAlgorithm<T>*>> todo{nullopt};
 
         const auto nChildren = children.size();
-        size_t calculationsChild{0};
+        size_t     calculationsChild{0};
 
-        while(true)
-        {
-            if (!todo || calculationsChild > maxCalculations / nChildren)
-            {
+        while (true) {
+            if (!todo || calculationsChild > maxCalculations / nChildren) {
                 calculationsChild = 0;
-                auto lck = lock_for(mTodo);
-                if(available_todo())
+                auto lck          = lock_for(mTodo);
+                if (available_todo())
                     todo = pop_todo();
                 else
                     break;
             }
 
-            auto [optCalculation, algo] = todo.value();
+            auto[optCalculation, algo] = todo.value();
 
             calcFunction(optCalculation);
 
@@ -226,18 +217,17 @@ private:
 
             previousCalculations[algo].push_back(optCalculation);
 
-            if(OptHelper<T>::result_better(optCalculation, bestCalculations[algo], optTarget, targetValue))
+            if (OptHelper<T>::result_better(optCalculation, bestCalculations[algo], optTarget, targetValue))
                 bestCalculations[algo] = optCalculation;
 
-            if(previousCalculations[algo].size() >= maxCalculations)
+            if (previousCalculations[algo].size() >= maxCalculations)
                 break;
 
-            if(abortEarly)
-            {
+            if (abortEarly) {
                 OptCalculation<T> calcEarly;
                 calcEarly.result = abortValue;
 
-                if(OptHelper<T>::result_better(optCalculation, calcEarly, optTarget, targetValue))
+                if (OptHelper<T>::result_better(optCalculation, calcEarly, optTarget, targetValue))
                     break;
             }
 
@@ -249,35 +239,30 @@ private:
         }
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void push_todo(OptCalculation<T> const& optCalculation, IOptAlgorithm<T>* algo)
-    {
+    void push_todo(OptCalculation<T> const& optCalculation, IOptAlgorithm<T>* algo) {
         queueTodo.emplace(make_pair(optCalculation, algo));
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    bool available_todo()
-    {
+    bool available_todo() {
         return !queueTodo.empty();
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    pair<OptCalculation<T>, IOptAlgorithm<T>*> pop_todo()
-    {
+    pair<OptCalculation<T>, IOptAlgorithm<T>*> pop_todo() {
         auto out = queueTodo.front();
         queueTodo.pop();
         return out;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    T bad_value() const
-    {
-        switch(optTarget)
-        {
+    T bad_value() const {
+        switch (optTarget) {
             case OptTarget::MINIMIZE:
                 return numeric_limits<T>::max();
 
@@ -285,7 +270,7 @@ private:
                 return numeric_limits<T>::lowest();
 
             case OptTarget::APPROACH:
-                if(targetValue > 0.0)
+                if (targetValue > 0.0)
                     return numeric_limits<T>::lowest();
                 else
                     return numeric_limits<T>::max();
@@ -293,27 +278,24 @@ private:
             case OptTarget::DIVERGE:
                 return targetValue;
 
-            default: //MINIMIZE
+            default:  //MINIMIZE
                 return numeric_limits<T>::max();
         }
     }
 
-    OptCalculation<T> random_calculation(OptBoundaries<T> const& optBoundaries) const
-    {
+    OptCalculation<T> random_calculation(OptBoundaries<T> const& optBoundaries) const {
         OptCalculation<T> optCalculation;
         optCalculation.result = bad_value();
-        for(auto const& boundary : optBoundaries)
-        {
+        for (auto const& boundary : optBoundaries) {
             T newValue = boundary.second.min + OptHelper<T>::random_factor() * boundary.second.range();
             optCalculation.add_parameter(boundary.second.name, newValue);
         }
         return optCalculation;
     }
 
-//------------------------------------------------------------------------------
-
+    //------------------------------------------------------------------------------
 };
 
-} // namespace cppOpt
+}  // namespace cppOpt
 
-#endif // OPTCOORDINATOR_H
+#endif  // OPTCOORDINATOR_H

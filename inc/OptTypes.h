@@ -18,12 +18,11 @@
 
 #include "OptCalculation.h"
 
-namespace cppOpt
-{
-    using namespace std;
+namespace cppOpt {
+using namespace std;
 
-    template <typename T>
-    using calc_t = function<void(OptCalculation<T>&)>;
+template<typename T>
+using calc_t = function<void(OptCalculation<T>&)>;
 }
 
-#endif // OPTTYPES_H
+#endif  // OPTTYPES_H

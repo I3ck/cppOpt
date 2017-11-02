@@ -17,4 +17,4 @@
 //comment out or dont
 //#define DEBUG
 
-#endif // CONFIG_H
+#endif  // CONFIG_H

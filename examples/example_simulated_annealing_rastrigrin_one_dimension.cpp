@@ -16,8 +16,8 @@
   *        to find the minimum of the 1-dimensional rastrigrin function
   */
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 #include "cppOpt.h"
 
@@ -32,15 +32,14 @@ auto toOptimize = [](OptCalculation<double>& optCalculation) {
         pi(3.1415926535897932384),
         x = optCalculation.get_parameter("x");
 
-    double sum = x*x - A * cos(2.0 * pi * x);
+    double sum = x * x - A * cos(2.0 * pi * x);
 
     optCalculation.result = A * n + sum;
 };
 
 using namespace std;
 
-int main()
-{
+int main() {
     //setup the optimisation
     //define your boundaries
     OptBoundaries<double> optBoundaries;

@@ -12,10 +12,10 @@
 */
 
 #include <cmath>
-#include <vector>
-#include <iostream>
 #include <ctime>
+#include <iostream>
 #include <memory>
+#include <vector>
 
 #include "cppOpt.h"
 
@@ -25,11 +25,10 @@ using namespace cppOpt;
 #define DELTA 0.01
 
 auto toOptimize = [](OptCalculation<double>& optCalculation) {
-    optCalculation.result = pow(optCalculation.get_parameter("X"),2) + pow(optCalculation.get_parameter("Y"),2) + 14.876;
+    optCalculation.result = pow(optCalculation.get_parameter("X"), 2) + pow(optCalculation.get_parameter("Y"), 2) + 14.876;
 };
 
-double time_sa_1()
-{
+double time_sa_1() {
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
@@ -37,9 +36,9 @@ double time_sa_1()
     optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
-    double coolingFactor = 0.95;
-    double startChance = 0.25;
-    OptTarget optTarget = OptTarget::MINIMIZE;
+    double       coolingFactor   = 0.95;
+    double       startChance     = 0.25;
+    OptTarget    optTarget       = OptTarget::MINIMIZE;
 
     OptCoordinator<double, false> coordinator(
         maxCalculations,
@@ -54,11 +53,10 @@ double time_sa_1()
 
     coordinator.run_optimisation();
 
-    return ( clock() - start ) / (double) CLOCKS_PER_SEC;
+    return (clock() - start) / (double)CLOCKS_PER_SEC;
 }
 
-double time_sa_2()
-{
+double time_sa_2() {
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
@@ -66,9 +64,9 @@ double time_sa_2()
     optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
-    double coolingFactor = 0.95;
-    double startChance = 0.25;
-    OptTarget optTarget = OptTarget::MINIMIZE;
+    double       coolingFactor   = 0.95;
+    double       startChance     = 0.25;
+    OptTarget    optTarget       = OptTarget::MINIMIZE;
 
     OptCoordinator<double, true> coordinator(
         maxCalculations,
@@ -93,11 +91,10 @@ double time_sa_2()
 
     coordinator.run_optimisation(3);
 
-    return ( clock() - start ) / (double) CLOCKS_PER_SEC;
+    return (clock() - start) / (double)CLOCKS_PER_SEC;
 }
 
-double time_sa_3()
-{
+double time_sa_3() {
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
@@ -105,9 +102,9 @@ double time_sa_3()
     optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
-    double coolingFactor = 0.95;
-    double startChance = 0.25;
-    OptTarget optTarget = OptTarget::MINIMIZE;
+    double       coolingFactor   = 0.95;
+    double       startChance     = 0.25;
+    OptTarget    optTarget       = OptTarget::MINIMIZE;
 
     OptCoordinator<double, false> coordinator(
         maxCalculations,
@@ -132,11 +129,10 @@ double time_sa_3()
 
     coordinator.run_optimisation();
 
-    return ( clock() - start ) / (double) CLOCKS_PER_SEC;
+    return (clock() - start) / (double)CLOCKS_PER_SEC;
 }
 
-double time_sa_4()
-{
+double time_sa_4() {
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
@@ -144,9 +140,9 @@ double time_sa_4()
     optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
-    double coolingFactor = 0.95;
-    double startChance = 0.25;
-    OptTarget optTarget = OptTarget::MINIMIZE;
+    double       coolingFactor   = 0.95;
+    double       startChance     = 0.25;
+    OptTarget    optTarget       = OptTarget::MINIMIZE;
 
     OptCoordinator<double, true> coordinator(
         maxCalculations,
@@ -171,19 +167,17 @@ double time_sa_4()
 
     coordinator.run_optimisation(3);
 
-    return ( clock() - start ) / (double) CLOCKS_PER_SEC;
+    return (clock() - start) / (double)CLOCKS_PER_SEC;
 }
 
-double n_times(int times, std::function<double(void)> const& f)
-{
+double n_times(int times, std::function<double(void)> const& f) {
     double sum{0};
     for (int i = 0; i < times; ++i)
         sum += f();
-    return sum/times;
+    return sum / times;
 }
 
-int main()
-{
+int main() {
     constexpr int times = 10;
     cout << "All times in seconds" << endl;
     cout << "time_sa_1() :\t " << n_times(times, time_sa_1) << endl;

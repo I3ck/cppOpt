@@ -14,26 +14,22 @@
 #ifndef OPTHELPER_H
 #define OPTHELPER_H
 
-#include "OptTarget.h"
 #include "OptBoundaries.h"
+#include "OptTarget.h"
 
-namespace cppOpt
-{
+namespace cppOpt {
 
 using namespace std;
 
-template <typename T>
-class OptHelper
-{
-public:
-
-//------------------------------------------------------------------------------
+template<typename T>
+class OptHelper {
+   public:
+    //------------------------------------------------------------------------------
 
     //targetValue won't be used when maximizing or minimizing
-    static bool result_better(OptCalculation<T> const& result, OptCalculation<T> const& other, OptTarget const& optTarget, T const& targetValue) ///@todo consider implementing this in OptCalculation
+    static bool result_better(OptCalculation<T> const& result, OptCalculation<T> const& other, OptTarget const& optTarget, T const& targetValue)  ///@todo consider implementing this in OptCalculation
     {
-        switch(optTarget)
-        {
+        switch (optTarget) {
             case OptTarget::MINIMIZE:
                 return result.result < other.result;
 
@@ -46,60 +42,54 @@ public:
             case OptTarget::DIVERGE:
                 return fabs(targetValue - result.result) > fabs(targetValue - other.result);
 
-            default: //MINIMIZE
+            default:  //MINIMIZE
                 return result.result < other.result;
         }
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    static T random_factor() ///@todo all related functions now defined twice, move to helper
+    static T random_factor()  ///@todo all related functions now defined twice, move to helper
     {
-        return rand()/(T)(RAND_MAX);
+        return rand() / (T)(RAND_MAX);
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    static OptCalculation<T> random_calculation(OptBoundaries<T> const& boundaries)
-    {
+    static OptCalculation<T> random_calculation(OptBoundaries<T> const& boundaries) {
         OptCalculation<T> optCalculation;
-        for(auto const& boundary : boundaries)
-        {
+        for (auto const& boundary : boundaries) {
             T newValue = boundary.second.min + OptHelper<T>::random_factor() * boundary.second.range();
             optCalculation.add_parameter(boundary.second.name, newValue);
         }
         return optCalculation;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    static T calculate_random_change(const OptBoundary<T> &boundary, T temperature)
-    {
+    static T calculate_random_change(const OptBoundary<T>& boundary, T temperature) {
         T change, maxChange;
 
         maxChange = (T)0.5 * boundary.range() * temperature;
-        change = OptHelper<T>::random_factor() * maxChange;
+        change    = OptHelper<T>::random_factor() * maxChange;
 
-        if(rand() % 2)
+        if (rand() % 2)
             change *= -1.0;
 
         return change;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    static bool valid(const OptCalculation<T> &optCalculation, OptBoundaries<T> const& boundaries)
-    {
-        for(auto const& boundary : boundaries)
-        {
-            if(   optCalculation.get_parameter(boundary.first) < boundary.second.min
-               || optCalculation.get_parameter(boundary.first) > boundary.second.max)
-               return false;
+    static bool valid(const OptCalculation<T>& optCalculation, OptBoundaries<T> const& boundaries) {
+        for (auto const& boundary : boundaries) {
+            if (optCalculation.get_parameter(boundary.first) < boundary.second.min || optCalculation.get_parameter(boundary.first) > boundary.second.max)
+                return false;
         }
         return true;
     }
 };
 
-} // namespace cppOpt
+}  // namespace cppOpt
 
-#endif // OPTHELPER_H
+#endif  // OPTHELPER_H

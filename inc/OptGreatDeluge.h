@@ -16,12 +16,10 @@
 
 #include "IOptAlgorithm.h"
 
-namespace cppOpt
-{
+namespace cppOpt {
 
-template <typename T>
-class OptGreatDeluge final : public IOptAlgorithm<T>
-{
+template<typename T>
+class OptGreatDeluge final : public IOptAlgorithm<T> {
     OptBoundaries<T>
         boundaries;
 
@@ -43,33 +41,30 @@ class OptGreatDeluge final : public IOptAlgorithm<T>
         temperature{1.0},
         waterLevel;
 
-public:
-
-//------------------------------------------------------------------------------
+   public:
+    //------------------------------------------------------------------------------
 
     OptGreatDeluge(
         OptBoundaries<T> boundaries,
-        OptTarget optTarget,
-        T targetValue,
-        T coolingFactor,
-        T waterLevel,
-        T rain) :
+        OptTarget        optTarget,
+        T                targetValue,
+        T                coolingFactor,
+        T                waterLevel,
+        T                rain) :
 
-        boundaries(move(boundaries)),
-        optTarget(move(optTarget)),
-        targetValue(move(targetValue)),
-        coolingFactor(move(coolingFactor)),
-        rain(move(rain)),
-        waterLevel(move(waterLevel))
-    {}
+                  boundaries(move(boundaries)),
+                  optTarget(move(optTarget)),
+                  targetValue(move(targetValue)),
+                  coolingFactor(move(coolingFactor)),
+                  rain(move(rain)),
+                  waterLevel(move(waterLevel)) {}
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const* best) final
-    {
-        if(previous.empty() || !best)
+        OptCalculation<T> const*         best) final {
+        if (previous.empty() || !best)
             return OptHelper<T>::random_calculation(boundaries);
 
         OptCalculation<T>
@@ -77,22 +72,20 @@ public:
             referenceValue,
             compareValue = compare_value();
 
-        if(OptHelper<T>::result_better(previous.back(), compareValue, optTarget, targetValue))
+        if (OptHelper<T>::result_better(previous.back(), compareValue, optTarget, targetValue))
             referenceValue = previous.back();
 
         else
             referenceValue = *best;
 
-        while(true)
-        {
+        while (true) {
             newValue = OptCalculation<T>();
-            for(auto const& boundary : boundaries)
-            {
+            for (auto const& boundary : boundaries) {
                 T change = OptHelper<T>::calculate_random_change(boundary.second, temperature);
 
                 newValue.add_parameter(boundary.first, referenceValue.get_parameter(boundary.first) + change);
             }
-            if(OptHelper<T>::valid(newValue, boundaries))
+            if (OptHelper<T>::valid(newValue, boundaries))
                 break;
         }
 
@@ -101,28 +94,23 @@ public:
         return newValue;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    OptBoundaries<T> const& get_boundaries() final
-    {
+    OptBoundaries<T> const& get_boundaries() final {
         return boundaries;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-private:
-
-    void update_temperature()
-    {
+   private:
+    void update_temperature() {
         temperature *= coolingFactor;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void update_water_level()
-    {
-        switch(optTarget)
-        {
+    void update_water_level() {
+        switch (optTarget) {
             case OptTarget::MINIMIZE:
                 waterLevel -= rain;
                 break;
@@ -132,37 +120,35 @@ private:
                 break;
 
             case OptTarget::APPROACH:
-                if(targetValue > waterLevel)
+                if (targetValue > waterLevel)
                     waterLevel += rain;
                 else
                     waterLevel -= rain;
                 break;
 
             case OptTarget::DIVERGE:
-                if(targetValue > waterLevel)
+                if (targetValue > waterLevel)
                     waterLevel -= rain;
                 else
                     waterLevel += rain;
                 break;
 
-            default: // MINIMIZE
+            default:  // MINIMIZE
                 waterLevel -= rain;
         }
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    OptCalculation<T> compare_value() const
-    {
+    OptCalculation<T> compare_value() const {
         OptCalculation<T> out;
         out.result = waterLevel;
         return out;
     }
 
-//------------------------------------------------------------------------------
-
+    //------------------------------------------------------------------------------
 };
 
-#endif // OPTGREATDELUGE_H
+#endif  // OPTGREATDELUGE_H
 
-} // namespace cppOpt
+}  // namespace cppOpt

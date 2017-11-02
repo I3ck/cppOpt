@@ -11,20 +11,18 @@
     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef OPTTARGET
-#define OPTTARGET
+#ifndef OPTTARGET_H
+#define OPTTARGET_H
 
-namespace cppOpt
-{
+namespace cppOpt {
 
-enum class OptTarget
-{
+enum class OptTarget {
     MINIMIZE,
     MAXIMIZE,
     APPROACH,
     DIVERGE
 };
 
-} // namespace cppOpt
+}  // namespace cppOpt
 
-#endif // OPTTARGET
+#endif  // OPTTARGET_H

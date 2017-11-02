@@ -15,16 +15,16 @@
 #define CPPOPT_H
 
 #include "config.h"
-#include "OptTypes.h"
-#include "OptHelper.h"
-#include "OptTarget.h"
-#include "OptCoordinator.h"
-#include "OptBoundary.h"
 #include "OptBoundaries.h"
+#include "OptBoundary.h"
 #include "OptCalculation.h"
-#include "OptSimulatedAnnealing.h"
-#include "OptThresholdAccepting.h"
-#include "OptGreatDeluge.h"
+#include "OptCoordinator.h"
 #include "OptEvolutionary.h"
+#include "OptGreatDeluge.h"
+#include "OptHelper.h"
+#include "OptSimulatedAnnealing.h"
+#include "OptTarget.h"
+#include "OptThresholdAccepting.h"
+#include "OptTypes.h"
 
-#endif // CPPOPT_H
+#endif  // CPPOPT_H

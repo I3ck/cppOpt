@@ -14,24 +14,22 @@
 #ifndef IOPTALGORITHM_H
 #define IOPTALGORITHM_H
 
-namespace cppOpt
-{
+namespace cppOpt {
 
 using namespace std;
 
-template <typename T>
-class IOptAlgorithm
-{
-public:
+template<typename T>
+class IOptAlgorithm {
+   public:
     virtual OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const* best) = 0;
+        OptCalculation<T> const*         best) = 0;
 
     virtual OptBoundaries<T> const& get_boundaries() = 0;
 
-    virtual ~IOptAlgorithm() {};
+    virtual ~IOptAlgorithm(){};
 };
 
-} // namespace cppOpt
+}  // namespace cppOpt
 
-#endif // IOPTALGORITHM_H
+#endif  // IOPTALGORITHM_H

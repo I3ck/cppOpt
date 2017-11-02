@@ -16,12 +16,10 @@
 
 #include "IOptAlgorithm.h"
 
-namespace cppOpt
-{
+namespace cppOpt {
 
-template <typename T>
-class OptSimulatedAnnealing final : public IOptAlgorithm<T>
-{
+template<typename T>
+class OptSimulatedAnnealing final : public IOptAlgorithm<T> {
     OptBoundaries<T>
         boundaries;
 
@@ -32,45 +30,41 @@ class OptSimulatedAnnealing final : public IOptAlgorithm<T>
         temperature{1.0},
         chance;
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-public:
+   public:
     OptSimulatedAnnealing(
         OptBoundaries<T> boundaries,
-        T coolingFactor,
-        T startChance) :
+        T                coolingFactor,
+        T                startChance) :
 
-        boundaries(move(boundaries)),
-        coolingFactor(move(coolingFactor)),
-        chance(move(startChance))
-    {}
+                         boundaries(move(boundaries)),
+                         coolingFactor(move(coolingFactor)),
+                         chance(move(startChance)) {}
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
     OptCalculation<T> get_next_calculation(
         vector<OptCalculation<T>> const& previous,
-        OptCalculation<T>         const* best) final
-    {
-        if(previous.empty() || !best)
+        OptCalculation<T> const*         best) final {
+        if (previous.empty() || !best)
             return OptHelper<T>::random_calculation(boundaries);
 
         OptCalculation<T> referenceValue, newValue;
 
-        if(OptHelper<T>::random_factor() < chance)
+        if (OptHelper<T>::random_factor() < chance)
             referenceValue = previous.back();
         else
             referenceValue = *best;
 
-        while(true)
-        {
+        while (true) {
             newValue = OptCalculation<T>();
-            for(auto const& boundary : boundaries)
-            {
+            for (auto const& boundary : boundaries) {
                 T change = OptHelper<T>::calculate_random_change(boundary.second, temperature);
 
                 newValue.add_parameter(boundary.first, referenceValue.get_parameter(boundary.first) + change);
             }
-            if(OptHelper<T>::valid(newValue, boundaries))
+            if (OptHelper<T>::valid(newValue, boundaries))
                 break;
         }
 
@@ -80,31 +74,26 @@ public:
         return newValue;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-private:
-
-    OptBoundaries<T> const& get_boundaries() final
-    {
+   private:
+    OptBoundaries<T> const& get_boundaries() final {
         return boundaries;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void update_temperature()
-    {
+    void update_temperature() {
         temperature *= coolingFactor;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void update_chance()
-    {
+    void update_chance() {
         chance *= coolingFactor;
     }
-
 };
 
-#endif // OPTSIMULATEDANNEALING_H
+#endif  // OPTSIMULATEDANNEALING_H
 
-} // namespace cppOpt
+}  // namespace cppOpt

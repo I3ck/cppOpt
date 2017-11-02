@@ -14,108 +14,95 @@
 #ifndef OPTCALCULATION_H
 #define OPTCALCULATION_H
 
-#include <string>
 #include <map>
+#include <string>
 
-namespace cppOpt
-{
+namespace cppOpt {
 
 using namespace std;
 
-template <typename T>
-class OptCalculation
-{
-private:
-    map <string, T> parameters;
+template<typename T>
+class OptCalculation {
+   private:
+    map<string, T> parameters;
 
-public:
+   public:
     T result{};
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    map <string, T> const& get_parameters() const
-    {
+    map<string, T> const& get_parameters() const {
         return parameters;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void set_parameters(const map <string, T> value)
-    {
+    void set_parameters(const map<string, T> value) {
         parameters = move(value);
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    void add_parameter(string const& name, T value)
-    {
+    void add_parameter(string const& name, T value) {
         parameters[name] = value;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    T get_parameter(string const& name) const
-    {
+    T get_parameter(string const& name) const {
         return parameters.at(name);
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    T distance_to(OptCalculation const& other) const
-    {
-        if(!using_same_parameters(other))
+    T distance_to(OptCalculation const& other) const {
+        if (!using_same_parameters(other))
             throw runtime_error("Can't calculate the distance between two OptCalculation if they're not using the same parameters");
 
         T squareSum(0.0);
-        for(auto const& parameter : parameters)
+        for (auto const& parameter : parameters)
             squareSum += pow(parameters.at(parameter.first) - other.parameters.at(parameter.first), 2);
 
         return sqrt(squareSum);
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    OptCalculation calculation_between(OptCalculation const& other) const
-    {
-        if(!using_same_parameters(other))
+    OptCalculation calculation_between(OptCalculation const& other) const {
+        if (!using_same_parameters(other))
             throw runtime_error("Can't calculate the center of two OptCalculation not having them same parameters");
 
         OptCalculation out;
 
-        for(auto const& parameter : parameters)
-        {
-            T centerValue = ( parameters.at(parameter.first) + other.parameters.at(parameter.first) ) / 2.0;
+        for (auto const& parameter : parameters) {
+            T centerValue = (parameters.at(parameter.first) + other.parameters.at(parameter.first)) / 2.0;
             out.add_parameter(parameter.first, centerValue);
         }
 
         return out;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    bool using_same_parameters(OptCalculation const& other) const
-    {
-        for(auto const& parameter : parameters)
-        {
-            if(other.parameters.find(parameter.first) == other.parameters.end())
+    bool using_same_parameters(OptCalculation const& other) const {
+        for (auto const& parameter : parameters) {
+            if (other.parameters.find(parameter.first) == other.parameters.end())
                 return false;
         }
 
-        for(auto const& parameter : other.parameters)
-        {
-            if(parameters.find(parameter.first) == parameters.end())
+        for (auto const& parameter : other.parameters) {
+            if (parameters.find(parameter.first) == parameters.end())
                 return false;
         }
         return true;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    string to_string_values(string const& delimiter = " ") const
-    {
+    string to_string_values(string const& delimiter = " ") const {
         string out("");
 
-        for(auto const& parameter : parameters)
+        for (auto const& parameter : parameters)
             out += to_string(parameter.second) + delimiter;
 
         out += to_string(result);
@@ -123,13 +110,12 @@ public:
         return out;
     }
 
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 
-    string to_string_header(string const& delimiter = " ") const
-    {
+    string to_string_header(string const& delimiter = " ") const {
         string out("");
 
-        for(auto const& parameter : parameters)
+        for (auto const& parameter : parameters)
             out += parameter.first + delimiter;
 
         out += "RESULT";
@@ -137,10 +123,9 @@ public:
         return out;
     }
 
-//------------------------------------------------------------------------------
-
+    //------------------------------------------------------------------------------
 };
 
-} // namespace cppOpt
+}  // namespace cppOpt
 
-#endif // OPTCALCULATION_HS
+#endif  // OPTCALCULATION_HS

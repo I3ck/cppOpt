@@ -17,8 +17,8 @@
   *        but now using 4 threads
   */
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 #include "cppOpt.h"
 
@@ -27,21 +27,20 @@ using namespace cppOpt;
 //define your own calculation
 auto toOptimize = [](OptCalculation<double>& optCalculation) {
     //defined x^2 as function to be optimised
-    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
+    optCalculation.result = pow(optCalculation.get_parameter("X"), 2);
 };
 
 using namespace std;
 
-int main()
-{
+int main() {
     //setup the optimisation
     //define your boundaries
     //to enable 4 threads, the range of example_1 is split
     OptBoundaries<double>
-            optBoundaries1,
-            optBoundaries2,
-            optBoundaries3,
-            optBoundaries4;
+        optBoundaries1,
+        optBoundaries2,
+        optBoundaries3,
+        optBoundaries4;
 
     optBoundaries1.add_boundary({-5.0, -2.5, "X"});
     optBoundaries2.add_boundary({-2.5, 0.0, "X"});

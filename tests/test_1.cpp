@@ -12,7 +12,7 @@
 */
 
 #define CATCH_CONFIG_MAIN
-#include "../dependencies/Catch.h" //https://github.com/philsquared/Catch
+#include "../dependencies/Catch.h"  //https://github.com/philsquared/Catch
 
 #include <cmath>
 #include <vector>
@@ -25,11 +25,10 @@ using namespace cppOpt;
 #define DELTA 0.01
 
 auto toOptimize = [](OptCalculation<double>& optCalculation) {
-    optCalculation.result = pow(optCalculation.get_parameter("X"),2);
+    optCalculation.result = pow(optCalculation.get_parameter("X"), 2);
 };
 
 TEST_CASE("Boundary") {
-
     SECTION("Constructor") {
         OptBoundary<double> optBoundary{0.0, 1.0, "test"};
 
@@ -49,7 +48,6 @@ TEST_CASE("Boundary") {
 }
 
 TEST_CASE("Boundaries") {
-
     SECTION("Constructor") {
         OptBoundaries<double> optBoundaries;
     }
@@ -70,24 +68,17 @@ TEST_CASE("Boundaries") {
         optBoundaries.add_boundary({0.0, 10.0, "y"});
         optBoundaries.add_boundary({0.0, 10.0, "z"});
 
-        std::vector< OptBoundaries<double> > splitted = optBoundaries.split("x", 10);
+        std::vector<OptBoundaries<double>> splitted = optBoundaries.split("x", 10);
 
-        for(unsigned int i = 0; i < optBoundaries.size(); ++i)
-        {
-            for(auto const& boundary : splitted[i])
-            {
-                if(boundary.first == "x")
-                {
+        for (unsigned int i = 0; i < optBoundaries.size(); ++i) {
+            for (auto const& boundary : splitted[i]) {
+                if (boundary.first == "x") {
                     REQUIRE(boundary.second.min == 0.0 + i);
                     REQUIRE(boundary.second.max == 1.0 + i);
-                }
-                else if(boundary.first == "y")
-                {
+                } else if (boundary.first == "y") {
                     REQUIRE(boundary.second.min == 0.0);
                     REQUIRE(boundary.second.max == 10.0);
-                }
-                else if(boundary.first == "z")
-                {
+                } else if (boundary.first == "z") {
                     REQUIRE(boundary.second.min == 0.0);
                     REQUIRE(boundary.second.max == 10.0);
                 }
@@ -97,13 +88,12 @@ TEST_CASE("Boundaries") {
 }
 
 TEST_CASE("Simulated Annealing") {
-
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
-    double coolingFactor = 0.95;
-    double startChance = 0.25;
+    double       coolingFactor   = 0.95;
+    double       startChance     = 0.25;
 
     SECTION("Minimizing") {
         OptTarget optTarget = OptTarget::MINIMIZE;
@@ -202,14 +192,13 @@ TEST_CASE("Simulated Annealing") {
 }
 
 TEST_CASE("Threshold Accepting") {
-
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
-    double coolingFactor = 0.95;
-    double threshold = 5.0;
-    double thresholdFactor = 0.95;
+    double       coolingFactor   = 0.95;
+    double       threshold       = 5.0;
+    double       thresholdFactor = 0.95;
 
     SECTION("Minimizing") {
         OptTarget optTarget = OptTarget::MINIMIZE;
@@ -323,17 +312,16 @@ TEST_CASE("Threshold Accepting") {
 }
 
 TEST_CASE("Great Deluge") {
-
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
-    double coolingFactor = 0.95;
-    double rain = 0.2;
+    double       coolingFactor   = 0.95;
+    double       rain            = 0.2;
 
     SECTION("Minimizing") {
-        OptTarget optTarget = OptTarget::MINIMIZE;
-        double waterLevel = 15.0;
+        OptTarget optTarget  = OptTarget::MINIMIZE;
+        double    waterLevel = 15.0;
 
         OptCoordinator<double, false> coordinator(
             maxCalculations,
@@ -355,8 +343,8 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Maximizing") {
-        OptTarget optTarget = OptTarget::MAXIMIZE;
-        double waterLevel = 10.0;
+        OptTarget optTarget  = OptTarget::MAXIMIZE;
+        double    waterLevel = 10.0;
 
         OptCoordinator<double, false> coordinator(
             maxCalculations,
@@ -378,15 +366,14 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Approaching") {
-        OptTarget optTarget = OptTarget::APPROACH;
-        double waterLevel = 18.0;
+        OptTarget optTarget  = OptTarget::APPROACH;
+        double    waterLevel = 18.0;
 
         OptCoordinator<double, false> coordinator(
             maxCalculations,
             toOptimize,
             optTarget,
             3.3);
-
 
         coordinator.add_child(make_unique<OptGreatDeluge<double>>(
             optBoundaries,
@@ -402,8 +389,8 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Diverging1") {
-        OptTarget optTarget = OptTarget::DIVERGE;
-        double waterLevel = 10.0;
+        OptTarget optTarget  = OptTarget::DIVERGE;
+        double    waterLevel = 10.0;
 
         OptCoordinator<double, false> coordinator(
             maxCalculations,
@@ -425,8 +412,8 @@ TEST_CASE("Great Deluge") {
     }
 
     SECTION("Diverging2") {
-        OptTarget optTarget = OptTarget::DIVERGE;
-        double waterLevel = 10.0;
+        OptTarget optTarget  = OptTarget::DIVERGE;
+        double    waterLevel = 10.0;
 
         OptCoordinator<double, false> coordinator(
             maxCalculations,
@@ -449,12 +436,11 @@ TEST_CASE("Great Deluge") {
 }
 
 TEST_CASE("Evolutionary") {
-
     OptBoundaries<double> optBoundaries;
     optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
-    double coolingFactor = 0.95;
+    double       coolingFactor   = 0.95;
 
     unsigned int
         nIndividualsStart(50),
@@ -508,7 +494,7 @@ TEST_CASE("Evolutionary") {
 
         coordinator.run_optimisation();
 
-        REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
+        REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < 100.0 * DELTA);  //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
 
     SECTION("Approaching") {
@@ -532,7 +518,7 @@ TEST_CASE("Evolutionary") {
 
         coordinator.run_optimisation();
 
-        REQUIRE(fabs(coordinator.get_best_calculation().result - 3.3) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
+        REQUIRE(fabs(coordinator.get_best_calculation().result - 3.3) < 100.0 * DELTA);  //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
 
     SECTION("Diverging1") {
@@ -556,7 +542,7 @@ TEST_CASE("Evolutionary") {
 
         coordinator.run_optimisation();
 
-        REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
+        REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < 100.0 * DELTA);  //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
 
     SECTION("Diverging2") {
@@ -585,12 +571,11 @@ TEST_CASE("Evolutionary") {
 }
 
 TEST_CASE("Multithreading / Boundary Splitting") {
-
     OptBoundaries<double>
-            optBoundaries1,
-            optBoundaries2,
-            optBoundaries3,
-            optBoundaries4;
+        optBoundaries1,
+        optBoundaries2,
+        optBoundaries3,
+        optBoundaries4;
 
     optBoundaries1.add_boundary({-5.0, -4.0, "X"});
     optBoundaries2.add_boundary({-3.0, -1.0, "X"});
@@ -598,8 +583,8 @@ TEST_CASE("Multithreading / Boundary Splitting") {
     optBoundaries4.add_boundary({5.0, 50.0, "X"});
 
     unsigned int maxCalculations = 3000;
-    double coolingFactor = 0.95;
-    double startChance = 0.25;
+    double       coolingFactor   = 0.95;
+    double       startChance     = 0.25;
 
     SECTION("Minimizing") {
         OptTarget optTarget = OptTarget::MINIMIZE;
