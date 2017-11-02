@@ -34,14 +34,6 @@ private:
 //------------------------------------------------------------------------------
 
 public:
-    void add_boundary(T min, T max, const string &name)
-    {
-        OptBoundary<T> temp{min, max, name};
-        add_boundary(temp);
-    }
-
-//------------------------------------------------------------------------------
-
     void add_boundary(const OptBoundary<T> &optBoundary)
     {
         optBoundaries.insert(make_pair(optBoundary.name, optBoundary));

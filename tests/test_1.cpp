@@ -59,19 +59,16 @@ TEST_CASE("Boundaries") {
 
         REQUIRE(optBoundaries.size() == 0);
 
-        optBoundaries.add_boundary(1.0, 3.0, "test");
+        optBoundaries.add_boundary({1.0, 3.0, "test"});
         REQUIRE(optBoundaries.size() == 1);
-
-        optBoundaries.add_boundary(OptBoundary<double>{1.0, 3.0, "test2"});
-        REQUIRE(optBoundaries.size() == 2);
     }
 
     SECTION("Splitting") {
         OptBoundaries<double> optBoundaries;
 
-        optBoundaries.add_boundary(0.0, 10.0, "x");
-        optBoundaries.add_boundary(0.0, 10.0, "y");
-        optBoundaries.add_boundary(0.0, 10.0, "z");
+        optBoundaries.add_boundary({0.0, 10.0, "x"});
+        optBoundaries.add_boundary({0.0, 10.0, "y"});
+        optBoundaries.add_boundary({0.0, 10.0, "z"});
 
         std::vector< OptBoundaries<double> > splitted = optBoundaries.split("x", 10);
 
@@ -102,7 +99,7 @@ TEST_CASE("Boundaries") {
 TEST_CASE("Simulated Annealing") {
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
@@ -207,7 +204,7 @@ TEST_CASE("Simulated Annealing") {
 TEST_CASE("Threshold Accepting") {
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
@@ -328,7 +325,7 @@ TEST_CASE("Threshold Accepting") {
 TEST_CASE("Great Deluge") {
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
@@ -454,7 +451,7 @@ TEST_CASE("Great Deluge") {
 TEST_CASE("Evolutionary") {
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
 
     unsigned int maxCalculations = 300;
     double coolingFactor = 0.95;
@@ -595,10 +592,10 @@ TEST_CASE("Multithreading / Boundary Splitting") {
             optBoundaries3,
             optBoundaries4;
 
-    optBoundaries1.add_boundary(-5.0, -4.0, "X");
-    optBoundaries2.add_boundary(-3.0, -1.0, "X");
-    optBoundaries3.add_boundary(-0.5, 0.5, "X");
-    optBoundaries4.add_boundary(5.0, 50.0, "X");
+    optBoundaries1.add_boundary({-5.0, -4.0, "X"});
+    optBoundaries2.add_boundary({-3.0, -1.0, "X"});
+    optBoundaries3.add_boundary({-0.5, 0.5, "X"});
+    optBoundaries4.add_boundary({5.0, 50.0, "X"});
 
     unsigned int maxCalculations = 3000;
     double coolingFactor = 0.95;

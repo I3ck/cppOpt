@@ -36,7 +36,7 @@ int main()
     //setup the optimisation
     //define your total boundaries
     OptBoundaries<double> optBoundariesTotal;
-    optBoundariesTotal.add_boundary(-5.0, 5.0, "X");
+    optBoundariesTotal.add_boundary({-5.0, 5.0, "X"});
 
     //and split them into 4
     vector< OptBoundaries<double> > optBoundariesSplit = optBoundariesTotal.split("X", 4);

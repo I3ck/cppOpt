@@ -44,7 +44,7 @@ int main()
     //setup the optimisation
     //define your boundaries
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.12, 5.12, "x");
+    optBoundaries.add_boundary({-5.12, 5.12, "x"});
 
     //number of calculations
     unsigned int maxCalculations = 3000;

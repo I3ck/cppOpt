@@ -43,10 +43,10 @@ int main()
             optBoundaries3,
             optBoundaries4;
 
-    optBoundaries1.add_boundary(-5.0, -2.5, "X");
-    optBoundaries2.add_boundary(-2.5, 0.0, "X");
-    optBoundaries3.add_boundary(0.0, 2.5, "X");
-    optBoundaries4.add_boundary(2.5, 5.0, "X");
+    optBoundaries1.add_boundary({-5.0, -2.5, "X"});
+    optBoundaries2.add_boundary({-2.5, 0.0, "X"});
+    optBoundaries3.add_boundary({0.0, 2.5, "X"});
+    optBoundaries4.add_boundary({2.5, 5.0, "X"});
 
     //number of calculations
     unsigned int maxCalculations = 300;

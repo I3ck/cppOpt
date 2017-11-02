@@ -33,8 +33,8 @@ double time_sa_1()
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
-    optBoundaries.add_boundary(-14.0, 23.0, "Y");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
+    optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
@@ -62,8 +62,8 @@ double time_sa_2()
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
-    optBoundaries.add_boundary(-14.0, 23.0, "Y");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
+    optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
@@ -101,8 +101,8 @@ double time_sa_3()
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
-    optBoundaries.add_boundary(-14.0, 23.0, "Y");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
+    optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
@@ -140,8 +140,8 @@ double time_sa_4()
     auto start = clock();
 
     OptBoundaries<double> optBoundaries;
-    optBoundaries.add_boundary(-5.0, 5.0, "X");
-    optBoundaries.add_boundary(-14.0, 23.0, "Y");
+    optBoundaries.add_boundary({-5.0, 5.0, "X"});
+    optBoundaries.add_boundary({-14.0, 23.0, "Y"});
 
     unsigned int maxCalculations = 30000;
     double coolingFactor = 0.95;
