@@ -44,7 +44,7 @@ public:
         coolingFactor(move(coolingFactor)),
         chance(move(startChance))
     {}
-        
+
 //------------------------------------------------------------------------------
 
     OptCalculation<T> get_next_calculation(
@@ -81,6 +81,8 @@ public:
     }
 
 //------------------------------------------------------------------------------
+
+private:
 
     OptBoundaries<T> const& get_boundaries() final
     {

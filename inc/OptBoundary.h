@@ -22,9 +22,8 @@ namespace cppOpt
 {
 
 template <typename T>
-class OptBoundary
+struct OptBoundary
 {
-public:
     const T
         min,
         max;
