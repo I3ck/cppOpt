@@ -87,7 +87,7 @@ int main()
         mutation));
 
     //let's go
-    coordinator.run_optimisation(1);
+    coordinator.run_optimisation();
 
     //print result
     OptCalculation<double> best = coordinator.get_best_calculation();

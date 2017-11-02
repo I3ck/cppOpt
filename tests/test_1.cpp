@@ -119,7 +119,7 @@ TEST_CASE("Simulated Annealing") {
             coolingFactor,
             startChance));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -138,7 +138,7 @@ TEST_CASE("Simulated Annealing") {
             coolingFactor,
             startChance));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -157,7 +157,7 @@ TEST_CASE("Simulated Annealing") {
             coolingFactor,
             startChance));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 3.3) < DELTA);
     }
@@ -176,7 +176,7 @@ TEST_CASE("Simulated Annealing") {
             coolingFactor,
             startChance));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -195,7 +195,7 @@ TEST_CASE("Simulated Annealing") {
             coolingFactor,
             startChance));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -228,7 +228,7 @@ TEST_CASE("Threshold Accepting") {
             threshold,
             thresholdFactor));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -250,7 +250,7 @@ TEST_CASE("Threshold Accepting") {
             threshold,
             thresholdFactor));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -272,7 +272,7 @@ TEST_CASE("Threshold Accepting") {
             threshold,
             thresholdFactor));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 3.3) < DELTA);
     }
@@ -294,7 +294,7 @@ TEST_CASE("Threshold Accepting") {
             threshold,
             thresholdFactor));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -316,7 +316,7 @@ TEST_CASE("Threshold Accepting") {
             threshold,
             thresholdFactor));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -349,7 +349,7 @@ TEST_CASE("Great Deluge") {
             waterLevel,
             rain));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -372,7 +372,7 @@ TEST_CASE("Great Deluge") {
             waterLevel,
             rain));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -396,7 +396,7 @@ TEST_CASE("Great Deluge") {
             waterLevel,
             rain));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 3.3) < DELTA);
     }
@@ -419,7 +419,7 @@ TEST_CASE("Great Deluge") {
             waterLevel,
             rain));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < DELTA);
     }
@@ -442,7 +442,7 @@ TEST_CASE("Great Deluge") {
             waterLevel,
             rain));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -482,7 +482,7 @@ TEST_CASE("Evolutionary") {
             nIndividualsOffspring,
             mutation));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -506,7 +506,7 @@ TEST_CASE("Evolutionary") {
             nIndividualsOffspring,
             mutation));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
@@ -530,7 +530,7 @@ TEST_CASE("Evolutionary") {
             nIndividualsOffspring,
             mutation));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 3.3) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
@@ -554,7 +554,7 @@ TEST_CASE("Evolutionary") {
             nIndividualsOffspring,
             mutation));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 25.0) < 100.0 * DELTA); //the evolutionary algorithm has big problems reaching the very edge of a problem, so the delta was increased
     }
@@ -578,7 +578,7 @@ TEST_CASE("Evolutionary") {
             nIndividualsOffspring,
             mutation));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation();
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < 100.0);
     }
@@ -630,7 +630,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
             coolingFactor,
             startChance));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation(4);
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 0.0) < DELTA);
     }
@@ -664,7 +664,7 @@ TEST_CASE("Multithreading / Boundary Splitting") {
             coolingFactor,
             startChance));
 
-        coordinator.run_optimisation(1);
+        coordinator.run_optimisation(4);
 
         REQUIRE(fabs(coordinator.get_best_calculation().result - 2500.0) < DELTA);
     }

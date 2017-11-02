@@ -21,6 +21,7 @@
 #include <thread>
 #include <memory>
 #include <optional>
+#include <type_traits>
 
 #include "config.h"
 #include "OptTarget.h"
@@ -113,29 +114,18 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void run_optimisation(unsigned int maxThreads)
+    template<bool b = !isMultiThreaded>
+    typename std::enable_if_t<b>
+    run_optimisation()
     {
-        srand(randomSeed);
+        do_run_optimisation(1);
+    }
 
-        //get the first to-calculate value of every optimiser
-        //and push it onto the todo queue
-        for(const auto &child : children)
-        {
-            bestCalculations[child.get()] = random_calculation(child->get_boundaries());
-            push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()]), child.get());
-        }
-
-        if constexpr (isMultiThreaded) {
-            vector <thread> threads;
-            threads.reserve(maxThreads);
-
-            for(unsigned int i=0; i<maxThreads; ++i)
-                threads.emplace_back([this](){return do_work();});
-
-            for(auto &thread :threads)
-                thread.join();
-        } else
-            do_work(); ///@todo rename function
+    template<bool b = isMultiThreaded>
+    typename std::enable_if_t<b>
+    run_optimisation(unsigned int maxThreads)
+    {
+        do_run_optimisation(maxThreads);
     }
 
 //------------------------------------------------------------------------------
@@ -167,6 +157,35 @@ public:
 //------------------------------------------------------------------------------
 
 private:
+    void do_run_optimisation(unsigned int maxThreads)
+    {
+        if (children.empty())
+            return;
+
+        srand(randomSeed);
+
+        //get the first to-calculate value of every optimiser
+        //and push it onto the todo queue
+        for(const auto &child : children)
+        {
+            bestCalculations[child.get()] = random_calculation(child->get_boundaries());
+            push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()]), child.get());
+        }
+
+        if constexpr (isMultiThreaded) {
+            vector <thread> threads;
+            threads.reserve(maxThreads);
+
+            for(unsigned int i=0; i<maxThreads; ++i)
+                threads.emplace_back([this](){return do_work();});
+
+            for(auto &thread :threads)
+                thread.join();
+        } else
+            do_work(); ///@todo rename function
+    }
+
+//------------------------------------------------------------------------------
 
     inline optional<lock> lock_for(mutex& m) {
         if constexpr (isMultiThreaded) {
