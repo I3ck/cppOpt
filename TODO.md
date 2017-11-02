@@ -6,3 +6,4 @@
 - enable overload for coordinator without multithreading which simply requires run_optimisation without number threads (enable if)
 - update readme and tag with version
 - const foo&  vs foo const&
+- bracket style

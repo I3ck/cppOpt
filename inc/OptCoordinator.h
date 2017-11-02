@@ -61,6 +61,9 @@ class OptCoordinator final
     T
         abortValue{0};
 
+    unsigned int
+        randomSeed{(unsigned int) time(NULL)};
+
     const calc_t<T>
         calcFunction;
 
@@ -103,12 +106,14 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void run_optimisation(unsigned int maxThreads)
+    void set_seed(unsigned int seed)
     {
-        run_optimisation(maxThreads, time(NULL));
+        randomSeed = seed;
     }
 
-    void run_optimisation(unsigned int maxThreads, unsigned int randomSeed)
+//------------------------------------------------------------------------------
+
+    void run_optimisation(unsigned int maxThreads)
     {
         srand(randomSeed);
 
