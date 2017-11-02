@@ -157,7 +157,7 @@ private:
     {
         unsigned int i = 1;
 
-        for(const auto &individual : previousCalculationsSorted)
+        for(auto const& individual : previousCalculationsSorted)
         {
             individualsSelected.push_back(individual.second);
 
@@ -187,7 +187,7 @@ private:
         }
 
         individualsSelected.clear();
-        for(const auto &parentPair : parents)
+        for(auto const& parentPair : parents)
         {
             for(unsigned int i = 0; i < nIndividualsOffspring; ++i)
                 individualsBred.push(  parentPair.first.calculation_between(parentPair.second)  );

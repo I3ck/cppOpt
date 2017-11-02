@@ -45,7 +45,7 @@ public:
     {
         string out("");
 
-        for(const auto &boundary : optBoundaries)
+        for(auto const& boundary : optBoundaries)
             out += boundary.first + " ";
 
         return out;
@@ -60,7 +60,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    vector<OptBoundaries> split(const string &name, unsigned int times) const
+    vector<OptBoundaries> split(string const& name, unsigned int times) const
     {
         vector<OptBoundaries> out;
 
@@ -73,7 +73,7 @@ public:
         if(times < 1)
             return out; //error case
 
-        for(const auto &boundary : optBoundaries)
+        for(auto const& boundary : optBoundaries)
         {
             if(boundary.first == name)
             {
@@ -91,7 +91,7 @@ public:
         for(unsigned int i = 0; i < times; ++i)
         {
             OptBoundaries newBoundaries;
-            for(const auto &boundary : optBoundaries)
+            for(auto const& boundary : optBoundaries)
             {
                 if(boundary.first == name)
                 {

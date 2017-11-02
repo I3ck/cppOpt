@@ -4,5 +4,4 @@
 - evolutionary mutations won't check for borders (only relevant if the algorithms should have to stay within their borders)  
 - forward instead of move in constructors?
 - update readme and tag with version
-- const foo&  vs foo const&
-- bracket style
+- bracket style (beautify code)

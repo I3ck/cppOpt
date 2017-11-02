@@ -47,27 +47,27 @@ public:
 
 //------------------------------------------------------------------------------
 
-    void add_parameter(const string &name, T value)
+    void add_parameter(string const& name, T value)
     {
         parameters[name] = value;
     }
 
 //------------------------------------------------------------------------------
 
-    T get_parameter(const string &name) const
+    T get_parameter(string const& name) const
     {
         return parameters.at(name);
     }
 
 //------------------------------------------------------------------------------
 
-    T distance_to(const OptCalculation &other) const
+    T distance_to(OptCalculation const& other) const
     {
         if(!using_same_parameters(other))
             throw runtime_error("Can't calculate the distance between two OptCalculation if they're not using the same parameters");
 
         T squareSum(0.0);
-        for(const auto &parameter : parameters)
+        for(auto const& parameter : parameters)
             squareSum += pow(parameters.at(parameter.first) - other.parameters.at(parameter.first), 2);
 
         return sqrt(squareSum);
@@ -75,14 +75,14 @@ public:
 
 //------------------------------------------------------------------------------
 
-    OptCalculation calculation_between(const OptCalculation &other) const
+    OptCalculation calculation_between(OptCalculation const& other) const
     {
         if(!using_same_parameters(other))
             throw runtime_error("Can't calculate the center of two OptCalculation not having them same parameters");
 
         OptCalculation out;
 
-        for(const auto &parameter : parameters)
+        for(auto const& parameter : parameters)
         {
             T centerValue = ( parameters.at(parameter.first) + other.parameters.at(parameter.first) ) / 2.0;
             out.add_parameter(parameter.first, centerValue);
@@ -93,15 +93,15 @@ public:
 
 //------------------------------------------------------------------------------
 
-    bool using_same_parameters(const OptCalculation &other) const
+    bool using_same_parameters(OptCalculation const& other) const
     {
-        for(const auto &parameter : parameters)
+        for(auto const& parameter : parameters)
         {
             if(other.parameters.find(parameter.first) == other.parameters.end())
                 return false;
         }
 
-        for(const auto &parameter : other.parameters)
+        for(auto const& parameter : other.parameters)
         {
             if(parameters.find(parameter.first) == parameters.end())
                 return false;
@@ -111,11 +111,11 @@ public:
 
 //------------------------------------------------------------------------------
 
-    string to_string_values(const string &delimiter = " ") const
+    string to_string_values(string const& delimiter = " ") const
     {
         string out("");
 
-        for(const auto &parameter : parameters)
+        for(auto const& parameter : parameters)
             out += to_string(parameter.second) + delimiter;
 
         out += to_string(result);
@@ -125,11 +125,11 @@ public:
 
 //------------------------------------------------------------------------------
 
-    string to_string_header(const string &delimiter = " ") const
+    string to_string_header(string const& delimiter = " ") const
     {
         string out("");
 
-        for(const auto &parameter : parameters)
+        for(auto const& parameter : parameters)
             out += parameter.first + delimiter;
 
         out += "RESULT";

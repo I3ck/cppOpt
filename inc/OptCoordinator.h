@@ -147,7 +147,7 @@ public:
 
         out = finishedCalculations[0];
 
-        for(const auto &finishedCalculation : finishedCalculations)
+        for(auto const& finishedCalculation : finishedCalculations)
             if(OptHelper<T>::result_better(finishedCalculation, out, optTarget, targetValue))
                 out = finishedCalculation;
 
@@ -166,7 +166,7 @@ private:
 
         //get the first to-calculate value of every optimiser
         //and push it onto the todo queue
-        for(const auto &child : children)
+        for(auto const& child : children)
         {
             bestCalculations[child.get()] = random_calculation(child->get_boundaries());
             push_todo(child->get_next_calculation(previousCalculations[child.get()], &bestCalculations[child.get()]), child.get());

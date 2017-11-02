@@ -74,7 +74,7 @@ TEST_CASE("Boundaries") {
 
         for(unsigned int i = 0; i < optBoundaries.size(); ++i)
         {
-            for(const auto &boundary : splitted[i])
+            for(auto const& boundary : splitted[i])
             {
                 if(boundary.first == "x")
                 {
